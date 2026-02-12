@@ -1,0 +1,69 @@
+#header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 2rem;
+
+    height: 5rem;
+    background: var(--secondary);
+}
+
+/* right side of header --------------------------------------------------------------------------------------------- */
+
+#header-right, #header-left {
+    display: flex;
+    align-items: center;
+    max-height: 100%;
+
+    gap: 1rem;
+}
+
+#header-right img {  /*  logo  */
+    max-height: 100%;
+    height: 4rem;
+}
+
+#header-right #website-title {  /*  logo  */
+    font-weight: 900;
+}
+
+/* left side of header --------------------------------------------------------------------------------------------- */
+
+/* search bar ------------------------------------------------------------------------------------------------------ */
+
+#search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--background);
+
+    height: 2rem;
+    width: 25vw;
+    border-radius: 0.95rem;
+
+    padding: 0.8rem;
+}
+
+#search-bar #search-bar-text {
+    color: var(--searchbar-text);
+}
+
+#message-icon {
+    height: 3.5rem;
+}
+
+#profile {
+    height: 3.5rem;
+    width: 3.5rem;
+    background: var(--profile-background);
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#profile-icon {
+    height: 2.5rem;
+}
