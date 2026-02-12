@@ -2,13 +2,13 @@
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  /* line-height: 1.5;
+  line-height: 1.5;
   font-weight: 400;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
+  -moz-osx-font-smoothing: grayscale;
 
   font-family: "Montserrat";
 
@@ -18,6 +18,9 @@
   --tertiary: #1b809a;
   --profile-background: #DADA4F;
   --searchbar-text: #d5d5d5;
+  --light-grey: #d9d9d9;
+  --dark-grey: #B7B7B7;
+  --darkest-grey: #333333;
 }
 
 * {

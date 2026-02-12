@@ -1,0 +1,37 @@
+#footer {
+    display: flex;
+    
+    height: 4rem;
+    width: 100vw;
+
+    background: var(--tertiary);
+}
+
+#footer-left {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    width: 40%;
+}
+
+#footer #footer-logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5rem;
+    height: 3rem;
+    background: var(--darkest-grey);
+
+    border-radius: 0.70rem;
+}
+
+#footer #footer-logo-container #footer-logo {
+    height: 2rem;
+}
+
+#footer .footer-link {
+    text-decoration: none;
+    color: var(--darkest-grey);
+    font-weight: 500;
+}
