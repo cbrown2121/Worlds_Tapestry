@@ -1,0 +1,62 @@
+.forum-landing-page {
+    display: flex;
+    justify-content: space-between;
+    
+    padding: 4rem;
+
+    min-height: 100vh; /* change later. its closer to 90vh since we need to account for the header height. this is just temporary */
+}
+
+/* main content ==================================================================================================================== */
+
+.forum-landing-page .forum-landing-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 70%;
+}
+
+/* side bar ==================================================================================================================== */
+
+.forum-landing-page .forum-landing-side {
+    width: 25%;
+    background: var(--light-grey);
+    border: 2px solid var(--text);
+    padding: 2rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+}
+
+.forum-landing-page .forum-landing-side .forum-information-stats {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+}
+
+.forum-landing-page .forum-landing-side .forum-information-stats .forum-image {
+    height: 7rem;
+}
+
+.forum-landing-page .forum-landing-side .forum-information-stats .forum-stats {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.forum-landing-page .forum-landing-side .forum-information-stats .forum-stats h2 {
+    font-weight: 600;
+}
+
+.forum-landing-page .forum-landing-side .forum-information-stats .forum-stats h3 {
+    font-weight: 400;
+}
+
+.forum-landing-page .forum-landing-side .forum-highlights {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-evenly; */
+    gap: 3rem;
+}
