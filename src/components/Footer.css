@@ -11,23 +11,12 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-
     width: 40%;
 }
 
-#footer #footer-logo-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 5rem;
-    height: 3rem;
-    background: var(--darkest-grey);
-
-    border-radius: 0.70rem;
-}
-
 #footer #footer-logo-container #footer-logo {
-    height: 2rem;
+    height: 2.5rem;
+    display: flex;
 }
 
 #footer .footer-link {
