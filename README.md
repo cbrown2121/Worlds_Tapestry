@@ -1,4 +1,4 @@
-### Tools needed to run
+## Tools needed to run
 1) NodeJS
 2) NPM (will be set up with nodejs)
 3) npm install node
