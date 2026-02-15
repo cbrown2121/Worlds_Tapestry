@@ -7,15 +7,17 @@ import CategoryLandingPage from "./components/forum_landing_page/category_landin
 import ForumLandingPage from "./components/forum_landing_page/ForumLandingPage.jsx"
 import ThreadPage from "./components/forum_landing_page/category_landing_page/thread_page/ThreadPage.jsx"
 import Footer from "./components/Footer.jsx"
+import MapPage from "./components/map_page/MapPage.jsx"
 
 // as of this momement to view the different pages you have to communet and uncomment landing page and forum landing page
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  <>
     <Header />
     {/* <LandingPage /> */}
     {/* <ForumLandingPage /> */}
     {/* <CategoryLandingPage /> */}
-    <ThreadPage/>
+    {/* <ThreadPage/> */}
+    <MapPage />
     <Footer />
-  </StrictMode>,
+  </>,
 )
