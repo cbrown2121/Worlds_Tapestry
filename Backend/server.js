@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -39,6 +39,70 @@ app.get("/location", (req, res) => {
     res.json(results);
   });
 });
+
+app.get("/users", (req, res) => {
+  db.query("SELECT * FROM users", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+app.get("/forums", (req, res) => {
+  db.query("SELECT * FROM forums", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+app.get("/posts", (req, res) => {
+  db.query("SELECT * FROM posts", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+app.get("/events", (req, res) => {
+  db.query("SELECT * FROM events", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+app.get("/Reports", (req, res) => {
+  db.query("SELECT * FROM Reports", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+app.get("/userpins", (req, res) => {
+  db.query("SELECT * FROM userpins", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+app.get("/Messages", (req, res) => {
+  db.query("SELECT * FROM Messages", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+app.get("/threads", (req, res) => {
+  db.query("SELECT * FROM threads", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+app.get("/forumsettings", (req, res) => {
+  db.query("SELECT * FROM forumsettings", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
