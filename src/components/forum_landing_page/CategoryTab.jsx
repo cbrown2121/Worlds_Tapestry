@@ -23,13 +23,17 @@ function CategoryTab( { title, tags, threadCount, postCount, mostRecent} ) {
                 <tbody className="category-info-details">
                     <tr>
                         <td className="category-name-text">{title}</td>
+                        { threadCount != undefined && 
                         <td className="category-thread-count">{threadCount}</td>
+                        }
                         <td className="category-post-count">{postCount}</td>
                         <td className="category-recency-time">{mostRecent}</td>
                     </tr>
                     <tr>
                         <td className="category-tags-text">{tagsText}</td>
+                        { threadCount != undefined && 
                         <td>Threads</td>
+                        } 
                         <td>Posts/Replies</td>
                         <td>Most Recent</td>
                     </tr>

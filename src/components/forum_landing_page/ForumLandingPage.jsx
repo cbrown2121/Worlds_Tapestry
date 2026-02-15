@@ -19,23 +19,23 @@ function ForumLandingPage() {
 //   replace keys later
   return (
     <>
-        <div className="forum-landing-page">
-            <div className="forum-landing-main">
-                <ForumSection title="Pinned Threads" categoryTabsList={[<CategoryTab key={1} {...pinnedOne} />, <CategoryTab key={2} {...pinnedTwo} />]}/>
+        <div className="forum-landing-page landing-page">
+            <div className="forum-landing-main landing-page-main">
+                <ForumSection title="Pinned Categories" categoryTabsList={[<CategoryTab key={1} {...pinnedOne} />, <CategoryTab key={2} {...pinnedTwo} />]}/>
                 <ForumSection title="Categories" categoryTabsList={[<CategoryTab key={1} {...categoryOne} />, <CategoryTab key={2} {...categoryTwo} />, <CategoryTab key={2} {...categoryThree} />]}/>
             </div>
-            <div className="forum-landing-side">
-                <div className="forum-information-stats">
+            <div className="forum-landing-side landing-page-side">
+                <div className="forum-information-stats landing-page-information-stats">
                     <img src={defaultIcon} alt="" className="forum-image" />
-                    <div className="forum-stats">
-                        <h2 className="forum-name">Forum</h2>
+                    <div className="forum-stats landing-page-stats">
+                        <h2 className="forum-name landing-page-name">Forum</h2>
                         <h3 className="user-count">13,078</h3>
                         <h3 className="users-online">548</h3>
                         <h3 className="thread-count-stats">8,756</h3>
                         <h3 className="creation-data">xx/xx/xxxx</h3>
                     </div>
                 </div>
-                <div className="forum-highlights">
+                <div className="forum-highlights landing-page-highlights">
                     <ForumTrendingTab trendingTitle="Most Popular Category of the Day" trendingName="Category Name" trendingDetails="564 Posts Today" />
                     <ForumTrendingTab trendingTitle="Featured Post" trendingName="Post Title" trendingDetails="Details" />
                     <ForumTrendingTab trendingTitle="Most Post Category of the Day" trendingName="Post Title" trendingDetails="132 Replies" />

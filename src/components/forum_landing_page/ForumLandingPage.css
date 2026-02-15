@@ -1,15 +1,15 @@
-.forum-landing-page {
+.landing-page {
     display: flex;
     justify-content: space-between;
     
     padding: 4rem;
 
-    min-height: 100vh; /* change later. its closer to 90vh since we need to account for the header height. this is just temporary */
+    min-height: 100vh; /*  change later. its closer to 90vh since we need to account for the header height. this is just temporary */
 }
 
 /* main content ==================================================================================================================== */
 
-.forum-landing-page .forum-landing-main {
+.landing-page .landing-page-main {
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -18,7 +18,7 @@
 
 /* side bar ==================================================================================================================== */
 
-.forum-landing-page .forum-landing-side {
+.landing-page .landing-page-side {
     width: 25%;
     background: var(--light-grey);
     border: 2px solid var(--text);
@@ -26,37 +26,57 @@
 
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 4rem;
+    /* align-items: center; */
+    /* gap: 4rem; */
+
+    height: fit-content;
 }
 
-.forum-landing-page .forum-landing-side .forum-information-stats {
+.landing-page .landing-page-side .landing-page-information-stats {
     display: flex;
     align-items: center;
     gap: 4rem;
 }
 
-.forum-landing-page .forum-landing-side .forum-information-stats .forum-image {
+.landing-page .category-landing-side { /* styling for thread landing pages ========================================================== */
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.landing-page .landing-page-side .landing-page-information-stats img {
     height: 7rem;
 }
 
-.forum-landing-page .forum-landing-side .forum-information-stats .forum-stats {
+.landing-page .landing-page-side .landing-page-information-stats .landing-page-stats {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
 }
 
-.forum-landing-page .forum-landing-side .forum-information-stats .forum-stats h2 {
+.landing-page .landing-page-side .landing-page-information-stats .landing-page-stats h2 {
     font-weight: 600;
 }
 
-.forum-landing-page .forum-landing-side .forum-information-stats .forum-stats h3 {
+.landing-page .landing-page-side .landing-page-information-stats .landing-page-stats h3 {
     font-weight: 400;
 }
 
-.forum-landing-page .forum-landing-side .forum-highlights {
+.landing-page .landing-page-side .landing-page-highlights {
     display: flex;
     flex-direction: column;
     /* justify-content: space-evenly; */
     gap: 3rem;
+}
+
+/* create thread button for category landing pages ========================================================================================================== */
+
+.landing-page .landing-page-side .create-thread {
+    border: 2px solid var(--text);
+    background: var(--background);
+    height: 4rem;
+
+    width: 100%;
+
+    font-size: 1.5rem;
 }

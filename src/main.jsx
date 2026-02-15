@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client"
 import "./index.css"
 import Header from "./components/Header.jsx"
 import LandingPage from "./components/landing_page/LandingPage.jsx"
+import CategoryLandingPage from "./components/forum_landing_page/category_landing_page/CategoryLandingPage.jsx"
 import ForumLandingPage from "./components/forum_landing_page/ForumLandingPage.jsx"
 import Footer from "./components/Footer.jsx"
 
@@ -10,8 +11,9 @@ import Footer from "./components/Footer.jsx"
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Header />
-    <LandingPage />
+    {/* <LandingPage /> */}
     {/* <ForumLandingPage /> */}
+    <CategoryLandingPage />
     <Footer />
   </StrictMode>,
 )
