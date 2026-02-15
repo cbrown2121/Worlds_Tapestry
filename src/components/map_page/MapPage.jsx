@@ -8,8 +8,8 @@ export default function MapPage() {
   });
 
   const center = useMemo(() => ({
-    lat: 41.8821,
-    lng: -87.6240,
+    lat: 42.6806,
+    lng: -83.1338,
   }), []);
 
   const [userPins, setUserPins] = useState([]);
