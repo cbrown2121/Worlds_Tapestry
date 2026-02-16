@@ -33,7 +33,7 @@ function ThreadPage() {
             <ThreadPost key={13} {...postExampleThree} />
             <ThreadPost key={14} {...postExampleFour} /> */}
             {ThreadList.map((post) => (
-                        <ThreadPost key={post.PostID} subject={post.PostID} username={post.Creator} text={post.Content} likecount={0} dislikecount={0} timemade={post.Creation_Date}/>
+                        <ThreadPost key={post.PostID} subject={post.subject} id={post.PostID} username={post.Creator} text={post.Content} likecount={post.likes} dislikecount={post.dislikes} timemade={post.Creation_Date}/>
                     ))}
         </div>
     </>
