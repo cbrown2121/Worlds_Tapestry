@@ -96,22 +96,15 @@ app.get("/threads", (req, res) => {
   });
 });
 
-app.get("/forumsettings", (req, res) => {
-  db.query("SELECT * FROM forumsettings", (err, results) => {
-    if (err) return res.status(500).json(err);
-    res.json(results);
-  });
-});
-
 app.post("/forums", (req, res) => {
-  const { forum_id, forum_name, creation_date, member_count, settings_id, tags } = req.body;
+  const { forum_id, forum_name, creation_date, member_count, tags, search_visibility, join_permissions } = req.body;
 
   const sql = `
-    INSERT INTO forums (ForumID, ForumName, CreationDate, MemberCount, SettingsID, Tags)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO forums (ForumID, ForumName, CreationDate, MemberCount, Tags, SearchVisibility, JoinPermissions)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
-  db.query(sql, [forum_id, forum_name, creation_date, member_count, settings_id, tags], (err, result) => {
+  db.query(sql, [forum_id, forum_name, creation_date, member_count, tags, search_visibility, join_permissions], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create forum" });

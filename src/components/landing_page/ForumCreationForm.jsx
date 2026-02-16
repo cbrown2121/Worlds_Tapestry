@@ -1,17 +1,24 @@
+import { useState } from "react"
 import "./ForumCreationForm.css"
+
+const getNewId = async () => {
+    return await fetch("http://localhost:5000/forums") // change later to not be on local host
+    .then(response => response.json())
+    .then(listOfForums => {
+        let length = listOfForums.length;
+        return listOfForums[length - 1].ForumID + 1;
+    }).catch(error => console.error(error));
+}
 
 function ForumCreationForm() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        let id = Date.now() + Math.random();
-        id = id.toString();
-
         const formData = new FormData(event.currentTarget);
-
-        let forumData = { forum_id: id.substring(0, 6), forum_name: formData.get("ForumName"), creation_date: 2026, member_count: 0, settings_id: id.substring(0, 8), tags: "#"}
-        // let settingsData = { SettingsID: id.substring(0, 8), SearchVisiblity: "Viewable", JoinPermissions: "Anyone", UIType: null}
+        const id = await getNewId();
+        
+        let forumData = { forum_id: id, forum_name: formData.get("ForumName"), creation_date: 2026, member_count: 0, tags: "#", search_visibility: "Viewable", join_permissions: "Anyone"}
 
         try { // submit to forum table
             const response = await fetch("http://localhost:5000/forums", {
@@ -27,31 +34,13 @@ function ForumCreationForm() {
             }
 
             const result = await response.json();
-            console.log(`Data was submitted successfully: ${result}`);
+            console.log(`Data was submitted successfully: ${forumData}`);
 
         } catch (error) {
             console.log(`Data was submitted unsuccessfully: ${error}`);
         }
 
-        // try { // submit to forum settings table
-        //     const response = await fetch("http://localhost:5000/forumsettings", {
-        //         method: "POST",
-        //         headers: {
-        //         "Content-Type": "application/json"
-        //         },
-        //         body: JSON.stringify(settingsData),
-        //     });
-
-        //     if (!response.ok) {
-        //         throw new Error("Network response error");
-        //     }
-
-        //     const result = await response.json();
-        //     console.log(`Data was submitted successfully: ${result}`);
-
-        // } catch (error) {
-        //     console.log(`Data was submitted unsuccessfully: ${error}`);
-        // }
+        window.location.reload(); // reload window to show that forum has been populated
     }
 
     return (
