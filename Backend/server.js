@@ -103,6 +103,78 @@ app.get("/forumsettings", (req, res) => {
   });
 });
 
+app.post("/forums", (req, res) => {
+  const { forum_id, forum_name, creation_date, member_count, settings_id, tags } = req.body;
+
+  const sql = `
+    INSERT INTO forums (ForumID, ForumName, CreationDate, MemberCount, SettingsID, Tags)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+
+  db.query(sql, [forum_id, forum_name, creation_date, member_count, settings_id, tags], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to create forum" });
+    }
+
+    res.json({ message: "Forum created", id: result.insertId });
+  });
+});
+
+
+app.post("/threads", (req, res) => {
+  const { threads_id, post_id, who_can_post } = req.body;
+
+  const sql = `
+    INSERT INTO threads (ThreadsID, PostID, WhoCanPost)
+    VALUES (?, ?, ?)
+  `;
+
+  db.query(sql, [threads_id, post_id, who_can_post], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to create thread" });
+    }
+
+    res.json({ message: "Thread created", id: result.insertId });
+  });
+});
+
+app.post("/userpins", (req, res) => {
+  const { pin_id, user_id, coordinates, visibility } = req.body;
+
+  const sql = `
+    INSERT INTO threads (ThreadsID, PostID, WhoCanPost)
+    VALUES (?, ?, ?)
+  `;
+
+  db.query(sql, [pin_id, post_id, who_can_post], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to create thread" });
+    }
+
+    res.json({ message: "Thread created", id: result.insertId });
+  });
+});
+
+app.post("/posts", (req, res) => {
+  const { creator, creation_date, status, content, likesdislikes } = req.body;
+
+  const sql = `
+    INSERT INTO posts (Creator, Creation_Date, Status, Replies, Content, likesdislikes )
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+
+  db.query(sql, [creator, creation_date, status, content, likesdislikes], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to create post" });
+    }
+
+    res.json({ message: "post created", id: result.insertId });
+  });
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
