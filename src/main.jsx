@@ -13,11 +13,11 @@ import MapPage from "./components/map_page/MapPage.jsx"
 createRoot(document.getElementById("root")).render(
   <>
     <Header />
-    <LandingPage />
-    {/* <ForumLandingPage /> */}
-    {/* <CategoryLandingPage /> */}
-    {/* <ThreadPage/> */}
-    {/* <MapPage /> */}
+    { <LandingPage />}
+    { <ForumLandingPage /> }
+    {/* { <CategoryLandingPage /> } */}
+    { <ThreadPage/> }
+    {/* <MapPage />  */}
     <Footer />
   </>,
 )

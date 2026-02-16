@@ -6,27 +6,35 @@ import thumbsDownIcon from "../../../../assets/thumbs-down.svg"
 import profile from "../../../../assets/profile.svg"
 
 // feel free to change the attributes im just going for what works best for now
-function ThreadPost({ subject, text, likeCount, dislikeCount, username}) {
+function ThreadPost({ subject, likecount, timemade, dislikecount, text, username}) {
     const [count, setCount] = useState(0)
+    const [like, Upvote] = useState(likecount)
+    const [dislike, Downvote]  = useState(dislikecount)
 
+    function upclicked(){
+         Upvote(like + 1)  
+    }
+    function downclick(){
+        Downvote(dislike + 1)
+    }
   return (
     <>
         <div className="thread-post">
             <div className="post-left">
-                <h1 className="post-subject">{subject}</h1>
+                {/* <h1 className="post-subject">{subject}</h1> */}
                 <p className="post-content">{text}</p>
                 <div className="post-like-dislike-date">
                     <div className="ratings">
                         <div className="rating">
-                            <img src={thumbsUpIcon} alt="" />
-                            <p className="like-count">{likeCount}</p>
+                            <button type="button" id="Like" onClick={upclicked}><img src={thumbsUpIcon} alt="upward arrow" /></button>
+                            <p className="like-count">{like}</p>
                         </div>
                         <div className="rating">
-                            <img src={thumbsDownIcon} alt="" />
-                            <p className="dislike-count">{dislikeCount}</p>
+                            <button type="button" id="Dislike" onClick={downclick}><img src={thumbsDownIcon} alt="downward arrow" /></button>
+                            <p className="dislike-count">{dislike}</p>
                         </div>
                     </div>
-                    <p className="post-creation-day">xx/xx/xxxx</p>
+                    <p className="post-creation-day">{timemade}</p>
                 </div>
             </div>
             <div className="post-right">
@@ -35,16 +43,16 @@ function ThreadPost({ subject, text, likeCount, dislikeCount, username}) {
                         <img src={profile} alt="" className="user-profile" />
                         <div className="user-name-and-type">
                             <h1 className="user-name">{username}</h1>
-                            <h2 className="user-type">User Type</h2>
+                            <h2 className="user-type">User</h2>
                         </div>
                     </div>
                     <div className="user-minor-details">
-                        <p className="forum-join-date">User since: xx/xx/xxxx</p>
+                        {/* <p className="forum-join-date">User since: xx/xx/xxxx</p>
                         <p className="thread-start-count">xxxx Posts</p>
-                        <p className="forum-post-count">xxxx Threads started</p>
+                        <p className="forum-post-count">xxxx Threads started</p> */}
                     </div>
                 </div>
-                <button className="reply-to-post">Reply to Post</button>
+                <button className="reply-to-post" >Reply to Post</button>
             </div>
         </div>
     </>
