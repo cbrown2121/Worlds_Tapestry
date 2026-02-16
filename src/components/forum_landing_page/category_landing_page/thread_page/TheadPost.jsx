@@ -18,7 +18,7 @@ function ThreadPost({ subject, likecount, timemade, dislikecount, text, username
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(this),
+                body: JSON.stringify(tempbody),
             });
 
             if (!response.ok) {

@@ -99,15 +99,9 @@ app.get("/threads", (req, res) => {
 app.post("/forums", (req, res) => {
   const { forum_id, forum_name, creation_date, member_count, tags, search_visibility, join_permissions } = req.body;
 
-<<<<<<< HEAD
-  const sql = `// query to insert forum 
-    INSERT INTO forums (ForumID, ForumName, CreationDate, MemberCount, SettingsID, Tags)
-    VALUES (?, ?, ?, ?, ?, ?)
-=======
   const sql = `
     INSERT INTO forums (ForumID, ForumName, CreationDate, MemberCount, Tags, SearchVisibility, JoinPermissions)
     VALUES (?, ?, ?, ?, ?, ?, ?)
->>>>>>> d689a005f2db23213d6560b74630fc3fc55c5b01
   `;
 
   db.query(sql, [forum_id, forum_name, creation_date, member_count, tags, search_visibility, join_permissions], (err, result) => {
