@@ -11,6 +11,12 @@
   },
   "dependencies": {
     "@react-google-maps/api": "^2.20.8",
+<<<<<<< HEAD
+=======
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+>>>>>>> a7db404c7c0d8c5bb6520191d2d8a4545d1a689c
     "mysql2": "^3.17.1",
     "node": "^25.6.1",
     "react": "^19.2.0",
