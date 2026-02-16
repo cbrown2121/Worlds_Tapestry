@@ -106,7 +106,7 @@ app.get("/forumsettings", (req, res) => {
 app.post("/forums", (req, res) => {
   const { forum_id, forum_name, creation_date, member_count, settings_id, tags } = req.body;
 
-  const sql = `
+  const sql = `// query to insert forum 
     INSERT INTO forums (ForumID, ForumName, CreationDate, MemberCount, SettingsID, Tags)
     VALUES (?, ?, ?, ?, ?, ?)
   `;
@@ -161,12 +161,12 @@ app.post("/userpins", (req, res) => {
 app.post("/posts", (req, res) => {
   const { creator, creation_date, status, content, likesdislikes } = req.body;
 
-  const sql = `
-    INSERT INTO posts (Creator, Creation_Date, Status, Replies, Content, likesdislikes )
-    VALUES (?, ?, ?, ?, ?, ?)
+  const sql = ` // query for posting likes
+    INSERT INTO posts (Creator, Creation_Date, Status, Replies, Content, likes, dislikes, subject )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
-  db.query(sql, [creator, creation_date, status, content, likesdislikes], (err, result) => {
+  db.query(sql, [creator, creation_date, status, replies, content, likes, dislikes, subject], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create post" });
@@ -175,6 +175,28 @@ app.post("/posts", (req, res) => {
     res.json({ message: "post created", id: result.insertId });
   });
 });
+
+app.put("/posts/:id", (req, res) => {
+  const postID = req.params.id;
+  const { creator, creation_date, status, replies, content, likes, dislikes, subject } = req.body;
+
+  const sql = `
+    UPDATE posts
+    SET Creator = ?, Creation_Date = ?, Status = ?, Replies = ?, Content = ?, Likes = ?, Dislikes = ?, Subject = ?
+    WHERE PostID = ?
+  `;
+
+  db.query(sql, [creator, creation_date, status, replies, content, likes, dislikes, subject, postID], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to update post" });
+    }
+
+    res.json({ message: "Post updated" });
+  });
+});
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
