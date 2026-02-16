@@ -6,14 +6,14 @@ import thumbsDownIcon from "../../../../assets/thumbs-down.svg"
 import profile from "../../../../assets/profile.svg"
 
 // feel free to change the attributes im just going for what works best for now
-function ThreadPost({ subject, likecount, timemade, dislikecount, text, username, id }) {
+function ThreadPost({ Subject, likecount, timemade, dislikecount, text, username, id, Replies, Status }) {
     const [count, setCount] = useState(0)
     const [like, Upvote] = useState(likecount)
     const [dislike, Downvote] = useState(dislikecount)
     const likeupdate = async () => {
-        //let tempbody = {Creator : username, Likes: like, Dislikes:dislike, Content:text}
+        let tempbody = {postID: id, creator : username, creation_date : timemade, status: Status, replies: Replies, content : text, likes : like, dislikes : dislike, subject : Subject}
         try { // submit to posts table to update data
-            const response = await fetch("http://localhost:5000/posts", {
+            const response = await fetch("http://localhost:5000/posts/:id", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -34,9 +34,11 @@ function ThreadPost({ subject, likecount, timemade, dislikecount, text, username
     }
     function upclicked() {
         Upvote(like + 1);
+        likeupdate()
     }
     function downclick() {
         Downvote(dislike + 1);
+        likeupdate()
     }
     return (
         <>
@@ -47,11 +49,11 @@ function ThreadPost({ subject, likecount, timemade, dislikecount, text, username
                     <div className="post-like-dislike-date">
                         <div className="ratings">
                             <div className="rating">
-                                <button type="button" id="Like" onClickCapture={upclicked} onClick={likeupdate}><img src={thumbsUpIcon} alt="upward arrow" /></button>
+                                <button type="button" id="Like"  onClick={upclicked}><img src={thumbsUpIcon} alt="upward arrow" /></button>
                                 <p className="like-count">{like}</p>
                             </div>
                             <div className="rating">
-                                <button type="button" id="Dislike" onClickCapture={downclick} onClick={likeupdate}><img src={thumbsDownIcon} alt="downward arrow" /></button>
+                                <button type="button" id="Dislike"  onClick={downclick}><img src={thumbsDownIcon} alt="downward arrow" /></button>
                                 <p className="dislike-count">{dislike}</p>
                             </div>
                         </div>
