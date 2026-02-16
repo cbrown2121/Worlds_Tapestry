@@ -16,24 +16,19 @@ function LandingPage() {
         fetch("http://localhost:5000/forums") // change later to not be on local host
         .then(response => response.json())
         .then(forumList => {
-            fetch("http://localhost:5000/forumsettings") // merge forum and forum settings (or at least put forum visiblity in the forum table) to avoid all this
-            .then(response => response.json())
-            .then(forumPrivacy => {
-                // addForumsToList(forumList, forumPrivacy);
-                setForumList(forumList);
-            }).catch(error => console.error(error));
-
+            addForumsToList(forumList);
+            // window.location.reload();
         }).catch(error => console.error(error));
     }, []);
 
-    const addForumsToList = (forumList, privacyList) => { // this is a mess. sorry
-        console.log(forumList)
-
+    const addForumsToList = (forumList) => { // this is a mess. sorry
         for (let i = forumList.length - 1; 0 <= i; i--) {
-            if (privacyList[i].SearchVisibility == "Hidden") {
+            if (forumList[i].SearchVisibility == "Hidden") {
                 forumList.splice(i, 1); // remove elements from the list that are supposed to be private
             }
         }
+
+        setForumList(forumList.reverse()); // reverse so most recent are on top. best for presenting currently
     }
 
     return (
