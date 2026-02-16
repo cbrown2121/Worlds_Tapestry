@@ -38,9 +38,13 @@
     /* justify-content: space-evenly; */
 }
 
-#forum-creation form #forumName {
-    height: 2rem;
-    font-size: 1rem;
+#forum-creation form #ForumName {
+    height: 3rem;
+    font-size: 1.5rem;
+
+    width: 100%;
+
+    text-align: center;
 } 
 
 #forum-creation form button {
@@ -53,5 +57,5 @@
     font-weight: 500;
 
     height: 3rem;
-    width: 10rem;
+    width: 100%;
 } 

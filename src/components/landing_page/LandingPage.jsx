@@ -19,7 +19,7 @@ function LandingPage() {
             fetch("http://localhost:5000/forumsettings") // merge forum and forum settings (or at least put forum visiblity in the forum table) to avoid all this
             .then(response => response.json())
             .then(forumPrivacy => {
-                addForumsToList(forumList, forumPrivacy);
+                // addForumsToList(forumList, forumPrivacy);
                 setForumList(forumList);
             }).catch(error => console.error(error));
 
