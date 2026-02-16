@@ -133,10 +133,10 @@ app.post("/threads", (req, res) => {
   db.query(sql, [threads_id, post_id, who_can_post], (err, result) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: "Failed to create forum" });
+      return res.status(500).json({ error: "Failed to create thread" });
     }
 
-    res.json({ message: "Forum created", id: result.insertId });
+    res.json({ message: "Thread created", id: result.insertId });
   });
 });
 
