@@ -11,9 +11,11 @@ function ThreadPost({ Subject, likecount, timemade, dislikecount, text, username
     const [like, Upvote] = useState(likecount)
     const [dislike, Downvote] = useState(dislikecount)
 
-    const likeupdate = async (newLikeCount, newDislikeCount) => {
-        let tempbody = { postID: id, likes : newLikeCount, dislikes : newDislikeCount }
-        
+    const likeupdate = async () => {
+        let newlike = like
+        let newdis = dislike
+        let tempbody = { postID: id, likes: newlike, dislikes: newdis }
+
         try { // submit to posts table to update data
             const response = await fetch("http://localhost:5000/posts/update-like-dislike", {
                 method: "PUT",
@@ -38,13 +40,12 @@ function ThreadPost({ Subject, likecount, timemade, dislikecount, text, username
 
     const upclicked = () => {
         Upvote(like + 1);
-        likeupdate(like + 1, dislike);
     }
 
     const downclick = () => {
         Downvote(dislike + 1);
-        likeupdate(like, dislike + 1,);
     }
+
 
     return (
         <>
@@ -55,11 +56,11 @@ function ThreadPost({ Subject, likecount, timemade, dislikecount, text, username
                     <div className="post-like-dislike-date">
                         <div className="ratings">
                             <div className="rating">
-                                <button type="button" id="Like"  onClick={upclicked}><img src={thumbsUpIcon} alt="upward arrow" /></button>
+                                <button type="button" id="Like" onClickCapture={upclicked} onClick={likeupdate}><img src={thumbsUpIcon} alt="upward arrow" /></button>
                                 <p className="like-count">{like}</p>
                             </div>
                             <div className="rating">
-                                <button type="button" id="Dislike"  onClick={downclick}><img src={thumbsDownIcon} alt="downward arrow" /></button>
+                                <button type="button" id="Dislike" onClickCapture={downclick} onClick={likeupdate}><img src={thumbsDownIcon} alt="downward arrow" /></button>
                                 <p className="dislike-count">{dislike}</p>
                             </div>
                         </div>
