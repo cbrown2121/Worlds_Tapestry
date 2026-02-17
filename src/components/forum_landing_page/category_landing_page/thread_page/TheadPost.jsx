@@ -10,10 +10,12 @@ function ThreadPost({ Subject, likecount, timemade, dislikecount, text, username
     const [count, setCount] = useState(0)
     const [like, Upvote] = useState(likecount)
     const [dislike, Downvote] = useState(dislikecount)
-    const likeupdate = async () => {
-        let tempbody = {postID: id, creator : username, creation_date : timemade, status: Status, replies: Replies, content : text, likes : like, dislikes : dislike, subject : Subject}
+
+    const likeupdate = async (newLikeCount, newDislikeCount) => {
+        let tempbody = { postID: id, likes : newLikeCount, dislikes : newDislikeCount }
+        
         try { // submit to posts table to update data
-            const response = await fetch("http://localhost:5000/posts/:id", {
+            const response = await fetch("http://localhost:5000/posts/update-like-dislike", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -26,20 +28,24 @@ function ThreadPost({ Subject, likecount, timemade, dislikecount, text, username
             }
 
             const result = await response.json();
+            console.log(tempbody)
             console.log(`Data was submitted successfully: ${result}`);
 
         } catch (error) {
             console.log(`Data was submitted unsuccessfully: ${error}`);
         }
     }
-    function upclicked() {
+
+    const upclicked = () => {
         Upvote(like + 1);
-        likeupdate()
+        likeupdate(like + 1, dislike);
     }
-    function downclick() {
+
+    const downclick = () => {
         Downvote(dislike + 1);
-        likeupdate()
+        likeupdate(like, dislike + 1,);
     }
+
     return (
         <>
             <div className="thread-post">

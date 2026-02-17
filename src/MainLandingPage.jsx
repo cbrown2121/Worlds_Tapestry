@@ -14,10 +14,10 @@ function MainLandingPage() {
     return (
         <>
             <Header />
-            <LandingPage />
+            {/* <LandingPage /> */}
             {/* <ForumLandingPage /> */}
             {/* <CategoryLandingPage /> */}
-            {/* <ThreadPage/> */}
+            <ThreadPage/>
             {/* <MapPage /> */}
             <Footer />
         </>

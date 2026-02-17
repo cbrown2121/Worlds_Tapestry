@@ -169,17 +169,18 @@ app.post("/posts", (req, res) => {
   });
 });
 
-app.put("/posts/:id", (req, res) => {
-  const postID = req.params.id;
-  const { creator, creation_date, status, replies, content, likes, dislikes, subject } = req.body;
+app.put("/posts/update-like-dislike", (req, res) => {
+  const { postID, likes, dislikes } = req.body;
 
   const sql = `
     UPDATE posts
-    SET Creator = ?, Creation_Date = ?, Status = ?, Replies = ?, Content = ?, Likes = ?, Dislikes = ?, Subject = ?
+    SET likes = ?, dislikes = ?
     WHERE PostID = ?
   `;
 
-  db.query(sql, [creator, creation_date, status, replies, content, likes, dislikes, subject, postID], (err, result) => {
+  console.log(req.body)
+
+  db.query(sql, [likes, dislikes, postID], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to update post" });
@@ -188,8 +189,6 @@ app.put("/posts/:id", (req, res) => {
     res.json({ message: "Post updated" });
   });
 });
-
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

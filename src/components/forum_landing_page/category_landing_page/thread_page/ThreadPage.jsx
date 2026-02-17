@@ -12,11 +12,6 @@ function ThreadPage() {
                 setThread(data)
             }).catch(error => console.error(error));
         }, []);
-    // change default keys later
-    // let postExampleOne = { subject: "New Post", text: "Hello there I am a new user you all suck.", likecount: 5, dislikecount: 0, username: "username"}
-    // let postExampleTwo = { subject: "Re: New Post", text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex magni perspiciatis dolorum, dolorem at, ducimus nostrum et ullam, qui nobis nihil sapiente dolor adipisci aut dignissimos! Animi odio ipsa cum. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugit, itaque. Sit earum necessitatibus mollitia unde est fuga omnis accusantium porro eaque voluptate, exercitationem modi officia illo facilis natus voluptatem doloribus.", likecount: 12, dislikecount: 5, username: "username"}
-    // let postExampleThree = { subject: "Re: New Post", text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex magni perspiciatis dolorum, dolorem at, ducimus nostrum et ullam, qui nobis nihil sapiente dolor adipisci aut dignissimos! Animi odio ipsa cum. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugit, itaque. Sit earum necessitatibus mollitia unde est fuga omnis accusantium porro eaque voluptate, exercitationem modi officia illo facilis natus voluptatem doloribus.", likecount: 3, dislikecount: 21, username: "username"}
-    // let postExampleFour = { subject: "Re: Re: New Post", text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex magni perspiciatis dolorum, dolorem at, ducimus nostrum et ullam, qui nobis nihil sapiente dolor adipisci aut dignissimos! Animi odio ipsa cum. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugit, itaque. Sit earum necessitatibus mollitia unde est fuga omnis accusantium porro eaque voluptate, exercitationem modi officia illo facilis natus voluptatem doloribus.", likecount: 80, dislikecount: 9, username: "username"}
 
   return (
     <>
