@@ -1,5 +1,5 @@
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 export default function MapPage() {
   const { isLoaded } = useJsApiLoader({
@@ -7,10 +7,46 @@ export default function MapPage() {
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_KEY,
   });
 
-  const center = useMemo(() => ({
-    lat: 42.6806,
-    lng: -83.1338,
-  }), []);
+  const [center, setCenter] = useState({
+    lat: 0,
+    lng: 0
+  });
+
+  const [locations, setLocations] = useState([]);
+
+  const getIndex = (locationName, locationList) => {
+    for (let i = 0; i < locationList.length; i++) {
+      if (locationList[i].LocationName == locationName) {
+        return i;
+      }
+    }
+  }
+
+  useEffect(() => {
+      fetch("http://localhost:5000/location")
+      .then(response => response.json())
+      .then(locationList => {
+        let index = getIndex("Oakland University", locationList);
+        setLocations(locationList);
+        setCenter({
+          lat: parseFloat(locationList[index].Latitude),
+          lng: parseFloat(locationList[index].Longitute)
+        });
+      }).catch(error => console.error(error));
+  }, []);
+
+  const updateMap = (locationName) => { // make this more robust later and have it use the react states
+    fetch("http://localhost:5000/location")
+      .then(response => response.json())
+      .then(locationList => {
+        let index = getIndex(locationName, locationList);
+        setLocations(locationList);
+        setCenter({
+          lat: parseFloat(locationList[index].Latitude),
+          lng: parseFloat(locationList[index].Longitute)
+        });
+    }).catch(error => console.error(error));
+  }
 
   const [userPins, setUserPins] = useState([]);
   const [menuPosition, setMenuPosition] = useState(null);
@@ -84,6 +120,10 @@ export default function MapPage() {
           <Marker key={index} position={pin} />
         ))}
       </GoogleMap>
+
+        <button onClick={() => updateMap("Oakland University")} >Oakland</button>
+        <button onClick={() => updateMap("Eiffel Tower")} >Eiffel Tower</button>
+        <button onClick={() => updateMap("Mackinac Bridge")} ></button>
     </div>
   );
 }

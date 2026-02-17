@@ -13,15 +13,14 @@ function LandingPage() {
     const [forumList, setForumList] = useState([])
 
     useEffect(() => {
-        fetch("http://localhost:5000/forums") // change later to not be on local host
+        fetch("http://localhost:5000/forums")
         .then(response => response.json())
         .then(forumList => {
             addForumsToList(forumList);
-            // window.location.reload();
         }).catch(error => console.error(error));
     }, []);
 
-    const addForumsToList = (forumList) => { // this is a mess. sorry
+    const addForumsToList = (forumList) => {
         for (let i = forumList.length - 1; 0 <= i; i--) {
             if (forumList[i].SearchVisibility == "Hidden") {
                 forumList.splice(i, 1); // remove elements from the list that are supposed to be private

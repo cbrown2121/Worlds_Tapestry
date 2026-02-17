@@ -178,8 +178,6 @@ app.put("/posts/update-like-dislike", (req, res) => {
     WHERE PostID = ?
   `;
 
-  console.log(req.body)
-
   db.query(sql, [likes, dislikes, postID], (err, result) => {
     if (err) {
       console.error(err);

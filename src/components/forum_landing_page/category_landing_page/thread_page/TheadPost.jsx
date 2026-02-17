@@ -14,7 +14,7 @@ function ThreadPost({ Subject, likecount, timemade, dislikecount, text, username
     const likeupdate = async (newLikeCount, newDislikeCount) => {
         let tempbody = { postID: id, likes : newLikeCount, dislikes : newDislikeCount }
         
-        try { // submit to posts table to update data
+        try { // updating the posts table like and dislike count
             const response = await fetch("http://localhost:5000/posts/update-like-dislike", {
                 method: "PUT",
                 headers: {
