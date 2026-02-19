@@ -1,5 +1,5 @@
 import { useState } from "react"
-import logo from "../assets/logo_letters.png"
+import logo from "../assets/logo_letters_framed.png"
 import "./Footer.css"
 
 function Footer() {
@@ -15,7 +15,8 @@ function Footer() {
           
 
           <a href="" className="footer-link" id="about-us">About Us</a>
-          <a href="" className="footer-link" id="about-us">Mission</a>
+          <a href="" className="footer-link" id="about-us">Guidelines</a>
+          <a href="" className="footer-link" id="about-us">FAQs</a>
           <a href="" className="footer-link" id="about-us">Report</a>
         </div>
 

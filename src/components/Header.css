@@ -3,7 +3,8 @@
     align-items: center;
     justify-content: space-between;
 
-    padding: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
 
     height: 5rem;
     background: var(--secondary);

@@ -183,7 +183,6 @@ app.post("/posts", (req, res) => {
   });
 });
 
-<<<<<<< HEAD
 // POST location
 app.post("/location", (req, res) => {
   const { location_id, location_name, reviews, status, latitude, longitute } = req.body;
@@ -269,10 +268,6 @@ app.post("/users", (req, res) => {
 app.put("/posts/:id", (req, res) => {
   const postID = req.params.id;
   const { creator, creation_date, status, replies, content, likes, dislikes, subject } = req.body;
-=======
-app.put("/posts/update-like-dislike", (req, res) => {
-  const { postID, likes, dislikes } = req.body;
->>>>>>> 46e9bd9f2fe59b8e4a18c16a2ee800973201380c
 
   const sql = `
     UPDATE posts
