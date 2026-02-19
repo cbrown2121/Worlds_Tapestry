@@ -6,14 +6,18 @@ import thumbsDownIcon from "../../../../assets/thumbs-down.svg"
 import profile from "../../../../assets/profile.svg"
 
 // feel free to change the attributes im just going for what works best for now
-function ThreadPost({ subject, likecount, timemade, dislikecount, text, username, id }) {
+function ThreadPost({ Subject, likecount, timemade, dislikecount, text, username, id, Replies, Status }) {
     const [count, setCount] = useState(0)
     const [like, Upvote] = useState(likecount)
     const [dislike, Downvote] = useState(dislikecount)
+
     const likeupdate = async () => {
-        //let tempbody = {Creator : username, Likes: like, Dislikes:dislike, Content:text}
+        let newlike = like
+        let newdis = dislike
+        let tempbody = { postID: id, likes: newlike, dislikes: newdis }
+
         try { // submit to posts table to update data
-            const response = await fetch("http://localhost:5000/posts", {
+            const response = await fetch("http://localhost:5000/posts/update-like-dislike", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -26,18 +30,23 @@ function ThreadPost({ subject, likecount, timemade, dislikecount, text, username
             }
 
             const result = await response.json();
+            console.log(tempbody)
             console.log(`Data was submitted successfully: ${result}`);
 
         } catch (error) {
             console.log(`Data was submitted unsuccessfully: ${error}`);
         }
     }
-    function upclicked() {
+
+    const upclicked = () => {
         Upvote(like + 1);
     }
-    function downclick() {
+
+    const downclick = () => {
         Downvote(dislike + 1);
     }
+
+
     return (
         <>
             <div className="thread-post">

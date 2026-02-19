@@ -17,8 +17,8 @@ function MainLandingPage() {
             {/* <LandingPage /> */}
             {/* <ForumLandingPage /> */}
             {/* <CategoryLandingPage /> */}
-            {/* <ThreadPage/> */}
-            <MapPage />
+            <ThreadPage/>
+            {/* <MapPage /> */}
             <Footer />
         </>
     )
