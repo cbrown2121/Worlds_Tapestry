@@ -1,34 +1,39 @@
-import { useState, useEffect } from "react"
-import "./ForumLandingPage.css"
-import CategoryTab from "./CategoryTab"
-import ForumSection from "./ForumSection"
-import ForumTrendingTab from "./ForumTrendingTab"
-import defaultIcon from "../../assets/commmunity-default-icon.svg"
+import { useState, useEffect } from "react";
+import "./ForumLandingPage.css";
+import CategoryTab from "./CategoryTab";
+import ForumSection from "./ForumSection";
+import ForumTrendingTab from "./ForumTrendingTab";
+import defaultIcon from "../../assets/commmunity-default-icon.svg";
 
-function ForumLandingPage() {
-    const [count, setCount] = useState(0)
+function ForumLandingPage( forumID ) {
+    const [forumName, setForumName] = useState(null)
 
-//   default data
+    useEffect(() => {
+        fetch(`http://localhost:5000/forums/${forumID.forumID}`)
+        .then(response => response.json())
+        .then(forum => {
+            setForumName(forum[0].ForumName); // change to be all data and also get the category data
+        }).catch(error => console.error(error));
+    }, []);
+
     let pinnedOne = { title: "Annoucments", tags: ["tag1", "tag2"], threadCount: "23", postCount: "196", mostRecent: "1 Day Ago"};
     let pinnedTwo = { title: "FAQ", tags: ["tag1", "tag2", "tag3"], threadCount: "1", postCount: "1", mostRecent: "92 Days Ago"};
     let categoryOne = { title: "Category 1", tags: ["tag1", "tag2"], threadCount: "168", postCount: "12,687", mostRecent: "5 Minutes Ago"};
     let categoryTwo = { title: "Category 2", tags: ["tag1", "tag2", "tag3"], threadCount: "12", postCount: "136", mostRecent: "20 Minutes Ago"};
     let categoryThree = { title: "Category 3", tags: ["tag1", "tag2", "tag3"], threadCount: "1,345", postCount: "62,487", mostRecent: "1 Hour Ago"};
-  
 
-//   replace keys later
   return (
     <>
         <div className="forum-landing-page landing-page">
             <div className="forum-landing-main landing-page-main">
-                <ForumSection title="Pinned Categories" categoryTabsList={[<CategoryTab key={1} {...pinnedOne} />, <CategoryTab key={2} {...pinnedTwo} />]}/>
-                <ForumSection title="Categories" categoryTabsList={[<CategoryTab key={1} {...categoryOne} />, <CategoryTab key={2} {...categoryTwo} />, <CategoryTab key={2} {...categoryThree} />]}/>
+                <ForumSection title="Pinned Categories" categoryTabsList={[<CategoryTab key={6} {...pinnedOne} />, <CategoryTab key={7} {...pinnedTwo} />]}/>
+                <ForumSection title="Categories" categoryTabsList={[<CategoryTab key={5} {...categoryOne} />, <CategoryTab key={8} {...categoryTwo} />, <CategoryTab key={9} {...categoryThree} />]}/>
             </div>
             <div className="forum-landing-side landing-page-side">
                 <div className="forum-information-stats landing-page-information-stats">
                     <img src={defaultIcon} alt="" className="forum-image" />
                     <div className="forum-stats landing-page-stats">
-                        <h2 className="forum-name landing-page-name">Forum</h2>
+                        <h2 className="forum-name landing-page-name">{ forumName }</h2>
                         <h3 className="user-count">13,078</h3>
                         <h3 className="users-online">548</h3>
                         <h3 className="thread-count-stats">8,756</h3>

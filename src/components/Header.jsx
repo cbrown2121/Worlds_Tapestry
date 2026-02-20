@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import logo from "../assets/logo_clear.png"
 import messageIcon from "../assets/message-icon.svg"
 import profileIcon from "../assets/profile.svg"
@@ -15,14 +16,12 @@ function Header( currentPage ) {
     <>
       <div id="header">
         <div id="header-right">
-          {/* Temporary navigation */}
-            <img src={logo} alt="" id="logo" />
-            <h1 id="website-title">World's Tapestry</h1>
-            {/* <button onClick={changePage("LandingPage")} id="LandingPage">Home</button>
-            <button onClick={changePage("ForumLandingPage")} id="ForumLandingPage">Forum Landing</button>
-            <button onClick={changePage("CategoryLandingPage")} id="CategoryLandingPage">Category Landing</button>
-            <button onClick={changePage("ThreadPage")} id="ThreadPage">Thread Page</button>
-            <button onClick={changePage("MapPage")} id="MapPage">Map Page</button> */}
+            <Link className="router-link" to="/">
+              <img src={logo} alt="" id="logo" />
+            </Link>
+            <Link className="router-link" to="/">
+              <h1 id="website-title">World's Tapestry</h1>
+            </Link>
         </div>
         <div id="header-left">
           <SearchBar/>

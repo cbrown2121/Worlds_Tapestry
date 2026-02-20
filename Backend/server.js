@@ -57,6 +57,15 @@ app.get("/forums", (req, res) => {
   });
 });
 
+app.get("/forums/:forumID", (req, res) => {
+  const sql = `SELECT * FROM forums WHERE ForumID = ?`;
+
+  db.query(sql, [req.params.forumID], (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
+});
+
 // GET posts
 app.get("/posts", (req, res) => {
   db.query("SELECT * FROM posts", (err, results) => {

@@ -40,3 +40,8 @@ html, body, #root {
 body {
   overflow-x: hidden;
 }
+
+.router-link {
+  color: inherit;
+  text-decoration: inherit;
+}

@@ -11,6 +11,8 @@
 
     border: 2px solid var(--text);
     border-radius: 0.30rem;
+
+    text-decoration: none;
 }
 
 .community-tab .community-icon {
