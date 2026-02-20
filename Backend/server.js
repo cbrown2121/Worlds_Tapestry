@@ -114,6 +114,16 @@ app.get("/threads", (req, res) => {
   });
 });
 
+// GET categories for a specific forum
+app.get("/categories/:forumID", (req, res) => {
+  const sql = `SELECT * FROM categories WHERE ForumID = ?`;
+
+  db.query(sql, [req.params.forumID], (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
+});
+
 // POST Endpoints
 // POST forums
 app.post("/forums", (req, res) => {
