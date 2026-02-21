@@ -5,20 +5,21 @@ import ForumSection from "./ForumSection";
 import ForumTrendingTab from "./ForumTrendingTab";
 import defaultIcon from "../../assets/commmunity-default-icon.svg";
 
-function ForumLandingPage( forumID ) {
+function ForumLandingPage( props ) {
+    const [forumID, setForumID] = useState(props.forumID)
     const [forumName, setForumName] = useState(null)
     const [pinnedCategories, setPinnedCategories] = useState([]);
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:5000/forums/${forumID.forumID}`)
+        fetch(`http://localhost:5000/forums/${forumID}`)
         .then(response => response.json())
         .then(forum => {
             setForumName(forum[0].ForumName); // change to be all data and also get the category data
         }).catch(error => console.error(error));
 
         
-        fetch(`http://localhost:5000/categories/${forumID.forumID}`)
+        fetch(`http://localhost:5000/categories/${forumID}`)
         .then(response => response.json())
         .then(categoryList => {
             createCategories(categoryList);
@@ -26,28 +27,19 @@ function ForumLandingPage( forumID ) {
 
     }, []);
 
-    // { title: category.CategoryName, tags: ["1", "1"], threadCount: "0", postCount: "0", mostRecent: "NULL Ago"}
-
     const createCategories = (categoriesList) => {
-        console.log(categoriesList)
         for (let i = 0; i < categoriesList.length; i++) {
             let category = categoriesList[i];
             if (category.Pinned == 1) { // category is pinned
-                setPinnedCategories(pinnedCategories => [...pinnedCategories, {key: category.CategoryID, content: { title: category.CategoryName, tags: ["1", "1"], threadCount: "0", postCount: "0", mostRecent: "NULL Ago"}}] ); // change this to be better later. once the database is more accurate we can just pass the database object
+                setPinnedCategories(pinnedCategories => [...pinnedCategories, {key: category.CategoryID, content: { title: category.CategoryName, tags: ["1", "1"], threadCount: "0", postCount: "0", mostRecent: "NULL Ago", categoryID: category.CategoryID, forumID: forumID}}] ); // change this to be better later. once the database is more accurate we can just pass the database object
             } else { // category is pinned
-                setCategories(categories => [...categories, {key: category.CategoryID, content: { title: category.CategoryName, tags: ["1", "1"], threadCount: "0", postCount: "0", mostRecent: "NULL Ago"}}] );
+                setCategories(categories => [...categories, {key: category.CategoryID, content: { title: category.CategoryName, tags: ["1", "1"], threadCount: "0", postCount: "0", mostRecent: "NULL Ago", categoryID: category.CategoryID, forumID: forumID}}] );
             }
         }
     }
 
   return (
     <>
-        {
-            console.log(pinnedCategories)
-        }
-        {
-             console.log(categories)
-        }
         <div className="forum-landing-page landing-page">
             <div className="forum-landing-main landing-page-main">
                 <ForumSection title="Pinned Categories" categoryTabsList=
@@ -57,7 +49,7 @@ function ForumLandingPage( forumID ) {
                 />
                 <ForumSection title="Categories" categoryTabsList=
                     {categories.map((category) => (
-                        <CategoryTab key={category.key} {...category.content} />
+                        <CategoryTab key={category.key} {...category.content}/>
                     ))}
                 />
             </div>

@@ -5,14 +5,12 @@ import { useLocation } from 'react-router-dom';
 
 
 function ForumPage() {
-
     const location = useLocation();
-    const { forumID } = location.state;
 
     return (
         <>
             <Header />
-            <ForumLandingPage forumID={ forumID } /> 
+            <ForumLandingPage forumID={ location.state.forumID } /> 
             <Footer />
         </>
     )

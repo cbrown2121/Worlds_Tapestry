@@ -124,6 +124,26 @@ app.get("/categories/:forumID", (req, res) => {
   });
 });
 
+// GET threads for a specific categories
+app.get("/threads/:categoryID", (req, res) => {
+  const sql = `SELECT * FROM threads WHERE CategoryID = ?`;
+
+  db.query(sql, [req.params.categoryID], (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
+});
+
+// GET posts for specific threads
+app.get("/posts/:threadID", (req, res) => {
+  const sql = `SELECT * FROM posts WHERE ThreadID = ?`;
+
+  db.query(sql, [req.params.threadID], (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
+});
+
 // POST Endpoints
 // POST forums
 app.post("/forums", (req, res) => {
@@ -282,11 +302,12 @@ app.post("/users", (req, res) => {
     res.json({ message: "user created", id: result.insertId });
   });
 });
+
 // PUT Endpoints
-// PUT postID
+// PUT postID 
 app.put("/posts/:id", (req, res) => {
   const postID = req.params.id;
-  const { creator, creation_date, status, replies, content, likes, dislikes, subject } = req.body;
+  const { likes, dislikes } = req.body;
 
   const sql = `
     UPDATE posts

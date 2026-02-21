@@ -1,4 +1,4 @@
-.forum-category-tab {
+.forum-category-tab, .thread-tab {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -13,20 +13,20 @@
     height: 8rem;
 }
 
-.forum-category-tab .category-image {
+.forum-category-tab .category-image, .thread-tab .thread-image {
     height: 5rem;
 }
 
-.forum-category-tab .category-info { /* table */
+.forum-category-tab .category-info, .thread-tab .thread-info { /* table */
     width: 80%;
     table-layout: fixed;
 }
 
-.forum-category-tab .category-info .category-info-details {
+.forum-category-tab .category-info .category-info-details, .thread-tab .thread-info .thread-info-details {
     text-align: center;
 }
 
-.forum-category-tab .category-info .category-info-details td {
+.forum-category-tab .category-info .category-info-details td, .thread-tab .thread-info .thread-info-details td {
     padding: 0.5rem;
     font-size: 1.1rem;
     font-weight: 500;
