@@ -49,6 +49,47 @@ app.get("/users", (req, res) => {
   });
 });
 
+// GET a single user profile
+app.get("/api/users/:id", (req, res) => {
+  const { id } = req.params;
+
+  db.query("SELECT * FROM users WHERE UserID = ?", [id], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Query failed" });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json(results[0]);
+  });
+});
+
+// GET conversation between two users
+app.get("/messages/conversation/:user1-:user2", (req, res) => {
+  const { user1, user2 } = req.params;
+
+  if (!user1 || !user2) {
+    return res.status(400).json({ error: "user1 and user2 are required" });
+  }
+
+  db.query(
+    `SELECT *
+     FROM Messages
+     WHERE (SenderID = ? AND ReceiverID = ?)
+        OR (SenderID = ? AND ReceiverID = ?)
+     ORDER BY SentAt ASC, MessageID ASC`,
+    [user1, user2, user2, user1],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Query failed" });
+      }
+      res.json(results);
+    }
+  );
+});
+
 // GET forums
 app.get("/forums", (req, res) => {
   db.query("SELECT * FROM forums", (err, results) => {
@@ -150,8 +191,8 @@ app.post("/forums", (req, res) => {
   const { forum_id, forum_name, creation_date, member_count, tags, search_visibility, join_permissions } = req.body;
 
   const sql = `// query to insert forum 
-    INSERT INTO forums (ForumID, ForumName, CreationDate, MemberCount, SettingsID, Tags)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO forums (ForumID, ForumName, CreationDate, MemberCount, Tags, SearchVisibility, JoinPermissions)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
   db.query(sql, [forum_id, forum_name, creation_date, member_count, tags, search_visibility, join_permissions], (err, result) => {
@@ -301,6 +342,28 @@ app.post("/users", (req, res) => {
 
     res.json({ message: "user created", id: result.insertId });
   });
+});
+
+// POST a new message
+app.post("/messages", (req, res) => {
+  const { SenderID, ReceiverID, MessageText } = req.body;
+
+  if (!SenderID || !ReceiverID || !MessageText) {
+    return res.status(400).json({ error: "SenderID, ReceiverID, and MessageText are required" });
+  }
+
+  db.query(
+    `INSERT INTO Messages (SenderID, ReceiverID, MessageText, SentAt)
+     VALUES (?, ?, ?, NOW())`,
+    [SenderID, ReceiverID, MessageText],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Insert failed" });
+      }
+      res.json({ ok: true, MessageID: result.insertId });
+    }
+  );
 });
 
 // PUT Endpoints

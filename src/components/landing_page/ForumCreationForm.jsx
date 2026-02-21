@@ -5,8 +5,9 @@ const getNewId = async () => {
     return await fetch("http://localhost:5000/forums") // change later to not be on local host
     .then(response => response.json())
     .then(listOfForums => {
-        let length = listOfForums.length;
-        return listOfForums[length - 1].ForumID + 1;
+        let mostRecentForumID = listOfForums[listOfForums.length - 1].ForumID;
+        let previousForumCode = parseInt(mostRecentForumID.substring(1));
+        return `F${previousForumCode + 1}`;
     }).catch(error => console.error(error));
 }
 
@@ -19,7 +20,7 @@ function ForumCreationForm() {
         const id = await getNewId();
         
         let forumData = { forum_id: id, forum_name: formData.get("ForumName"), creation_date: 2026, member_count: 0, tags: "#", search_visibility: "Viewable", join_permissions: "Anyone"}
-
+        
         try { // submit to forum table
             const response = await fetch("http://localhost:5000/forums", {
                 method: "POST",
