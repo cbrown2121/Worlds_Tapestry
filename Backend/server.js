@@ -366,6 +366,128 @@ app.post("/messages", (req, res) => {
   );
 });
 
+// DELETE Endpoints
+// DELETE forums
+app.delete("/forums/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  const sql = "DELETE FROM forums WHERE ForumID = ?";
+
+  db.query(sql, [id], (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "Forum not found" });
+
+    res.json({ message: "Forum deleted" });
+  });
+});
+
+// DELETE events
+app.delete("/events/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  db.query("DELETE FROM events WHERE EventID = ?", [id], (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "Event not found" });
+
+    res.json({ message: "Event deleted" });
+  });
+});
+
+// DELETE locations
+app.delete("/location/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  db.query("DELETE FROM location WHERE LocationID = ?", [id], (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "Location not found" });
+
+    res.json({ message: "Location deleted" });
+  });
+});
+
+// DELETE Posts
+app.delete("/posts/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  db.query("DELETE FROM posts WHERE PostID = ?", [id], (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "Post not found" });
+
+    res.json({ message: "Post deleted" });
+  });
+});
+
+// DELETE Reports
+app.delete("/reports/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  db.query("DELETE FROM reports WHERE ForumID = ?", [id], (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "Report not found" });
+
+    res.json({ message: "Report deleted" });
+  });
+});
+
+// DELETE Threads
+app.delete("/threads/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  db.query("DELETE FROM threads WHERE ThreadsID = ?", [id], (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "Thread not found" });
+
+    res.json({ message: "Thread deleted" });
+  });
+});
+
+// DELETE UserPins
+app.delete("/userpins/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  db.query("DELETE FROM userpins WHERE PinID = ?", [id], (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "Pin not found" });
+
+    res.json({ message: "User pin deleted" });
+  });
+});
+
+// DELETE Users
+app.delete("/users/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  db.query("DELETE FROM users WHERE UserID = ?", [id], (err, result) => {
+    if (err) {
+      if (err.errno === 1451)
+        return res.status(409).json({
+          message: "Cannot delete user with related records"
+        });
+
+      return res.status(500).json(err);
+    }
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "User not found" });
+
+    res.json({ message: "User deleted" });
+  });
+});
+
 // PUT Endpoints
 // PUT postID 
 app.put("/posts/:id", (req, res) => {
