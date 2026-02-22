@@ -489,7 +489,8 @@ app.delete("/users/:id", (req, res) => {
 });
 
 // PUT Endpoints
-// PUT postID 
+// PUT postID **still needs to update content and status**
+
 app.put("/posts/:id", (req, res) => {
   const postID = req.params.id;
   const { likes, dislikes } = req.body;
@@ -513,4 +514,325 @@ app.put("/posts/:id", (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+});
+
+
+// PATCH forums
+app.patch("/forums/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  // Whitelisted columns
+  const allowedFields = [
+    "ForumName",
+    "Tags",
+    "SearchVisibility",
+    "JoinPermissions"
+  ];
+
+  const updates = [];
+  const values = [];
+
+  for (const key in req.body) {
+    if (allowedFields.includes(key)) {
+      updates.push(`${key} = ?`);
+      values.push(req.body[key]);
+    }
+  }
+
+  if (updates.length === 0) {
+    return res.status(400).json({
+      message: "No valid fields provided for update"
+    });
+  }
+
+  values.push(id);
+
+  const sql = `
+    UPDATE forums
+    SET ${updates.join(", ")}
+    WHERE ForumID = ?
+  `;
+
+  db.query(sql, values, (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Forum not found" });
+    }
+
+    res.json({ message: "Forum updated successfully" });
+  });
+});
+
+// PATCH events
+app.patch("/events/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  // Whitelisted columns
+  const allowedFields = [
+    "LocationID",
+    "EventName",
+    "Reviews",
+    "Status",
+    "Latitude",
+    "Longitude"
+  ];
+
+  const updates = [];
+  const values = [];
+
+  for (const key in req.body) {
+    if (allowedFields.includes(key)) {
+      updates.push(`${key} = ?`);
+      values.push(req.body[key]);
+    }
+  }
+
+  if (updates.length === 0)
+    return res.status(400).json({ message: "No valid fields provided" });
+
+  values.push(id);
+
+  const sql = `
+    UPDATE events
+    SET ${updates.join(", ")}
+    WHERE EventID = ?
+  `;
+
+  db.query(sql, values, (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "Event not found" });
+
+    if (result.changedRows === 0)
+      return res.json({ message: "No changes made" });
+
+    res.json({ message: "Event updated successfully" });
+  });
+});
+
+// PATCH Location
+app.patch("/location/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  // White listed columns
+  const allowedFields = [
+    "LocationName",
+    "Reviews",
+    "Status",
+    "Latitude",
+    "Longitude"
+  ];
+
+  const updates = [];
+  const values = [];
+
+  for (const key in req.body) {
+    if (allowedFields.includes(key)) {
+      updates.push(`${key} = ?`);
+      values.push(req.body[key]);
+    }
+  }
+
+  if (updates.length === 0)
+    return res.status(400).json({ message: "No valid fields provided" });
+
+  values.push(id);
+
+  const sql = `
+    UPDATE location
+    SET ${updates.join(", ")}
+    WHERE LocationID = ?
+  `;
+
+  db.query(sql, values, (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "Location not found" });
+
+    if (result.changedRows === 0)
+      return res.json({ message: "No changes made" });
+
+    res.json({ message: "Location updated successfully" });
+  });
+});
+
+// PATCH Posts
+app.patch("/posts/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  // White listed columns
+  const allowedFields = [
+    "Status",
+    "Replies",
+    "Content",
+    "Subject"
+  ];
+
+  const updates = [];
+  const values = [];
+
+  for (const key in req.body) {
+    if (allowedFields.includes(key)) {
+      updates.push(`${key} = ?`);
+      values.push(req.body[key]);
+    }
+  }
+
+  if (updates.length === 0)
+    return res.status(400).json({ message: "No valid fields provided" });
+
+  values.push(id);
+
+  const sql = `
+    UPDATE posts
+    SET ${updates.join(", ")}
+    WHERE PostID = ?
+  `;
+
+  db.query(sql, values, (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "Post not found" });
+
+    if (result.changedRows === 0)
+      return res.json({ message: "No changes made" });
+
+    res.json({ message: "Post updated successfully" });
+  });
+});
+
+// PATCH Threads
+app.patch("/threads/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  // White listed columns
+  const allowedFields = [
+    "ThreadName",
+    "Locked",
+    "WhoCanPost"
+  ];
+
+  const updates = [];
+  const values = [];
+
+  for (const key in req.body) {
+    if (allowedFields.includes(key)) {
+      updates.push(`${key} = ?`);
+      values.push(req.body[key]);
+    }
+  }
+
+  if (updates.length === 0)
+    return res.status(400).json({ message: "No valid fields provided" });
+
+  values.push(id);
+
+  const sql = `
+    UPDATE threads
+    SET ${updates.join(", ")}
+    WHERE ThreadsID = ?
+  `;
+
+  db.query(sql, values, (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "Thread not found" });
+
+    if (result.changedRows === 0)
+      return res.json({ message: "No changes made" });
+
+    res.json({ message: "Thread updated successfully" });
+  });
+});
+
+// PATCH Reports
+app.patch("/reports/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  // White listed columns
+  const allowedFields = [
+    "IssueType",
+    "Subject"
+  ];
+
+  const updates = [];
+  const values = [];
+
+  for (const key in req.body) {
+    if (allowedFields.includes(key)) {
+      updates.push(`${key} = ?`);
+      values.push(req.body[key]);
+    }
+  }
+
+  if (updates.length === 0)
+    return res.status(400).json({ message: "No valid fields provided" });
+
+  values.push(id);
+
+  const sql = `
+    UPDATE reports
+    SET ${updates.join(", ")}
+    WHERE ReportID = ?
+  `;
+
+  db.query(sql, values, (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "Report not found" });
+
+    if (result.changedRows === 0)
+      return res.json({ message: "No changes made" });
+
+    res.json({ message: "Report updated successfully" });
+  });
+});
+
+app.patch("/users/:id", (req, res) => {
+  const id = req.params.id.trim();
+
+  const allowedFields = [
+    "UserName",
+    "Email",
+    "Role"
+  ];
+
+  const updates = [];
+  const values = [];
+
+  for (const key in req.body) {
+    if (allowedFields.includes(key)) {
+      updates.push(`${key} = ?`);
+      values.push(req.body[key]);
+    }
+  }
+
+  if (updates.length === 0)
+    return res.status(400).json({ message: "No valid fields provided" });
+
+  values.push(id);
+
+  const sql = `
+    UPDATE users
+    SET ${updates.join(", ")}
+    WHERE UserID = ?
+  `;
+
+  db.query(sql, values, (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "User not found" });
+
+    if (result.changedRows === 0)
+      return res.json({ message: "No changes made" });
+
+    res.json({ message: "User updated successfully" });
+  });
 });
