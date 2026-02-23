@@ -2,6 +2,7 @@ import LandingPage from "./components/landing_page/LandingPage.jsx";
 import ForumPage from "./components/forum_landing_page/ForumPage.jsx";
 import CategoryPage from "./components/forum_landing_page/category_landing_page/CategoryPage.jsx";
 import ThreadPage from "./components/forum_landing_page/category_landing_page/thread_page/ThreadPage.jsx";
+import ProfilePage from "./components/profile_page/ProfilePage.jsx";
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
       <BrowserRouter>
         <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/Profile" element={<ProfilePage />} />
             <Route path="/Forum/:forumName" element={<ForumPage />} /> { /* : is used when the URL is a variable. we might be able to make a set up where each forum has its own URL (and thats kinda what im doing right now)- but then we have to restrict forum names to be one of one. */ }
             <Route path="/Forum/:forumName/category/:categoryName" element={<CategoryPage />} />
             <Route path="/Forum/:forumName/category/:categoryName/thread/:threadName" element={<ThreadPage />} />

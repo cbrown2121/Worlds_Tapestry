@@ -50,7 +50,7 @@ app.get("/users", (req, res) => {
 });
 
 // GET a single user profile
-app.get("/api/users/:id", (req, res) => {
+app.get("/users/:id", (req, res) => {
   const { id } = req.params;
 
   db.query("SELECT * FROM users WHERE UserID = ?", [id], (err, results) => {

@@ -26,9 +26,11 @@ function Header( currentPage ) {
         <div id="header-left">
           <SearchBar/>
           <img src={messageIcon} alt="" id="message-icon" />
-          <div id="profile">
-            <img src={profileIcon} alt="" id="profile-icon" />
-          </div>
+          <Link className="router-link" to="/Profile">
+            <div id="profile">
+              <img src={profileIcon} alt="" id="profile-icon" />
+            </div>
+          </Link>
         </div>
       </div>
     </>
