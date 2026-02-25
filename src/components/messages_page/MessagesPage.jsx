@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 export default function MessagesPage() {
-  const user1 = "U100000";   // you (demo)
-  const user2 = "U100001";  // other user (demo)
+  const user1 = "1";   // you (demo)
+  const user2 = "2";  // other user (demo)
 
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
@@ -21,7 +21,7 @@ export default function MessagesPage() {
   const sendMessage = async () => {
     if (!text.trim()) return;
 
-    await fetch("http://localhost:5000/message", {
+    await fetch("http://localhost:5000/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

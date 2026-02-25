@@ -3,11 +3,10 @@ import Header from "../Header.jsx";
 import Footer from "../Footer.jsx";
 import MessagesPage from "../messages_page/MessagesPage.jsx";
 import "./ProfilePage.css"
-
+import ProfileUpdateForm from "./ProfileUpdateForm.jsx";
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
-  const userId = "U100000"; // demo user
-
+  const userId = "1"; // demo user
   useEffect(() => {
     fetch(`http://localhost:5000/users/${userId}`)
       .then((res) => res.json())
@@ -29,6 +28,7 @@ export default function ProfilePage() {
             <p><strong>Role:</strong> {user.Role}</p>
             <p><strong>CreationDate:</strong> {user.CreationDate}</p>
           </div>
+          <ProfileUpdateForm userID = {userId}/>
         <MessagesPage/>
         </div>
       <Footer/> 

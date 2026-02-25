@@ -21,7 +21,7 @@ function ThreadContent(props) {
             <div className="thread-header">
                 <div className="thread-name-count">
                     <h1 className="thread-name">Topic Name</h1>
-                    <h2 className="thread-post-count">10 Posts by 6 users</h2>
+                    <h2 className="thread-post-count">3 Posts by 2 users</h2>
                 </div>
             </div>
             {posts.map((post) => (
