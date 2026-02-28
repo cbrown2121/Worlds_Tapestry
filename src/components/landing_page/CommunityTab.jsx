@@ -27,9 +27,10 @@ function CommunityTab( { communityName, friendCount, threadCount, forumIdentific
             <Link className="router-link" 
                 to={ `/Forum/${ communityName.replace(/[ ]/g, "_") }` } 
                 state={{ 
-                    forumID: forumIdentification // this is how we pass along what forum we are viewing to the forumpage component 
+                    forumID: forumIdentification, // this is how we pass along what forum we are viewing to the forumpage component 
                     // https://dev.to/gaurbprajapati/demystifying-uselocation-in-reactjs-a-beginners-guide-to-navigation-4h6f
                     // https://medium.com/@alexanie_/https-ocxigin-hashnode-dev-uselocation-hook-in-react-router-758a0a711308
+                    forumName: communityName
                 }}
             >
                 <div className="community-tab">

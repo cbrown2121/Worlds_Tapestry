@@ -7,18 +7,12 @@ import defaultIcon from "../../assets/commmunity-default-icon.svg";
 
 function ForumLandingPage( props ) {
     const [forumID, setForumID] = useState(props.forumID)
-    const [forumName, setForumName] = useState(null)
+    const [forumName, setForumName] = useState(props.forumName)
     const [pinnedCategories, setPinnedCategories] = useState([]);
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:5000/forums/${forumID}`)
-        .then(response => response.json())
-        .then(forum => {
-            setForumName(forum[0].ForumName); // change to be all data and also get the category data
-        }).catch(error => console.error(error));
-
-        
+        console.log(`http://localhost:5000/categories/${forumID}`)
         fetch(`http://localhost:5000/categories/${forumID}`)
         .then(response => response.json())
         .then(categoryList => {

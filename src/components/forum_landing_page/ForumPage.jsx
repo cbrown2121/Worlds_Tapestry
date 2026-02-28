@@ -10,7 +10,7 @@ function ForumPage() {
     return (
         <>
             <Header />
-            <ForumLandingPage forumID={ location.state.forumID } /> 
+            <ForumLandingPage forumID={ location.state.forumID } forumName={ location.state.forumName } /> 
             <Footer />
         </>
     )

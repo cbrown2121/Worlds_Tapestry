@@ -32,7 +32,7 @@ app.get("/test-db", (req, res) => {
 // GET Endpoints
 // GET location
 app.get("/location", (req, res) => {
-  db.query("SELECT * FROM location", (err, results) => {
+  db.query("SELECT * FROM Location", (err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Query failed" });
@@ -43,7 +43,7 @@ app.get("/location", (req, res) => {
 
 // GET users
 app.get("/users", (req, res) => {
-  db.query("SELECT * FROM users", (err, results) => {
+  db.query("SELECT * FROM Users", (err, results) => {
     if (err) return res.status(500).json(err);
     res.json(results);
   });
@@ -53,7 +53,7 @@ app.get("/users", (req, res) => {
 app.get("/users/:id", (req, res) => {
   const { id } = req.params;
 
-  db.query("SELECT * FROM users WHERE UserID = ?", [id], (err, results) => {
+  db.query("SELECT * FROM Users WHERE UserID = ?", [id], (err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Query failed" });
@@ -92,14 +92,14 @@ app.get("/messages/conversation/:user1-:user2", (req, res) => {
 
 // GET forums
 app.get("/forums", (req, res) => {
-  db.query("SELECT * FROM forums", (err, results) => {
+  db.query("SELECT * FROM Forums", (err, results) => {
     if (err) return res.status(500).json(err);
     res.json(results);
   });
 });
 
 app.get("/forums/:forumID", (req, res) => {
-  const sql = `SELECT * FROM forums WHERE ForumID = ?`;
+  const sql = `SELECT * FROM Forums WHERE ForumID = ?`;
 
   db.query(sql, [req.params.forumID], (err, result) => {
     if (err) return res.status(500).json(err);
@@ -109,7 +109,7 @@ app.get("/forums/:forumID", (req, res) => {
 
 // GET posts
 app.get("/posts", (req, res) => {
-  db.query("SELECT * FROM posts", (err, results) => {
+  db.query("SELECT * FROM Posts", (err, results) => {
     if (err) return res.status(500).json(err);
     res.json(results);
   });
@@ -117,7 +117,7 @@ app.get("/posts", (req, res) => {
 
 // GET events
 app.get("/events", (req, res) => {
-  db.query("SELECT * FROM events", (err, results) => {
+  db.query("SELECT * FROM Events", (err, results) => {
     if (err) return res.status(500).json(err);
     res.json(results);
   });
@@ -133,7 +133,7 @@ app.get("/Reports", (req, res) => {
 
 // GET userpins
 app.get("/userpins", (req, res) => {
-  db.query("SELECT * FROM userpins", (err, results) => {
+  db.query("SELECT * FROM Userpins", (err, results) => {
     if (err) return res.status(500).json(err);
     res.json(results);
   });
@@ -149,7 +149,7 @@ app.get("/Messages", (req, res) => {
 
 // GET threads
 app.get("/threads", (req, res) => {
-  db.query("SELECT * FROM threads", (err, results) => {
+  db.query("SELECT * FROM Threads", (err, results) => {
     if (err) return res.status(500).json(err);
     res.json(results);
   });
@@ -157,7 +157,7 @@ app.get("/threads", (req, res) => {
 
 // GET categories for a specific forum
 app.get("/categories/:forumID", (req, res) => {
-  const sql = `SELECT * FROM categories WHERE ForumID = ?`;
+  const sql = `SELECT * FROM Categories WHERE ForumID = ?`;
 
   db.query(sql, [req.params.forumID], (err, result) => {
     if (err) return res.status(500).json(err);
@@ -167,7 +167,7 @@ app.get("/categories/:forumID", (req, res) => {
 
 // GET threads for a specific categories
 app.get("/threads/:categoryID", (req, res) => {
-  const sql = `SELECT * FROM threads WHERE CategoryID = ?`;
+  const sql = `SELECT * FROM Threads WHERE CategoryID = ?`;
 
   db.query(sql, [req.params.categoryID], (err, result) => {
     if (err) return res.status(500).json(err);
@@ -177,7 +177,7 @@ app.get("/threads/:categoryID", (req, res) => {
 
 // GET posts for specific threads
 app.get("/posts/:threadID", (req, res) => {
-  const sql = `SELECT * FROM posts WHERE ThreadID = ?`;
+  const sql = `SELECT * FROM Posts WHERE ThreadID = ?`;
 
   db.query(sql, [req.params.threadID], (err, result) => {
     if (err) return res.status(500).json(err);
@@ -191,7 +191,7 @@ app.post("/forums", (req, res) => {
   const { forum_id, forum_name, creation_date, member_count, tags, search_visibility, join_permissions } = req.body;
 
   const sql = `// query to insert forum 
-    INSERT INTO forums (ForumID, ForumName, CreationDate, MemberCount, Tags, SearchVisibility, JoinPermissions)
+    INSERT INTO Forums (ForumID, ForumName, CreationDate, MemberCount, Tags, SearchVisibility, JoinPermissions)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
@@ -210,7 +210,7 @@ app.post("/threads", (req, res) => {
   const { threads_id, post_id, who_can_post } = req.body;
 
   const sql = `
-    INSERT INTO threads (ThreadsID, PostID, WhoCanPost)
+    INSERT INTO Threads (ThreadsID, PostID, WhoCanPost)
     VALUES (?, ?, ?)
   `;
 
@@ -229,7 +229,7 @@ app.post("/userpins", (req, res) => {
   const { pin_id, user_id, coordinates, visibility } = req.body;
 
   const sql = `
-    INSERT INTO threads (ThreadsID, PostID, WhoCanPost)
+    INSERT INTO Threads (ThreadsID, PostID, WhoCanPost)
     VALUES (?, ?, ?)
   `;
 
@@ -249,7 +249,7 @@ app.post("/posts", (req, res) => {
 
   // query for posting likes
   const sql = ` 
-    INSERT INTO posts (Creator, Creation_Date, Status, Replies, Content, likes, dislikes, subject )
+    INSERT INTO Posts (Creator, Creation_Date, Status, Replies, Content, likes, dislikes, subject )
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
@@ -269,7 +269,7 @@ app.post("/location", (req, res) => {
 
   // query for posting locations
   const sql = ` 
-    INSERT INTO location (LocationID, LocationName, Reviews, Status, Latitude, Longitute)
+    INSERT INTO Location (LocationID, LocationName, Reviews, Status, Latitude, Longitute)
     VALUES (?, ?, ?, ?, ?, ?)
   `;
 
@@ -289,7 +289,7 @@ app.post("/events", (req, res) => {
 
   // query for posting events
   const sql = ` 
-    INSERT INTO events (EventID, LocationID, EventName, Reviews, Status, Latitude, Longitude)
+    INSERT INTO Events (EventID, LocationID, EventName, Reviews, Status, Latitude, Longitude)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
@@ -310,7 +310,7 @@ app.post("/reports", (req, res) => {
   // query for posting reports
   // **Currently does not allow for a duplicate forumID**
   const sql = ` 
-    INSERT INTO reports (ForumID, PageLink, IssueType, Subject, FormSubmit)
+    INSERT INTO Reports (ForumID, PageLink, IssueType, Subject, FormSubmit)
     VALUES (?, ?, ?, ?, ?)
   `;
 
@@ -330,7 +330,7 @@ app.post("/users", (req, res) => {
 
   // query for posting users
   const sql = ` 
-    INSERT INTO users (UserID, UserName, Email, CreationDate, Role)
+    INSERT INTO Users (UserID, UserName, Email, CreationDate, Role)
     VALUES (?, ?, ?, ?, ?)
   `;
 
@@ -371,7 +371,7 @@ app.post("/messages", (req, res) => {
 app.delete("/forums/:id", (req, res) => {
   const id = req.params.id.trim();
 
-  const sql = "DELETE FROM forums WHERE ForumID = ?";
+  const sql = "DELETE FROM Forums WHERE ForumID = ?";
 
   db.query(sql, [id], (err, result) => {
     if (err) return res.status(500).json(err);
@@ -387,7 +387,7 @@ app.delete("/forums/:id", (req, res) => {
 app.delete("/events/:id", (req, res) => {
   const id = req.params.id.trim();
 
-  db.query("DELETE FROM events WHERE EventID = ?", [id], (err, result) => {
+  db.query("DELETE FROM Events WHERE EventID = ?", [id], (err, result) => {
     if (err) return res.status(500).json(err);
 
     if (result.affectedRows === 0)
@@ -401,7 +401,7 @@ app.delete("/events/:id", (req, res) => {
 app.delete("/location/:id", (req, res) => {
   const id = req.params.id.trim();
 
-  db.query("DELETE FROM location WHERE LocationID = ?", [id], (err, result) => {
+  db.query("DELETE FROM Location WHERE LocationID = ?", [id], (err, result) => {
     if (err) return res.status(500).json(err);
 
     if (result.affectedRows === 0)
@@ -415,7 +415,7 @@ app.delete("/location/:id", (req, res) => {
 app.delete("/posts/:id", (req, res) => {
   const id = req.params.id.trim();
 
-  db.query("DELETE FROM posts WHERE PostID = ?", [id], (err, result) => {
+  db.query("DELETE FROM Posts WHERE PostID = ?", [id], (err, result) => {
     if (err) return res.status(500).json(err);
 
     if (result.affectedRows === 0)
@@ -429,7 +429,7 @@ app.delete("/posts/:id", (req, res) => {
 app.delete("/reports/:id", (req, res) => {
   const id = req.params.id.trim();
 
-  db.query("DELETE FROM reports WHERE ForumID = ?", [id], (err, result) => {
+  db.query("DELETE FROM Reports WHERE ForumID = ?", [id], (err, result) => {
     if (err) return res.status(500).json(err);
 
     if (result.affectedRows === 0)
@@ -443,7 +443,7 @@ app.delete("/reports/:id", (req, res) => {
 app.delete("/threads/:id", (req, res) => {
   const id = req.params.id.trim();
 
-  db.query("DELETE FROM threads WHERE ThreadsID = ?", [id], (err, result) => {
+  db.query("DELETE FROM Threads WHERE ThreadsID = ?", [id], (err, result) => {
     if (err) return res.status(500).json(err);
 
     if (result.affectedRows === 0)
@@ -457,7 +457,7 @@ app.delete("/threads/:id", (req, res) => {
 app.delete("/userpins/:id", (req, res) => {
   const id = req.params.id.trim();
 
-  db.query("DELETE FROM userpins WHERE PinID = ?", [id], (err, result) => {
+  db.query("DELETE FROM Userpins WHERE PinID = ?", [id], (err, result) => {
     if (err) return res.status(500).json(err);
 
     if (result.affectedRows === 0)
@@ -471,7 +471,7 @@ app.delete("/userpins/:id", (req, res) => {
 app.delete("/users/:id", (req, res) => {
   const id = req.params.id.trim();
 
-  db.query("DELETE FROM users WHERE UserID = ?", [id], (err, result) => {
+  db.query("DELETE FROM Users WHERE UserID = ?", [id], (err, result) => {
     if (err) {
       if (err.errno === 1451)
         return res.status(409).json({
@@ -496,7 +496,7 @@ app.put("/posts/:id", (req, res) => {
   const { likes, dislikes } = req.body;
 
   const sql = `
-    UPDATE posts
+    UPDATE Posts
     SET likes = ?, dislikes = ?
     WHERE PostID = ?
   `;
@@ -548,7 +548,7 @@ app.patch("/forums/:id", (req, res) => {
   values.push(id);
 
   const sql = `
-    UPDATE forums
+    UPDATE Forums
     SET ${updates.join(", ")}
     WHERE ForumID = ?
   `;
@@ -594,7 +594,7 @@ app.patch("/events/:id", (req, res) => {
   values.push(id);
 
   const sql = `
-    UPDATE events
+    UPDATE Events
     SET ${updates.join(", ")}
     WHERE EventID = ?
   `;
@@ -641,7 +641,7 @@ app.patch("/location/:id", (req, res) => {
   values.push(id);
 
   const sql = `
-    UPDATE location
+    UPDATE Location
     SET ${updates.join(", ")}
     WHERE LocationID = ?
   `;
@@ -687,7 +687,7 @@ app.patch("/posts/:id", (req, res) => {
   values.push(id);
 
   const sql = `
-    UPDATE posts
+    UPDATE Posts
     SET ${updates.join(", ")}
     WHERE PostID = ?
   `;
@@ -732,7 +732,7 @@ app.patch("/threads/:id", (req, res) => {
   values.push(id);
 
   const sql = `
-    UPDATE threads
+    UPDATE Threads
     SET ${updates.join(", ")}
     WHERE ThreadsID = ?
   `;
@@ -776,7 +776,7 @@ app.patch("/reports/:id", (req, res) => {
   values.push(id);
 
   const sql = `
-    UPDATE reports
+    UPDATE Reports
     SET ${updates.join(", ")}
     WHERE ReportID = ?
   `;
@@ -819,7 +819,7 @@ app.patch("/users/:id", (req, res) => {
   values.push(id);
 
   const sql = `
-    UPDATE users
+    UPDATE Users
     SET ${updates.join(", ")}
     WHERE UserID = ?
   `;
