@@ -29,7 +29,7 @@ function CategoryLandingPage( props ) {
                 <div className="category-landing-main landing-page-main">
                     <ForumSection title="Threads" categoryTabsList=
                         {threads.map((thread) => (
-                            <ThreadTab key={thread.ThreadsID} {...thread} />
+                            <ThreadTab key={thread.ThreadID} {...thread} />
                         ))}
                     />
                 </div>

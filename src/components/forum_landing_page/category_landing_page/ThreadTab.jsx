@@ -12,7 +12,7 @@ function ThreadTab( props ) {
             <Link className="router-link" 
                     to={ `${ location.pathname }/thread/${props.ThreadName.replace(/[ ]/g, "_")}` }  // change later so this includes the forum name from the previous link
                     state={{ 
-                        threadID: props.ThreadsID
+                        threadID: props.ThreadID
                     }}
             >
                 <div className="thread-tab">
@@ -22,13 +22,11 @@ function ThreadTab( props ) {
                         <tbody className="thread-info-details">
                             <tr>
                                 <td className="thread-name-text">{props.ThreadName}</td>
-                                <td className="thread-thread-count">{0}</td>
-                                <td className="thread-post-count">{0}</td>
+                                <td className="thread-post-count">{props.NumberOfPosts}</td>
                                 <td className="thread-recency-time">{0}</td>
                             </tr>
                             <tr>
                                 <td className="thread-tags-text">#Tag</td>
-                                <td>Threads</td>
                                 <td>Posts/Replies</td>
                                 <td>Most Recent</td>
                             </tr>

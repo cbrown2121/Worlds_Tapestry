@@ -107,6 +107,27 @@ app.get("/forums/:forumID", (req, res) => {
   });
 });
 
+// GET forums that the user is in
+app.get("/usersforums/:userID", (req, res) => {
+  // a forum will only be returned if there is a row in the UsersInForum table where the primary key is the given UserID
+  const sql = `SELECT * FROM Forums forums WHERE EXISTS (SELECT 1 FROM MemberList WHERE ForumID = forums.ForumID AND UserID = ?)`; 
+
+  db.query(sql, [req.params.userID], (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
+});
+
+// check if user is in given forum
+app.get("/forum-membership/:forumID/:userID", (req, res) => {
+  const sql = `SELECT * FROM MemberList WHERE ForumID = ? AND UserID = ?;`; 
+
+  db.query(sql, [req.params.forumID, req.params.userID], (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
+});
+
 // GET posts
 app.get("/posts", (req, res) => {
   db.query("SELECT * FROM Posts", (err, results) => {
@@ -190,7 +211,8 @@ app.get("/posts/:threadID", (req, res) => {
 app.post("/forums", (req, res) => {
   const { forum_id, forum_name, creation_date, member_count, tags, search_visibility, join_permissions } = req.body;
 
-  const sql = `// query to insert forum 
+  // query to insert forum 
+  const sql = `
     INSERT INTO Forums (ForumID, ForumName, CreationDate, MemberCount, Tags, SearchVisibility, JoinPermissions)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
@@ -205,12 +227,30 @@ app.post("/forums", (req, res) => {
   });
 });
 
+app.post("/add-user-to-forum", (req, res) => {
+  const { UserID, ForumID, UserRole } = req.body;
+
+  const sql = `
+    INSERT INTO MemberList (UserID, ForumID, UserRole)
+    VALUES (?, ?, ?)
+  `;
+
+  db.query(sql, [UserID, ForumID, UserRole], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to add user to forum" });
+    }
+
+    res.json({ message: "User membership with forum created", id: result.insertId });
+  });
+});
+
 // POST threads
 app.post("/threads", (req, res) => {
   const { threads_id, post_id, who_can_post } = req.body;
 
   const sql = `
-    INSERT INTO Threads (ThreadsID, PostID, WhoCanPost)
+    INSERT INTO Threads (ThreadID, PostID, WhoCanPost)
     VALUES (?, ?, ?)
   `;
 
@@ -229,7 +269,7 @@ app.post("/userpins", (req, res) => {
   const { pin_id, user_id, coordinates, visibility } = req.body;
 
   const sql = `
-    INSERT INTO Threads (ThreadsID, PostID, WhoCanPost)
+    INSERT INTO Threads (ThreadID, PostID, WhoCanPost)
     VALUES (?, ?, ?)
   `;
 
@@ -383,6 +423,22 @@ app.delete("/forums/:id", (req, res) => {
   });
 });
 
+// remove user forum a forums member list
+app.delete("/remove-user-from-forum", (req, res) => {
+  const { UserID, ForumID } = req.body;
+
+  const sql = "DELETE FROM MemberList WHERE ForumID = ? AND UserID = ?";
+
+  db.query(sql, [ ForumID, UserID ], (err, result) => {
+    if (err) return res.status(500).json(err);
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "The user was not in that forum" });
+
+    res.json({ message: "User removed from forum member list" });
+  });
+});
+
 // DELETE events
 app.delete("/events/:id", (req, res) => {
   const id = req.params.id.trim();
@@ -443,7 +499,7 @@ app.delete("/reports/:id", (req, res) => {
 app.delete("/threads/:id", (req, res) => {
   const id = req.params.id.trim();
 
-  db.query("DELETE FROM Threads WHERE ThreadsID = ?", [id], (err, result) => {
+  db.query("DELETE FROM Threads WHERE ThreadID = ?", [id], (err, result) => {
     if (err) return res.status(500).json(err);
 
     if (result.affectedRows === 0)
@@ -734,7 +790,7 @@ app.patch("/threads/:id", (req, res) => {
   const sql = `
     UPDATE Threads
     SET ${updates.join(", ")}
-    WHERE ThreadsID = ?
+    WHERE ThreadID = ?
   `;
 
   db.query(sql, values, (err, result) => {

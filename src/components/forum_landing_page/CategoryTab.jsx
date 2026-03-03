@@ -9,19 +9,19 @@ function CategoryTab( props ) {
     const location = useLocation();
     let tagsText = "";
 
-    for (let i = 0; i < props.tags.length; i++) {
-        tagsText += `#${props.tags[i]}`;
+    // for (let i = 0; i < props.tags.length; i++) {
+    //     tagsText += `#${props.tags[i]}`;
 
-        (i + 1 < props.tags.length ? tagsText += ", " : null);
-    }
+    //     (i + 1 < props.tags.length ? tagsText += ", " : null);
+    // }
 
     return (
         <>
             <Link className="router-link" 
-                    to={ `${ location.pathname }/category/${ props.title.replace(/[ ]/g, "_") }` }  // change later so this includes the forum name from the previous link
+                    to={ `${ location.pathname }/category/${ props.CategoryName.replace(/[ ]/g, "_") }` }  // change later so this includes the forum name from the previous link
                     state={{ 
-                        forumID: props.forumID,
-                        categoryID: props.categoryID
+                        forumID: props.ForumID,
+                        categoryID: props.CategoryID
                     }}
             >
                 <div className="forum-category-tab">
@@ -30,19 +30,25 @@ function CategoryTab( props ) {
                     <table className="category-info">
                         <tbody className="category-info-details">
                             <tr>
-                                <td className="category-name-text">{props.title}</td>
-                                { props.threadCount != undefined && 
-                                <td className="category-thread-count">{props.threadCount}</td>
-                                }
-                                <td className="category-post-count">{props.postCount}</td>
+                                <td className="category-name-text">{props.CategoryName}</td>
+                                <td className="category-thread-count">{props.NumberOfThreads}</td>
+                                <td className="category-post-count">{props.NumberOfPosts}</td>
                                 <td className="category-recency-time">{props.mostRecent}</td>
                             </tr>
                             <tr>
                                 <td className="category-tags-text">{props.tagsText}</td>
-                                { props.threadCount != undefined && 
+                                { props.NumberOfThreads == 1 && 
+                                <td>Thread</td> // maybe just do an if statement at the start instead of all this.. sorry for the mess for now we can clean up later
+                                }
+                                { props.NumberOfThreads != 1 && 
                                 <td>Threads</td>
                                 } 
+                                { props.NumberOfPosts == 1 && 
+                                <td>Post/Reply</td>
+                                }
+                                { props.NumberOfPosts != 1 && 
                                 <td>Posts/Replies</td>
+                                } 
                                 <td>Most Recent</td>
                             </tr>
                         </tbody>

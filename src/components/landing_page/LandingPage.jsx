@@ -11,9 +11,13 @@ import Footer from "../Footer.jsx";
 
 function LandingPage() {
     const [forumList, setForumList] = useState([])
+    const sampleForumId = 1;
+
+    const requestForAllForums = `http://localhost:5000/forums`; // only for testing purposes
+    const requestForUserForums = `http://localhost:5000/usersforums/${sampleForumId}`; // the route that will be used in the final deployment
 
     useEffect(() => {
-        fetch("http://localhost:5000/forums")
+        fetch(requestForAllForums)
         .then(response => response.json())
         .then(forumList => {
             addForumsToList(forumList);
@@ -53,7 +57,7 @@ function LandingPage() {
                     <div id="landing-right">
                         <div id="my-communities-header">
                             <img id="my-communities-header-icon" src={bookIcon} alt="" />
-                            <h1 id="my-communities-header-text" >Communities</h1>
+                            <h1 id="my-communities-header-text" >Your Communities</h1>
                         </div>
                         
                         <div id="my-communities">

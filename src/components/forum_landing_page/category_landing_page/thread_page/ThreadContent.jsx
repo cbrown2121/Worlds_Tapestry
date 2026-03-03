@@ -6,12 +6,13 @@ function ThreadContent(props) {
     // const [forumID, setForumID] = useState(props.forumID);
     const [threadID, setThreadID] = useState(props.threadID);
     const [posts, setPosts] = useState([]);
-    // const [ThreadList, setThread] = useState([])
+    const [ThreadList, setThread] = useState([])
     useEffect(() => {
             fetch(`http://localhost:5000/posts/${threadID}`) // change later to not be on local host
             .then(response => response.json())
             .then(postList => {
                 setPosts(postList)
+                console.log(`http://localhost:5000/posts/${threadID}`)
             }).catch(error => console.error(error));
         }, []);
 
