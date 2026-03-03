@@ -1,25 +1,14 @@
 import { useState } from "react"
 import "./ForumCreationForm.css"
 
-const getNewId = async () => {
-    return await fetch("http://localhost:5000/forums") // change later to not be on local host
-    .then(response => response.json())
-    .then(listOfForums => {
-        let mostRecentForumID = listOfForums[listOfForums.length - 1].ForumID;
-        let previousForumCode = parseInt(mostRecentForumID.substring(1));
-        return `F${previousForumCode + 1}`;
-    }).catch(error => console.error(error));
-}
-
 function ForumCreationForm() {
+    const sampleUserID = 1;
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
-        const id = await getNewId();
-        
-        let forumData = { forum_id: id, forum_name: formData.get("ForumName"), creation_date: 2026, member_count: 0, tags: "#", search_visibility: "Viewable", join_permissions: "Anyone"}
+        const formObject = { OwnerID: sampleUserID, ForumName: formData.get("ForumName"), SearchVisibility: formData.get("SearchVisibility"), JoinPermissions: formData.get("JoinPermissions"), AllowMaps: formData.get("AllowMaps"), Tags: "#"};
         
         try { // submit to forum table
             const response = await fetch("http://localhost:5000/forums", {
@@ -27,7 +16,7 @@ function ForumCreationForm() {
                 headers: {
                 "Content-Type": "application/json"
                 },
-                body: JSON.stringify(forumData),
+                body: JSON.stringify(formObject),
             });
 
             if (!response.ok) {
@@ -35,7 +24,16 @@ function ForumCreationForm() {
             }
 
             const result = await response.json();
-            console.log(`Data was submitted successfully: ${forumData}`);
+            // console.log(`Data was submitted successfully: ${forumData}`);
+
+            fetch(`http://localhost:5000/add-user-to-forum`, { // set the creator to be the owner. this could be done automatically with sql triggers but i was running into issues
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify({UserID: sampleUserID, ForumID: result.id, UserRole: "Owner"})
+            }).then(response => response.json()).catch(error => console.error(error));
+
 
         } catch (error) {
             console.log(`Data was submitted unsuccessfully: ${error}`);
@@ -58,16 +56,16 @@ function ForumCreationForm() {
                         </div>
                     </div>
 
-                    {/* <div className="form-section">
+                    <div className="form-section">
                         <div className="section-heading">
                             <h2 className="forum-section-header">Forum Visibility</h2>
                         </div>
 
                         <div className="forum-radio-button">
-                            <label htmlFor="searchable">Searchable</label>
-                            <input type="radio" id="searchable" name="searchable" value="searchable" defaultChecked />
+                            <label htmlFor="SearchVisibility">Searchable</label>
+                            <input type="radio" id="SearchVisibility" name="SearchVisibility" value="Searchable" defaultChecked />
                             <label htmlFor="forumSearchSettings">Hidden</label>
-                            <input type="radio" id="searchable" name="searchable" value="hidden" />
+                            <input type="radio" id="SearchVisibility" name="SearchVisibility" value="Hidden" />
                         </div>
                     </div>
                     <div className="form-section">
@@ -76,13 +74,26 @@ function ForumCreationForm() {
                         </div>
 
                         <div className="forum-radio-button">
-                            <label htmlFor="joinPermissions">Anyone</label>
-                            <input type="radio" id="joinPermissions" name="joinPermissions" value="anyone" defaultChecked />
+                            <label htmlFor="JoinPermissions">Anyone</label>
+                            <input type="radio" id="JoinPermissions" name="JoinPermissions" value="Anyone" defaultChecked />
                             <label htmlFor="inviteOnly">Invite Only</label>
-                            <input type="radio" id="joinPermissions" name="joinPermissions" value="inviteOnly"/>
+                            <input type="radio" id="JoinPermissions" name="JoinPermissions" value="Invite Only"/>
                         </div>
                         
-                    </div> */}
+                    </div>
+                    <div className="form-section">
+                        <div className="section-heading">
+                            <h2 className="forum-section-header">Allow Maps</h2>
+                        </div>
+
+                        <div className="forum-radio-button">
+                            <label htmlFor="AllowMaps">Yes</label>
+                            <input type="radio" id="AllowMaps" name="AllowMaps" value="1" />
+                            <label htmlFor="inviteOnly">No</label>
+                            <input type="radio" id="AllowMaps" name="AllowMaps" value="0" defaultChecked/>
+                        </div>
+                        
+                    </div>
                     <button className="create-forum-button" type="submit">Create Forum</button>
                 </form>
                 

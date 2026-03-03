@@ -209,15 +209,17 @@ app.get("/posts/:threadID", (req, res) => {
 // POST Endpoints
 // POST forums
 app.post("/forums", (req, res) => {
-  const { forum_id, forum_name, creation_date, member_count, tags, search_visibility, join_permissions } = req.body;
+  const { ForumName, SearchVisibility, JoinPermissions, AllowMaps, Tags, OwnerID } = req.body;
 
   // query to insert forum 
   const sql = `
-    INSERT INTO Forums (ForumID, ForumName, CreationDate, MemberCount, Tags, SearchVisibility, JoinPermissions)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO Forums (ForumName, SearchVisibility, JoinPermissions, AllowMaps, Tags, OwnerID)
+    VALUES (?, ?, ?, ?, ?, ?)
   `;
 
-  db.query(sql, [forum_id, forum_name, creation_date, member_count, tags, search_visibility, join_permissions], (err, result) => {
+  // datetime- forum id- member count are all generated automatically on mysqls end
+
+  db.query(sql, [ForumName, SearchVisibility, JoinPermissions, AllowMaps, Tags, OwnerID], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create forum" });
@@ -571,7 +573,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
 
 // PATCH forums
 app.patch("/forums/:id", (req, res) => {

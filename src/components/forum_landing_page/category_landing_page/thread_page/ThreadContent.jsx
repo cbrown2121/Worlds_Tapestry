@@ -12,7 +12,6 @@ function ThreadContent(props) {
             .then(response => response.json())
             .then(postList => {
                 setPosts(postList)
-                console.log(`http://localhost:5000/posts/${threadID}`)
             }).catch(error => console.error(error));
         }, []);
 
