@@ -1,5 +1,6 @@
 /* #forum-creation {
-
+    background: var(--background);
+    color: var(--text);
 } */
 
 #forum-creation #forum-creation-title {
@@ -12,6 +13,9 @@
     
     background: var(--light-grey);
     padding: 1rem;
+
+    background: var(--background);
+    color: var(--text);
 }
 
 #forum-creation form .form-section {

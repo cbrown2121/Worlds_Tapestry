@@ -1,36 +1,83 @@
-.forum-category-tab, .thread-tab {
+.forum-category-tab {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    /* justify-content: center; */
+
+    padding: 0 1rem;
+    gap: 1rem;
+
+    height: 10rem;
+    width: 80%;
 
     background: var(--light-grey);
+    border-radius: 1rem;
+}
+
+.forum-category-tab .icon-or-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgb(230, 192, 192);
+    height: 90%;
+    width: 15%;
+
+    border-radius: 1rem;
+}
+
+.forum-category-tab .category-information {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
 
     padding: 1rem;
-    gap: 3rem;
 
-    border: 2px solid var(--text);
-
-    height: 8rem;
+    height: 90%;
 }
 
-.forum-category-tab .category-image, .thread-tab .thread-image {
-    height: 5rem;
+.forum-category-tab .category-information .category-name {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
-.forum-category-tab .category-info, .thread-tab .thread-info { /* table */
-    width: 80%;
-    table-layout: fixed;
+.forum-category-tab .category-information .category-name .category-name-text {
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
-.forum-category-tab .category-info .category-info-details, .thread-tab .thread-info .thread-info-details {
-    text-align: center;
+.forum-category-tab .category-information .category-name .pinned-icon {
+    height: 1.25rem;
 }
 
-.forum-category-tab .category-info .category-info-details td, .thread-tab .thread-info .thread-info-details td {
-    padding: 0.5rem;
-    font-size: 1.1rem;
-    font-weight: 500;
+.forum-category-tab .category-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
-    display: table-cell;
-    width: 2%;
+    gap: 1rem;
+
+    height: 90%;
+    width: 30%;
+}
+
+.forum-category-tab .category-stats .category-stats-numbers {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.forum-category-tab .category-stats .category-stats-numbers .thread-count, .forum-category-tab .category-stats .category-stats-numbers .post-count {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.forum-category-tab .category-stats .category-stats-numbers .thread-count .number-of-threads, .forum-category-tab .category-stats .category-stats-numbers .post-count .number-of-posts {
+    font-size: 1.25rem;
 }

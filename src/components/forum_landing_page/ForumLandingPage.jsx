@@ -8,7 +8,6 @@ import defaultIcon from "../../assets/commmunity-default-icon.svg";
 function ForumLandingPage( props ) {
     const [forumID] = useState(props.forumID)
     const [forumName] = useState(props.forumName)
-    const [pinnedCategories, setPinnedCategories] = useState([]);
     const [categories, setCategories] = useState([]);
 
     const [userRole, setUserRole] = useState(null);
@@ -46,8 +45,8 @@ function ForumLandingPage( props ) {
         for (let i = 0; i < categoriesList.length; i++) {
             let category = categoriesList[i];
             if (category.Pinned == 1) { // category is pinned
-                setPinnedCategories(pinnedCategories => [...pinnedCategories, {...category}] ); // change this to be better later. once the database is more accurate we can just pass the database object
-            } else { // category is pinned
+                setCategories(categories => [{...category}, ...categories] ); // put the category at the front of the list
+            } else { // category is not pinned
                 setCategories(categories => [...categories, {...category}] );
             }
         }
@@ -84,36 +83,37 @@ function ForumLandingPage( props ) {
 
   return (
     <>
-        <div className="forum-landing-page landing-page">
-            <div className="forum-landing-main landing-page-main">
-                <ForumSection title="Pinned Categories" categoryTabsList=
-                    {pinnedCategories.map((pinnedCategory) => (
-                        <CategoryTab key={pinnedCategory.CategoryID} {...pinnedCategory} />
-                    ))}
-                />
+        <div className="forum-landing-page">
+            <div className="forum-landing-main">
                 <ForumSection title="Categories" categoryTabsList=
                     {categories.map((category) => (
                         <CategoryTab key={category.CategoryID} {...category}/>
                     ))}
                 />
             </div>
-            <div className="forum-landing-side landing-page-side">
-                <div className="forum-information-stats landing-page-information-stats">
+            <div className="forum-landing-side">
+                <div className="forum-information">
                     <img src={defaultIcon} alt="" className="forum-image" />
-                    <div className="forum-stats landing-page-stats">
-                        <h2 className="forum-name landing-page-name">{ forumName }</h2>
-                        <h3 className="user-count">13,078</h3>
-                        <h3 className="users-online">548</h3>
-                        <h3 className="thread-count-stats">8,756</h3>
-                        <h3 className="creation-data">xx/xx/xxxx</h3>
+                    <h2 className="forum-name">{ forumName }</h2>
+                </div>
+
+                <button id="forum-join-button" onClick={ joinButtonAction }> {joinButtonText} </button>
+
+                <div className="side-bar-section">
+                    <div className="side-bar-section-title">
+                        <h1>Top Tags</h1>
                     </div>
+                    <div className="side-bar-section-container"></div>
                 </div>
-                <div className="forum-highlights landing-page-highlights">
-                    <button id="forumJoin" onClick={ joinButtonAction }> {joinButtonText} </button>
-                    <ForumTrendingTab trendingTitle="Most Popular Category of the Day" trendingName="Category Name" trendingDetails="564 Posts Today" />
-                    <ForumTrendingTab trendingTitle="Featured Post" trendingName="Post Title" trendingDetails="Details" />
-                    <ForumTrendingTab trendingTitle="Most Post Category of the Day" trendingName="Post Title" trendingDetails="132 Replies" />
-                </div>
+
+                { (userRole == "Admin" || userRole == "Owner") && 
+                    <div className="side-bar-section">
+                        <div className="side-bar-section-title">
+                            <h1>Admin Dash</h1>
+                        </div>
+                        <button id="forum-settings" > Forum Settings </button>
+                    </div>
+                } 
             </div>
         </div>
     </>

@@ -1,19 +1,31 @@
-import { useState } from "react";
-import categoryImage from "../../assets/commmunity-default-icon.svg";
+import { useState, useEffect } from "react";
+import { calculateRecency } from "../../utility.js";
+import pinIcon from "../../assets/pin.svg";
 import { Link } from 'react-router-dom';
 import "./CategoryTab.css";
 import { useLocation } from 'react-router-dom';
 
 // tags should be an array
 function CategoryTab( props ) {
-    const location = useLocation();
-    let tagsText = "";
+    const location = useLocation(); 
+    const [recency, setRecency] = useState(null);
 
-    // for (let i = 0; i < props.tags.length; i++) {
-    //     tagsText += `#${props.tags[i]}`;
+    console.log(props)
 
-    //     (i + 1 < props.tags.length ? tagsText += ", " : null);
-    // }
+    useEffect(() => {
+        setRecency(calculateRecency(new Date(), new Date(props.MostRecentActivity)))
+    },[]);
+
+    let categoryName = <div className="category-name"><p className="category-name-text">{props.CategoryName}</p></div>;;
+
+    if (props.Pinned == 1) {
+        categoryName = 
+                        <div className="category-name">
+                            <p className="category-name-text">{props.CategoryName}</p> 
+                            
+                            <img src={pinIcon} alt="pin" className="pinned-icon" /> 
+                        </div>;
+    }
 
     return (
         <>
@@ -24,35 +36,46 @@ function CategoryTab( props ) {
                         categoryID: props.CategoryID
                     }}
             >
-                <div className="forum-category-tab">
-                    <img src={categoryImage} alt="" className="category-image" />
 
-                    <table className="category-info">
-                        <tbody className="category-info-details">
-                            <tr>
-                                <td className="category-name-text">{props.CategoryName}</td>
-                                <td className="category-thread-count">{props.NumberOfThreads}</td>
-                                <td className="category-post-count">{props.NumberOfPosts}</td>
-                                <td className="category-recency-time">{props.mostRecent}</td>
-                            </tr>
-                            <tr>
-                                <td className="category-tags-text">{props.tagsText}</td>
-                                { props.NumberOfThreads == 1 && 
-                                <td>Thread</td> // maybe just do an if statement at the start instead of all this.. sorry for the mess for now we can clean up later
-                                }
-                                { props.NumberOfThreads != 1 && 
-                                <td>Threads</td>
-                                } 
-                                { props.NumberOfPosts == 1 && 
-                                <td>Post/Reply</td>
-                                }
-                                { props.NumberOfPosts != 1 && 
-                                <td>Posts/Replies</td>
-                                } 
-                                <td>Most Recent</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div className="forum-category-tab">
+                    <div className="icon-or-image"></div>
+
+                    <div className="category-information">
+                        {categoryName}
+                        <div className="category-description">
+                            <p className="category-description-text">{props.Description}</p>
+                        </div>
+                    </div>
+
+                    <div className="category-stats">    
+                            <div className="category-stats-numbers">
+                                <div className="thread-count">
+                                    <p className="number-of-threads">{props.NumberOfThreads}</p>
+                                    <div className="thread-count-label">
+                                        { props.NumberOfThreads != 1 && 
+                                        <>Threads</>
+                                        } 
+
+                                        { props.NumberOfThreads == 1 && 
+                                        <>Thread</>
+                                        } 
+                                    </div>
+                                </div>
+                                <div className="post-count">
+                                    <p className="number-of-posts">{props.NumberOfPosts}</p>
+                                        { props.NumberOfPosts != 1 && 
+                                        <>Posts</>
+                                        } 
+
+                                        { props.NumberOfPosts == 1 && 
+                                        <>Post</>
+                                        } 
+                                </div>
+                            </div>
+                            <div className="most-recent-activity">
+                                <p className="most-recent">Recent Activity {recency}</p>
+                            </div>
+                    </div>
                 </div>
             </Link>
         </>
