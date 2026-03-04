@@ -7,6 +7,7 @@ import ProfileUpdateForm from "./ProfileUpdateForm.jsx";
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
   const userId = "1"; // demo user
+  
   useEffect(() => {
     fetch(`http://localhost:5000/users/${userId}`)
       .then((res) => res.json())

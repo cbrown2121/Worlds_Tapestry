@@ -266,6 +266,25 @@ app.post("/threads", (req, res) => {
   });
 });
 
+// POST categories
+app.post("/category", (req, res) => {
+  const { CategoryName, CategoryDescription, Pinned, ForumID } = req.body;
+
+  const sql = `
+    INSERT INTO Categories (CategoryName, Description, Pinned, ForumID)
+    VALUES (?, ?, ?, ?)
+  `;
+
+  db.query(sql, [CategoryName, CategoryDescription, Pinned, ForumID], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to create category" });
+    }
+
+    res.json({ message: "CategoryID created", id: result.insertId });
+  });
+});
+
 // POST userpins
 app.post("/userpins", (req, res) => {
   const { pin_id, user_id, coordinates, visibility } = req.body;

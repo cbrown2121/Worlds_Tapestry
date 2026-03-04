@@ -25,23 +25,28 @@ function CategoryLandingPage( props ) {
 
     return (
         <>
-            <div className="category-landing-page landing-page">
-                <div className="category-landing-main landing-page-main">
+            <div className="forum-landing-page">
+                <div className="forum-landing-main">
                     <ForumSection title="Threads" categoryTabsList=
                         {threads.map((thread) => (
                             <ThreadTab key={thread.ThreadID} {...thread} />
                         ))}
                     />
                 </div>
-                <div className="category-landing-side landing-page-side">
-                    <div className="category-information-stats landing-page-information-stats">
+                <div className="forum-landing-side">
+                    <div className="forum-information">
                         <img src={defaultIcon} alt="" className="forum-image" />
-                        <div className="category-stats landing-page-stats">
-                            <h2 className="category-name">Category Name</h2>
-                            <p>This text states the rules and purpose of the category</p>
-                        </div>
+                        <h2 className="forum-name">{props.categoryName}</h2>
                     </div>
-                    <button onClick={ createThread } className="create-thread">Create a Thread</button>
+
+                    {/* <button id="forum-join-button" > Hi </button>
+
+                    <div className="side-bar-section">
+                        <div className="side-bar-section-title">
+                            <h1>Top Tags</h1>
+                        </div>
+                        <div className="side-bar-section-container"></div>
+                    </div> */}
                 </div>
             </div>
         </>

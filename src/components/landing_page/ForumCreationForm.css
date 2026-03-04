@@ -42,7 +42,7 @@
     /* justify-content: space-evenly; */
 }
 
-#forum-creation form #ForumName {
+#forum-creation form #ForumName, #forum-creation form #CategoryName, #forum-creation form #CategoryDescription {
     height: 3rem;
     font-size: 1.5rem;
 

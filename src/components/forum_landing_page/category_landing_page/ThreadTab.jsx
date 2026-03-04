@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import categoryImage from "../../../assets/commmunity-default-icon.svg";
+import { calculateRecency } from "../../../utility.js";
 import { Link } from 'react-router-dom';
 // import "../";
 import { useLocation } from 'react-router-dom';
 
 function ThreadTab( props ) {
+    console.log(props)
     const location = useLocation();
+    const [recency, setRecency] = useState(null);
+
+    useEffect(() => {
+        setRecency(calculateRecency(props.MostRecentPost))
+    },[]);
 
     return (
         <>
@@ -15,23 +22,36 @@ function ThreadTab( props ) {
                         threadID: props.ThreadID
                     }}
             >
-                <div className="thread-tab">
-                    <img src={categoryImage} alt="" className="thread-image" />
 
-                    <table className="thread-info">
-                        <tbody className="thread-info-details">
-                            <tr>
-                                <td className="thread-name-text">{props.ThreadName}</td>
-                                <td className="thread-post-count">{props.NumberOfPosts}</td>
-                                <td className="thread-recency-time">{0}</td>
-                            </tr>
-                            <tr>
-                                <td className="thread-tags-text">#Tag</td>
-                                <td>Posts/Replies</td>
-                                <td>Most Recent</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div className="tab thread-tab">
+                    <div className="icon-or-image"></div>
+
+                    <div className="tab-information">
+                        <div className="tab-name-text">
+                            {props.ThreadName}
+                        </div>
+                        {/* <div className="category-description">
+                            <p className="category-description-text">{props.Description}</p>
+                        </div> */}
+                    </div>
+
+                    <div className="tab-stats">    
+                            <div className="tab-stats-numbers">
+                                <div className="post-count">
+                                    <p className="number-of-posts">{props.NumberOfPosts}</p>
+                                        { props.NumberOfPosts != 1 && 
+                                        <>Posts</>
+                                        } 
+
+                                        { props.NumberOfPosts == 1 && 
+                                        <>Post</>
+                                        } 
+                                </div>
+                            </div>
+                            <div className="most-recent-activity">
+                                <p className="most-recent">Recent Activity {recency}</p>
+                            </div>
+                    </div>
                 </div>
             </Link>
         </>

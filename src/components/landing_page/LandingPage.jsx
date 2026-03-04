@@ -20,19 +20,9 @@ function LandingPage() {
         fetch(requestForAllForums)
         .then(response => response.json())
         .then(forumList => {
-            addForumsToList(forumList);
+            setForumList(forumList.reverse());
         }).catch(error => console.error(error));
     }, []);
-
-    const addForumsToList = (forumList) => {
-        for (let i = forumList.length - 1; 0 <= i; i--) {
-            if (forumList[i].SearchVisibility == "Hidden") {
-                forumList.splice(i, 1); // remove elements from the list that are supposed to be private
-            }
-        }
-
-        setForumList(forumList.reverse()); // reverse so most recent are on top. best for presenting currently
-    }
 
     return (
         <>
@@ -40,10 +30,10 @@ function LandingPage() {
                 <div id="landing-page">
                     <div id="landing-left">
                         <ForumCreationForum/> 
-                        <div id="trending-column">
+                        {/* <div id="trending-column">
                             <TrendingTab trendingTitle="Popular Community of the Day" trendingCommunity="Community Name" trendingDetails="details..."/>
                             <TrendingTab trendingTitle="Popular Thread of the Day" trendingCommunity="Community Name" trendingDetails="details..."/>
-                        </div>
+                        </div> */}
                         {/* <div id="map">
                             <div id="my-map-heading">
                                 <img src={compassIcon} alt="" id="my-map-icon" />
@@ -62,7 +52,7 @@ function LandingPage() {
                         
                         <div id="my-communities">
                             {forumList.map((forum) => (
-                                <CommunityTab key={ forum.ForumID } communityName={ forum.ForumName } forumIdentification={ forum.ForumID } />
+                                <CommunityTab key={ forum.ForumID } {...forum} />
                             ))}
                         </div>
                     </div>

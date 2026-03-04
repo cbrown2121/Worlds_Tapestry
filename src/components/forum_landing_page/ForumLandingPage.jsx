@@ -3,6 +3,7 @@ import "./ForumLandingPage.css";
 import CategoryTab from "./CategoryTab";
 import ForumSection from "./ForumSection";
 import ForumTrendingTab from "./ForumTrendingTab";
+import CategoryCreationForum from "./CategoryCreationForm";
 import defaultIcon from "../../assets/commmunity-default-icon.svg";
 
 function ForumLandingPage( props ) {
@@ -67,7 +68,7 @@ function ForumLandingPage( props ) {
             setJoinButtonText("Leave Forum");
             
 
-        } else { // user is leaving the forum. in the future there should be more depending on the role since leaving should be more involved if theyre the forum owner
+        } else { // user is leaving the forum. 
             fetch(`http://localhost:5000/remove-user-from-forum`, {
                 method: "DELETE",
                 headers: {
@@ -78,7 +79,8 @@ function ForumLandingPage( props ) {
 
             setUserRole(null);
             setJoinButtonText("Join Forum");
-        }
+        } 
+        // in the future there should be more depending on the role since leaving should be more involved if theyre the forum owner
     }
 
   return (
@@ -112,6 +114,7 @@ function ForumLandingPage( props ) {
                             <h1>Admin Dash</h1>
                         </div>
                         <button id="forum-settings" > Forum Settings </button>
+                        <CategoryCreationForum forumID={forumID}/>
                     </div>
                 } 
             </div>

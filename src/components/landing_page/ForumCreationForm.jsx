@@ -24,7 +24,6 @@ function ForumCreationForm() {
             }
 
             const result = await response.json();
-            // console.log(`Data was submitted successfully: ${forumData}`);
 
             fetch(`http://localhost:5000/add-user-to-forum`, { // set the creator to be the owner. this could be done automatically with sql triggers but i was running into issues
                 method: "POST",

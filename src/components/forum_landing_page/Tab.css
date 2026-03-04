@@ -1,0 +1,127 @@
+.tab {
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+
+    padding: 0 1rem;
+    gap: 1rem;
+
+    height: 10rem;
+    width: 80%;
+
+    background: var(--light-grey);
+    border-radius: 1rem;
+}
+
+.landing-tab {
+    height: 7rem;
+    width: 100%;
+}
+
+.thread-tab {
+    height: 5rem;
+    justify-content: space-between;
+}
+
+.tab .icon-or-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgb(230, 192, 192);
+    height: 90%;
+    width: 15%;
+
+    border-radius: 1rem;
+}
+
+.thread-tab .icon-or-image {
+    height: 80%;
+    width: 7%;
+}
+
+.tab .tab-information {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+
+    padding: 1rem;
+
+    height: 90%;
+
+    width: 50%;
+}
+
+.landing-tab .tab-information {
+    margin: 1rem;
+    width: 100%;
+
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.landing-tab .tab-information .tab-name {
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.tab .tab-information .tab-name {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tab .tab-information .tab-name .tab-name-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.thread-tab .tab-name-text {
+    font-weight: 600;
+}
+
+.tab .tab-information .tab-name .pinned-icon {
+    height: 1.25rem;
+}
+
+.tab .tab-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 1rem;
+
+    height: 90%;
+    width: 30%;
+}
+
+.thread-tab .tab-stats {
+    flex-direction: row;
+    width: 60%;
+}
+
+.tab .tab-stats .tab-stats-numbers {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.tab .tab-stats .tab-stats-numbers .thread-count, .tab .tab-stats .tab-stats-numbers .post-count {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tab .tab-stats .tab-stats-numbers .thread-count .number-of-threads, .tab .tab-stats .tab-stats-numbers .post-count .number-of-posts {
+    font-size: 1.25rem;
+}
+
+.thread-tab .tab-stats .most-recent-activity {
+    width: 100%;
+}

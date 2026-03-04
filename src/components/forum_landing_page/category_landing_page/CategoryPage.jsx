@@ -10,7 +10,7 @@ function CategoryPage() {
     return (
         <>
             <Header />
-            <CategoryLandingPage forumID={state.forumID} categoryID={state.categoryID}/> 
+            <CategoryLandingPage forumID={state.forumID} categoryID={state.categoryID} categoryName={state.categoryName}/> 
             <Footer />
         </>
     )

@@ -84,34 +84,10 @@
     font-size: 1rem;
 }
 
-/* .landing-page-side .forum-information .landing-page-stats {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+.forum-landing-page .forum-landing-side #add-category-button {
+    background: var(--light-grey);
+    border: none;
+    height: 3rem;
+
+    font-size: 1rem;
 }
-
-.landing-page-side .landing-page-information-stats .landing-page-stats h2 {
-    font-weight: 600;
-}
-
-.landing-page .landing-page-side .landing-page-information-stats .landing-page-stats h3 {
-    font-weight: 400;
-}
-
-.landing-page .landing-page-side .landing-page-highlights {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-} */
-
-/* create thread button for category landing pages ========================================================================================================== */
-
-/* .landing-page .landing-page-side .create-thread {
-    border: 2px solid var(--text);
-    background: var(--background);
-    height: 4rem;
-
-    width: 100%;
-
-    font-size: 1.5rem;
-} */
