@@ -5,6 +5,7 @@ import ForumSection from "./ForumSection";
 import ForumTrendingTab from "./ForumTrendingTab";
 import CategoryCreationForum from "./CategoryCreationForm";
 import defaultIcon from "../../assets/commmunity-default-icon.svg";
+import FormElement from "../forms/FormElement.jsx";
 
 function ForumLandingPage( props ) {
     const [forumID] = useState(props.forumID)
@@ -81,46 +82,59 @@ function ForumLandingPage( props ) {
             setJoinButtonText("Join Forum");
         } 
         // in the future there should be more depending on the role since leaving should be more involved if theyre the forum owner
-    }
+    } 
 
-  return (
-    <>
-        <div className="forum-landing-page">
-            <div className="forum-landing-main">
-                <ForumSection title="Categories" categoryTabsList=
-                    {categories.map((category) => (
-                        <CategoryTab key={category.CategoryID} {...category}/>
-                    ))}
-                />
-            </div>
-            <div className="forum-landing-side">
-                <div className="forum-information">
-                    <img src={defaultIcon} alt="" className="forum-image" />
-                    <h2 className="forum-name">{ forumName }</h2>
+    let categoryNameSection = { type: "text", sectionTitle: "Category Name", sectionID:"CategoryName" };
+
+    let categoryDescription = { type: "text", sectionTitle: "Category Description", sectionID:"CategoryDescription" };
+
+    let categoryPinStatus = {
+        type: "radio", sectionTitle: "Pinned Status", sectionID:"PinnedStatus",
+        options: [
+            {label:"Pinned", id:"PinnedStatus", value:"0", defaultChecked: false},
+            {label:"Not Pinned", id:"PinnedStatus", value:"1", defaultChecked: true},
+        ]
+    };
+
+    return (
+        <>
+            <div className="forum-landing-page">
+                <div className="forum-landing-main">
+                    <ForumSection title="Categories" categoryTabsList=
+                        {categories.map((category) => (
+                            <CategoryTab key={category.CategoryID} {...category}/>
+                        ))}
+                    />
                 </div>
-
-                <button id="forum-join-button" onClick={ joinButtonAction }> {joinButtonText} </button>
-
-                <div className="side-bar-section">
-                    <div className="side-bar-section-title">
-                        <h1>Top Tags</h1>
+                <div className="forum-landing-side">
+                    <div className="forum-information">
+                        <img src={defaultIcon} alt="" className="forum-image" />
+                        <h2 className="forum-name">{ forumName }</h2>
                     </div>
-                    <div className="side-bar-section-container"></div>
-                </div>
 
-                { (userRole == "Admin" || userRole == "Owner") && 
+                    <button id="forum-join-button" onClick={ joinButtonAction }> {joinButtonText} </button>
+
                     <div className="side-bar-section">
                         <div className="side-bar-section-title">
-                            <h1>Admin Dash</h1>
+                            <h1>Top Tags</h1>
                         </div>
-                        <button id="forum-settings" > Forum Settings </button>
-                        <CategoryCreationForum forumID={forumID}/>
+                        <div className="side-bar-section-container"></div>
                     </div>
-                } 
+
+                    { (userRole == "Admin" || userRole == "Owner") && 
+                        <div className="side-bar-section">
+                            <div className="side-bar-section-title">
+                                <h1>Admin Dash</h1>
+                            </div>
+                            <button id="forum-settings" > Forum Settings </button>
+
+                            <FormElement  formTitle="Add A New Category" endPoint="category" passToEndPoint={ [{key: "ForumID", value: forumID}] } submitButtonText="Create Category" sections={ [categoryNameSection, categoryDescription, categoryPinStatus] } />
+                        </div>
+                    } 
+                </div>
             </div>
-        </div>
-    </>
-  )
+        </>
+    )
 }
 
 export default ForumLandingPage

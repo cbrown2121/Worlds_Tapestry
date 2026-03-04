@@ -16,6 +16,7 @@ const db = mysql.createPool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port:process.env.DB_PORT,
+  multipleStatements: true
 });
 
 // Test connection
@@ -209,17 +210,17 @@ app.get("/posts/:threadID", (req, res) => {
 // POST Endpoints
 // POST forums
 app.post("/forums", (req, res) => {
-  const { ForumName, SearchVisibility, JoinPermissions, AllowMaps, Tags, OwnerID } = req.body;
+  const { ForumName, SearchVisibility, JoinPermissions, AllowMaps, UserID } = req.body; // add in tags later the form currently doesnt support them
 
   // query to insert forum 
   const sql = `
-    INSERT INTO Forums (ForumName, SearchVisibility, JoinPermissions, AllowMaps, Tags, OwnerID)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO Forums (ForumName, SearchVisibility, JoinPermissions, AllowMaps, OwnerID)
+    VALUES (?, ?, ?, ?, ?)
   `;
 
   // datetime- forum id- member count are all generated automatically on mysqls end
 
-  db.query(sql, [ForumName, SearchVisibility, JoinPermissions, AllowMaps, Tags, OwnerID], (err, result) => {
+  db.query(sql, [ForumName, SearchVisibility, JoinPermissions, AllowMaps, UserID], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create forum" });
@@ -234,10 +235,14 @@ app.post("/add-user-to-forum", (req, res) => {
 
   const sql = `
     INSERT INTO MemberList (UserID, ForumID, UserRole)
-    VALUES (?, ?, ?)
+    VALUES (?, ?, ?);
+
+    UPDATE Forums 
+    SET MemberCount = MemberCount + 1 
+    WHERE ForumID = ?;
   `;
 
-  db.query(sql, [UserID, ForumID, UserRole], (err, result) => {
+  db.query(sql, [UserID, ForumID, UserRole, ForumID], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to add user to forum" });
@@ -268,14 +273,14 @@ app.post("/threads", (req, res) => {
 
 // POST categories
 app.post("/category", (req, res) => {
-  const { CategoryName, CategoryDescription, Pinned, ForumID } = req.body;
+  const { CategoryName, CategoryDescription, PinnedStatus, ForumID } = req.body;
 
   const sql = `
     INSERT INTO Categories (CategoryName, Description, Pinned, ForumID)
     VALUES (?, ?, ?, ?)
   `;
 
-  db.query(sql, [CategoryName, CategoryDescription, Pinned, ForumID], (err, result) => {
+  db.query(sql, [CategoryName, CategoryDescription, PinnedStatus, ForumID], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create category" });
@@ -448,9 +453,15 @@ app.delete("/forums/:id", (req, res) => {
 app.delete("/remove-user-from-forum", (req, res) => {
   const { UserID, ForumID } = req.body;
 
-  const sql = "DELETE FROM MemberList WHERE ForumID = ? AND UserID = ?";
+  const sql = `
+    DELETE FROM MemberList WHERE ForumID = ? AND UserID = ?;
 
-  db.query(sql, [ ForumID, UserID ], (err, result) => {
+    UPDATE Forums 
+    SET MemberCount = MemberCount - 1 
+    WHERE ForumID = ?;
+  `;
+
+  db.query(sql, [ ForumID, UserID, ForumID ], (err, result) => {
     if (err) return res.status(500).json(err);
 
     if (result.affectedRows === 0)

@@ -1,5 +1,4 @@
 import { useState } from "react"
-import "./ForumCreationForm.css"
 
 function ProfileUpdateForm(props) {
 
