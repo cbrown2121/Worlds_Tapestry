@@ -50,6 +50,21 @@ app.get("/users", (req, res) => {
   });
 });
 
+// GET users who are in a certain forum
+app.get("/:forumID/users", (req, res) => {
+  const { forumID } = req.params;
+
+  const SQL = 
+              ` SELECT DISTINCT * FROM MemberList 
+              	INNER JOIN Users u ON MemberList.UserID = u.UserID
+                WHERE MemberList.ForumID = ?;`;
+
+  db.query(SQL, [forumID], (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
 // GET a single user profile
 app.get("/users/:id", (req, res) => {
   const { id } = req.params;
@@ -618,6 +633,54 @@ app.put("/posts/:id", (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+});
+
+// PATCH memberlist
+app.patch("/memberlist/:forumID/:userID", (req, res) => {
+  const forumID = req.params.forumID.trim();
+  const userID = req.params.userID.trim();
+
+  // // Whitelisted columns
+  // const allowedFields = [
+  //   "ForumName",
+  //   "Tags",
+  //   "SearchVisibility",
+  //   "JoinPermissions"
+  // ];
+
+  // const updates = [];
+  // const values = [];
+
+  // for (const key in req.body) {
+  //   if (allowedFields.includes(key)) {
+  //     updates.push(`${key} = ?`);
+  //     values.push(req.body[key]);
+  //   }
+  // }
+
+  // if (updates.length === 0) {
+  //   return res.status(400).json({
+  //     message: "No valid fields provided for update"
+  //   });
+  // }
+
+  // values.push(id);
+
+  // const sql = `
+  //   UPDATE Forums
+  //   SET ${updates.join(", ")}
+  //   WHERE ForumID = ?
+  // `;
+
+  // db.query(sql, values, (err, result) => {
+  //   if (err) return res.status(500).json(err);
+
+  //   if (result.affectedRows === 0) {
+  //     return res.status(404).json({ message: "Forum not found" });
+  //   }
+
+  //   res.json({ message: "Forum updated successfully" });
+  // });
 });
 
 // PATCH forums
