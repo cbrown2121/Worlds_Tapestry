@@ -19,7 +19,6 @@ export default function ProfilePage() {
 
   return (
     <>
-      <Header/>
         <div className="profile-page">
           <div className="profile-container">
             <h2>User Profile</h2>
@@ -32,7 +31,6 @@ export default function ProfilePage() {
           <ProfileUpdateForm userID = {userId}/>
         <MessagesPage/>
         </div>
-      <Footer/> 
     </>
   )
 }

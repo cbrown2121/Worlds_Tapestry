@@ -46,3 +46,129 @@ body {
   color: inherit;
   text-decoration: inherit;
 }
+
+#page-content {
+    width: 100%;
+    display: flex;
+}
+
+/* SIDEBAR ----------------------------------------------------------------------------------------------------------------------------------------------- */
+
+#sidebar {
+  flex: 2;
+
+  /* height: 100%; */
+  /* width: 15vw; */
+
+  background: var(--light-grey);
+}
+
+/* MAIN CONTENT AREA -------------------------------------------------------------------------------------------------------------------------------------- */
+
+.main-content {
+    flex: 10;
+    /* display: flex;
+    flex-direction: column; */
+}
+
+/* HEADER ------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+#header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    height: 5rem;
+    background: var(--secondary);
+}
+
+/* right side of header --------------------------------------------------------------------------------------------- */
+
+#header-right, #header-left {
+    display: flex;
+    align-items: center;
+    max-height: 100%;
+
+    gap: 1rem;
+}
+
+#header-right img {  /*  logo  */
+    max-height: 100%;
+    height: 4rem;
+}
+
+#header-right #website-title {  /*  logo  */
+    font-weight: 900;
+}
+
+/* left side of header --------------------------------------------------------------------------------------------- */
+
+/* search bar ------------------------------------------------------------------------------------------------------ */
+
+#search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--background);
+
+    height: 2rem;
+    width: 25vw;
+    border-radius: 0.95rem;
+
+    padding: 0.8rem;
+}
+
+#search-bar #search-bar-text {
+    color: var(--searchbar-text);
+}
+
+#message-icon {
+    height: 3.5rem;
+}
+
+#profile {
+    height: 3.5rem;
+    width: 3.5rem;
+    background: var(--profile-background);
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#profile-icon {
+    height: 2.5rem;
+}
+
+/* FOOTER -------------------------------------------------------------------------------------------------------------------------------- */
+
+#footer {
+    display: flex;
+    
+    height: 4rem;
+    width: 100vw;
+
+    background: var(--tertiary);
+}
+
+#footer-left {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 40%;
+}
+
+#footer #footer-logo-container #footer-logo {
+    height: 2.5rem;
+    display: flex;
+}
+
+#footer .footer-link {
+    text-decoration: none;
+    color: var(--darkest-grey);
+    font-weight: 500;
+}

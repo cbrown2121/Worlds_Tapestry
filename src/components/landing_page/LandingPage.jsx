@@ -3,9 +3,7 @@ import bookIcon from "../../assets/book-icon.svg";
 import "./LandingPage.css";
 import CommunityTab from "./CommunityTab";
 import TrendingTab from "./TrendingTab";
-import Header from "../Header.jsx";
-import Footer from "../Footer.jsx";
-import FormElement from "../forms/FormElement.jsx";
+import FormElement from "../form_component/FormElement.jsx";
 
 // for now the "my communities" section is all the forums in our database
 
@@ -53,25 +51,23 @@ function LandingPage() {
 
     return (
         <>
-            <Header/> { /* we could change it so the header and footer are just in the app page and then we have the routing. i guess i was just worried about some edge case */ }
-                <div id="landing-page">
-                    <div id="landing-left">
-                        <FormElement  formTitle="Create A Forum" endPoint="forums" passToEndPoint={ [{key: "UserID", value: sampleUserId}] } submitButtonText="Create Forum" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } />
+            <div id="landing-page" className="main-content">
+                <div id="landing-left">
+                    <FormElement  formTitle="Create A Forum" endPoint="forums" passToEndPoint={ [{key: "UserID", value: sampleUserId}] } submitButtonText="Create Forum" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } />
+                </div>
+                <div id="landing-right">
+                    <div id="my-communities-header">
+                        <img id="my-communities-header-icon" src={bookIcon} alt="" />
+                        <h1 id="my-communities-header-text" >Your Communities</h1>
                     </div>
-                    <div id="landing-right">
-                        <div id="my-communities-header">
-                            <img id="my-communities-header-icon" src={bookIcon} alt="" />
-                            <h1 id="my-communities-header-text" >Your Communities</h1>
-                        </div>
-                        
-                        <div id="my-communities">
-                            {forumList.map((forum) => (
-                                <CommunityTab key={ forum.ForumID } {...forum} />
-                            ))}
-                        </div>
+                    
+                    <div id="my-communities">
+                        {forumList.map((forum) => (
+                            <CommunityTab key={ forum.ForumID } {...forum} />
+                        ))}
                     </div>
                 </div>
-            <Footer/>
+            </div>
         </>
     )
 }

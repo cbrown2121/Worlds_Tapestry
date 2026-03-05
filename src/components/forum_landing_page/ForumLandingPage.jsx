@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
+import { useLocation } from 'react-router-dom';
 import "./ForumLandingPage.css";
 import CategoryTab from "./CategoryTab";
 import ForumSection from "./ForumSection";
 import ForumTrendingTab from "./ForumTrendingTab";
-import CategoryCreationForum from "./CategoryCreationForm";
 import defaultIcon from "../../assets/commmunity-default-icon.svg";
-import FormElement from "../forms/FormElement.jsx";
+import FormElement from "../form_component/FormElement.jsx";
 
 function ForumLandingPage( props ) {
-    const [forumID] = useState(props.forumID)
-    const [forumName] = useState(props.forumName)
+    const location = useLocation();
+
+    const [forumID] = useState(location.state.forumID)
+    const [forumName] = useState(location.state.forumName)
     const [categories, setCategories] = useState([]);
 
     const [userRole, setUserRole] = useState(null);

@@ -1,6 +1,5 @@
 import { useState } from "react"
 import logo from "../assets/logo_letters_framed.png"
-import "./Footer.css"
 
 function Footer() {
   const [count, setCount] = useState(0)
