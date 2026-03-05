@@ -8,10 +8,10 @@ import defaultIcon from "../../assets/commmunity-default-icon.svg";
 import FormElement from "../form_component/FormElement.jsx";
 
 function ForumLandingPage( props ) {
-    // const location = useLocation();
+    const location = useLocation().state;
 
-    const [forumID] = useState(props.forumID)
-    const [forumName] = useState(props.forumName)
+    const [forumID] = useState(location.forumID)
+    const [forumName] = useState(location.forumName)
     const [categories, setCategories] = useState([]);
 
     const [userRole, setUserRole] = useState(null);

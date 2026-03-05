@@ -24,7 +24,7 @@ const Sidebar = ( props ) => { // currently this runs twice because there is a l
         <div className="forum-list">
           <p>Followed Forums: </p>
           {forumList.map((forum) => {
-            return  <Link key={ forum.ForumID } className="router-link" 
+            return  <Link key={ `${forum.ForumID}-${forum.ForumName}` } className="router-link" 
                       to={ `/Forum/${ forum.ForumName.replace(/[ ]/g, "_") }` } 
                       state={{ 
                           forumID: forum.ForumID,

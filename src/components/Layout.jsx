@@ -15,9 +15,9 @@ function Layout() { // this page is to set a layout so we dont need to add the h
                     <div id="main-content">
                         <Outlet/> { /* this is where the main page content will go https://reactrouter.com/api/components/Outlet */ } 
                     </div>
-                    <div id="second-sidebar"></div>
+                    {/* <div id="second-sidebar"></div> */}
                 </div>
-                <Footer/>
+                {/* <Footer/> */}
             </div>
         </>
     );

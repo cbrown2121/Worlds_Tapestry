@@ -7,8 +7,6 @@ import { useLocation } from 'react-router-dom';
 function ForumPage() {
     const location = useLocation();
 
-    console.log(location)
-
     return (
         <>
             <ForumLandingPage key={location.pathname} forumID={ location.state.forumID } forumName={ location.state.forumName } /> { /* giving a unique key to the component will force it to rerender. without it the forum links wont work correctly */ }

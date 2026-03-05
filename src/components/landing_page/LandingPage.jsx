@@ -26,19 +26,18 @@ function LandingPage() {
                 <div id="landing-left">
                     <h2>Threads From Followed Forums</h2>
                     {postList.map((post) => (
-                        <DashBoardPost key={ post.ThreadID } {...post} />
+                        <DashBoardPost key={ `${post.ThreadID}-${post.CategoryID}-${post.CreatorID}` } {...post} />
                     ))}
                     {/* <FormElement  formTitle="Create A Forum" endPoint="forums" passToEndPoint={ [{key: "UserID", value: sampleUserId}] } submitButtonText="Create Forum" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } /> */}
                 </div>
                 <div id="landing-right">
-                    {/* <div id="my-communities-header">
-                        <img id="my-communities-header-icon" src={bookIcon} alt="" />
-                        <h1 id="my-communities-header-text" >Your Communities</h1>
+                    <div id="dashboard-profile-overview">
+                        <div id="dashboard-overview-profile"></div>
+                        <div id="dashboard-name-profile">Username</div>
                     </div>
-                    
-                    <div id="my-communities">
-
-                    </div> */}
+                    <div id="dashboard-quick-message">
+                        Put quick access to user messages here
+                    </div>
                 </div>
             </div>
         </>

@@ -22,6 +22,7 @@
   --lightest-grey: #efefef;
   --dark-grey: #B7B7B7;
   --darkest-grey: #333333;
+  --sidebar-header-outline: #1b809a;
 }
 
 html, body, #root {
@@ -68,17 +69,19 @@ body {
   background: var(--light-grey);
 }
 
-
-
 /* MAIN CONTENT AREA -------------------------------------------------------------------------------------------------------------------------------------- */
 #main-page{
     display: flex;
     justify-content: space-between;
+
+    height: calc(100vh - 5rem); /* 5rem is header size */
 }
 
 .sidebar {
-    height: 90vh;
+    height: calc(100vh - 5rem);
     background: var(--secondary);
+
+    border-right: 2px solid var(--sidebar-header-outline);
 }
 
 .sidebar #create-forum-button {
@@ -118,14 +121,14 @@ body {
 
 #main-content {
     width: 100%;
-    height: 90vh;
-    min-height: 90vh;
-    overflow-y: scroll;
+    
+    /* min-height: 100%; */
+    /* overflow-y: scroll; */
 
     -ms-overflow-style: none;  /* hide scrollbar for edge */
     scrollbar-width: none;  /* hide scrollbar for firefox */
 
-    border-radius: 2rem;
+    /* border-radius: 2rem; */
 
     background: var(--background);
     /* flex: 10; */
@@ -139,13 +142,12 @@ body {
 }
 
 .main-content { /* ill change this later so we dont have an id and class with the same name */
-    height: 90vh;
-    overflow-y: scroll;
+    /* min-height: 100vh; */
+    overflow-y: auto;
+    height: calc(100vh - 5rem); /* 5rem is header size */
 
     -ms-overflow-style: none;  /* hide scrollbar for edge */
     scrollbar-width: none;  /* hide scrollbar for firefox */
-
-    padding-bottom: 2rem;
 }
 
 /* hide scrollbar for chrome / safari / opera */
@@ -165,6 +167,7 @@ body {
 
     height: 5rem;
     background: var(--secondary);
+    border-bottom: 2px solid var(--sidebar-header-outline);
 }
 
 /* right side of header --------------------------------------------------------------------------------------------- */
