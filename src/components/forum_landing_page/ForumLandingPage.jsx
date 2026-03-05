@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import "./ForumLandingPage.css";
 import CategoryTab from "./CategoryTab";
 import ForumSection from "./ForumSection";
@@ -8,10 +9,8 @@ import defaultIcon from "../../assets/commmunity-default-icon.svg";
 import FormElement from "../form_component/FormElement.jsx";
 
 function ForumLandingPage( props ) {
-    const location = useLocation().state;
-
-    const [forumID] = useState(location.forumID)
-    const [forumName] = useState(location.forumName)
+    const [forumID] = useState(props.forumID)
+    const [forumName] = useState(props.forumName)
     const [categories, setCategories] = useState([]);
 
     const [userRole, setUserRole] = useState(null);
@@ -86,18 +85,6 @@ function ForumLandingPage( props ) {
         // in the future there should be more depending on the role since leaving should be more involved if theyre the forum owner
     } 
 
-    let categoryNameSection = { type: "text", sectionTitle: "Category Name", sectionID:"CategoryName" };
-
-    let categoryDescription = { type: "text", sectionTitle: "Category Description", sectionID:"CategoryDescription" };
-
-    let categoryPinStatus = {
-        type: "radio", sectionTitle: "Pinned Status", sectionID:"PinnedStatus",
-        options: [
-            {label:"Pinned", id:"PinnedStatus", value:"0", defaultChecked: false},
-            {label:"Not Pinned", id:"PinnedStatus", value:"1", defaultChecked: true},
-        ]
-    };
-
     return (
         <>
             <div className="forum-landing-page main-content">
@@ -128,9 +115,15 @@ function ForumLandingPage( props ) {
                             <div className="side-bar-section-title">
                                 <h1>Admin Dash</h1>
                             </div>
-                            <button id="forum-settings" > Forum Settings </button>
-
-                            <FormElement  formTitle="Add A New Category" endPoint="category" passToEndPoint={ [{key: "ForumID", value: forumID}] } submitButtonText="Create Category" sections={ [categoryNameSection, categoryDescription, categoryPinStatus] } />
+                            <Link key={ `${forumID}-${forumName}-admin` } className="router-link" 
+                            to={ `/Forum/${ forumName.replace(/[ ]/g, "_") }/Admin-Dashboard` } 
+                            state={{ 
+                                forumID: forumID,
+                                forumName: forumName
+                            }}
+                            >
+                                <button id="forum-settings" > Forum Settings </button>
+                            </Link>
                         </div>
                     } 
                 </div>

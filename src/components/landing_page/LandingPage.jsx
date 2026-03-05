@@ -20,6 +20,32 @@ function LandingPage() {
         }).catch(error => console.error(error));
     }, []);
 
+    let forumNameSection = { type: "text", sectionTitle: "Forum Name", sectionID:"ForumName" };
+
+    let forumVisbilitySection = {
+        type: "radio", sectionTitle: "Forum Visibility", sectionID:"ForumVisibility",
+        options: [
+            {label:"Searchable", id:"SearchVisibility", value:"Searchable", defaultChecked: true},
+            {label:"Hidden", id:"SearchVisibility", value:"Hidden", defaultChecked: false},
+        ]
+    };
+
+    let forumJoinSection = {
+        type: "radio", sectionTitle: "Forum Join Settings", sectionID:"ForumJoinPermissions",
+        options: [
+            {label:"Anyone", id:"JoinPermissions", value:"Anyone", defaultChecked: true},
+            {label:"Invite Only", id:"JoinPermissions", value:"Invite Only", defaultChecked: false},
+        ]
+    };
+
+    let forumMapSection = {
+        type: "radio", sectionTitle: "Allow Maps", sectionID:"MapPermissions",
+        options: [
+            {label:"Yes", id:"AllowMaps", value:"1", defaultChecked: false},
+            {label:"No", id:"AllowMaps", value:"0", defaultChecked: true},
+        ]
+    };
+
     return (
         <>
             <div id="landing-page" className="main-content">
@@ -35,9 +61,12 @@ function LandingPage() {
                         <div id="dashboard-overview-profile"></div>
                         <div id="dashboard-name-profile">Username</div>
                     </div>
-                    <div id="dashboard-quick-message">
+                    {/* <div id="dashboard-quick-message">
                         Put quick access to user messages here
-                    </div>
+                    </div> */}
+
+                    <FormElement  formTitle="Create A Forum" endPoint="forums" passToEndPoint={ [{key: "UserID", value: sampleUserId}] } submitButtonText="Create Forum" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } />
+
                 </div>
             </div>
         </>

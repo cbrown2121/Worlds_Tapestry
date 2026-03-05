@@ -18,6 +18,10 @@ const Sidebar = ( props ) => { // currently this runs twice because there is a l
       }).catch(error => console.error(error));
   }, []);
 
+  const startForumCreation = () => {
+
+  }
+
   return (
     <>
       <div id={ props.id } className="sidebar">
@@ -36,7 +40,7 @@ const Sidebar = ( props ) => { // currently this runs twice because there is a l
             })}
         </div>
 
-        <button id="create-forum-button" >Create Forum</button>
+        {/* <button onClick={startForumCreation} id="create-forum-button" >Create Forum</button> */}
       </div>
     </>
   )

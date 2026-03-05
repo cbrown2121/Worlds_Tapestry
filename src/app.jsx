@@ -1,5 +1,6 @@
 import LandingPage from "./components/landing_page/LandingPage.jsx";
 import ForumPage from "./components/forum_landing_page/ForumPage.jsx"
+import ForumAdminPage from "./components/forum_landing_page/forum_admin_page/ForumAdminPage.jsx"
 import CategoryLandingPage from "./components/forum_landing_page/category_landing_page/CategoryLandingPage.jsx";
 import ThreadContent from "./components/forum_landing_page/category_landing_page/thread_page/ThreadContent.jsx";
 import ProfilePage from "./components/profile_page/ProfilePage.jsx";
@@ -37,6 +38,10 @@ function App() {
             
             <Route path="/Forum/:forumName/category/:categoryName/thread/:threadName" element={<Layout />}>
               <Route index element={<ThreadContent />}/>
+            </Route>
+
+            <Route path="/Forum/:forumName/Admin-Dashboard" element={<Layout />}>
+              <Route index element={<ForumAdminPage />}/>
             </Route>
         </Routes>
       </BrowserRouter>

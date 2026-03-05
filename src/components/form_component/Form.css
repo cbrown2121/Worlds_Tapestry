@@ -8,13 +8,13 @@
 }
 
 #form-component form {
-    border: 2px solid var(--text);
-    border-radius: 0.25rem;
+    /* border: 2px solid var(--text); */
+    border-radius: 0.5rem;
     
     background: var(--light-grey);
     padding: 1rem;
 
-    background: var(--background);
+    background: var(--light-grey);
     color: var(--text);
 }
 
