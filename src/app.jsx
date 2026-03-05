@@ -1,5 +1,5 @@
 import LandingPage from "./components/landing_page/LandingPage.jsx";
-import ForumLandingPage from "./components/forum_landing_page/ForumLandingPage.jsx"
+import ForumPage from "./components/forum_landing_page/ForumPage.jsx"
 import CategoryLandingPage from "./components/forum_landing_page/category_landing_page/CategoryLandingPage.jsx";
 import ThreadContent from "./components/forum_landing_page/category_landing_page/thread_page/ThreadContent.jsx";
 import ProfilePage from "./components/profile_page/ProfilePage.jsx";
@@ -23,8 +23,8 @@ function App() {
               <Route index element={<LandingPage />}/>
             </Route>
 
-            <Route path="/Forum/:forumName" element={<Layout />}>
-              <Route index element={<ForumLandingPage />}/>
+            <Route path="/Forum/:forumName" element={<Layout key={window.location.pathname} /> }>
+              <Route index element={<ForumPage />}/>
             </Route>
 
             <Route path="/Profile" element={<Layout />}>

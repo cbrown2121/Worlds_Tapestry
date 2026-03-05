@@ -8,10 +8,10 @@ import defaultIcon from "../../assets/commmunity-default-icon.svg";
 import FormElement from "../form_component/FormElement.jsx";
 
 function ForumLandingPage( props ) {
-    const location = useLocation();
+    // const location = useLocation();
 
-    const [forumID] = useState(location.state.forumID)
-    const [forumName] = useState(location.state.forumName)
+    const [forumID] = useState(props.forumID)
+    const [forumName] = useState(props.forumName)
     const [categories, setCategories] = useState([]);
 
     const [userRole, setUserRole] = useState(null);
@@ -100,7 +100,7 @@ function ForumLandingPage( props ) {
 
     return (
         <>
-            <div className="forum-landing-page">
+            <div className="forum-landing-page main-content">
                 <div className="forum-landing-main">
                     <ForumSection title="Categories" categoryTabsList=
                         {categories.map((category) => (

@@ -177,6 +177,22 @@ app.get("/threads", (req, res) => {
   });
 });
 
+// GET (original post) threads from forums the user is a member of
+app.get("/user-dash-threads/:userID", (req, res) => {
+  const sql = 
+            ` SELECT Threads.ThreadID, Threads.CategoryID, Threads.CreatorID, p.Content, u.UserName FROM Threads
+                INNER JOIN Categories c ON Threads.CategoryID = c.CategoryID
+                INNER JOIN MemberList m ON c.ForumID = m.ForumID
+                INNER JOIN Posts p ON Threads.ThreadID = p.ThreadID
+                INNER JOIN Users u ON Threads.CreatorID = u.UserID
+              WHERE m.UserID = ? AND p.OriginalThreadPost = 1;`; // posts are original threads if their value is 1 (true)
+  
+  db.query(sql, [req.params.userID], (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
 // GET categories for a specific forum
 app.get("/categories/:forumID", (req, res) => {
   const sql = `SELECT * FROM Categories WHERE ForumID = ?`;

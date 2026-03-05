@@ -9,13 +9,15 @@ function Layout() { // this page is to set a layout so we dont need to add the h
     return (
         <>
             <div id="website-content">
-                <Sidebar/>
-
-                <div id="main-content">
-                    <Header/>
-                    <Outlet/> { /* this is where the main content will go https://reactrouter.com/api/components/Outlet */ } 
-                    <Footer/>
+                <Header/>
+                <div id="main-page">
+                    <Sidebar id="sidebar-left"/>
+                    <div id="main-content">
+                        <Outlet/> { /* this is where the main page content will go https://reactrouter.com/api/components/Outlet */ } 
+                    </div>
+                    <div id="second-sidebar"></div>
                 </div>
+                <Footer/>
             </div>
         </>
     );

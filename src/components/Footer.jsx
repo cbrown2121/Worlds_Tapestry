@@ -7,7 +7,7 @@ function Footer() {
   return (
     <>
       <div id="footer">
-        <div id="footer-left">
+        {/* <div id="footer-left">
           <div id="footer-logo-container">
             <img src={logo} alt="" id="footer-logo" />
           </div>
@@ -19,7 +19,7 @@ function Footer() {
           <a href="" className="footer-link" id="about-us">Report</a>
         </div>
 
-        <div id="footer-right"></div>
+        <div id="footer-right"></div> */}
       </div>
     </>
   )
