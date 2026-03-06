@@ -3,61 +3,72 @@ import bookIcon from "../../assets/book-icon.svg";
 import "./LandingPage.css";
 import CommunityTab from "./CommunityTab";
 import TrendingTab from "./TrendingTab";
-import ForumCreationForum from "./ForumCreationForm";
-import Header from "../Header.jsx";
-import Footer from "../Footer.jsx";
+import FormElement from "../form_component/FormElement.jsx";
+import DashBoardPost from "./DashboardPost.jsx";
 
 // for now the "my communities" section is all the forums in our database
 
 function LandingPage() {
-    const [forumList, setForumList] = useState([])
-    const sampleForumId = 1;
-
-    const requestForAllForums = `http://localhost:5000/forums`; // only for testing purposes
-    const requestForUserForums = `http://localhost:5000/usersforums/${sampleForumId}`; // the route that will be used in the final deployment
+    const [postList, setPostList] = useState([]);
+    const sampleUserId = 1;
 
     useEffect(() => {
-        fetch(requestForAllForums)
+        fetch(`http://localhost:5000/user-dash-threads/${sampleUserId}`) // get original thread posts from all forums the user is in
         .then(response => response.json())
-        .then(forumList => {
-            setForumList(forumList.reverse());
+        .then(dashboardPosts => {
+            setPostList(dashboardPosts);
         }).catch(error => console.error(error));
     }, []);
 
+    let forumNameSection = { type: "text", sectionTitle: "Forum Name", sectionID:"ForumName" };
+
+    let forumVisbilitySection = {
+        type: "radio", sectionTitle: "Forum Visibility", sectionID:"ForumVisibility",
+        options: [
+            {label:"Searchable", id:"SearchVisibility", value:"Searchable", defaultChecked: true},
+            {label:"Hidden", id:"SearchVisibility", value:"Hidden", defaultChecked: false},
+        ]
+    };
+
+    let forumJoinSection = {
+        type: "radio", sectionTitle: "Forum Join Settings", sectionID:"ForumJoinPermissions",
+        options: [
+            {label:"Anyone", id:"JoinPermissions", value:"Anyone", defaultChecked: true},
+            {label:"Invite Only", id:"JoinPermissions", value:"Invite Only", defaultChecked: false},
+        ]
+    };
+
+    let forumMapSection = {
+        type: "radio", sectionTitle: "Allow Maps", sectionID:"MapPermissions",
+        options: [
+            {label:"Yes", id:"AllowMaps", value:"1", defaultChecked: false},
+            {label:"No", id:"AllowMaps", value:"0", defaultChecked: true},
+        ]
+    };
+
     return (
         <>
-            <Header/> { /* we could change it so the header and footer are just in the app page and then we have the routing. i guess i was just worried about some edge case */ }
-                <div id="landing-page">
-                    <div id="landing-left">
-                        <ForumCreationForum/> 
-                        {/* <div id="trending-column">
-                            <TrendingTab trendingTitle="Popular Community of the Day" trendingCommunity="Community Name" trendingDetails="details..."/>
-                            <TrendingTab trendingTitle="Popular Thread of the Day" trendingCommunity="Community Name" trendingDetails="details..."/>
-                        </div> */}
-                        {/* <div id="map">
-                            <div id="my-map-heading">
-                                <img src={compassIcon} alt="" id="my-map-icon" />
-                                <h1 id="my-map-text">My Map</h1>
-                            </div>
-
-                            <img src={map} alt="" id="map-image" />
-                            
-                        </div> */}
-                    </div>
-                    <div id="landing-right">
-                        <div id="my-communities-header">
-                            <img id="my-communities-header-icon" src={bookIcon} alt="" />
-                            <h1 id="my-communities-header-text" >Your Communities</h1>
-                        </div>
-                        
-                        <div id="my-communities">
-                            {forumList.map((forum) => (
-                                <CommunityTab key={ forum.ForumID } {...forum} />
-                            ))}
-                        </div>
-                    </div>
+            <div id="landing-page" className="main-content">
+                <div id="landing-left">
+                    <h2>Threads From Followed Forums</h2>
+                    {postList.map((post) => (
+                        <DashBoardPost key={ `${post.ThreadID}-${post.CategoryID}-${post.CreatorID}` } {...post} />
+                    ))}
+                    {/* <FormElement  formTitle="Create A Forum" endPoint="forums" passToEndPoint={ [{key: "UserID", value: sampleUserId}] } submitButtonText="Create Forum" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } /> */}
                 </div>
-            <Footer/>
+                <div id="landing-right">
+                    <div id="dashboard-profile-overview">
+                        <div id="dashboard-overview-profile"></div>
+                        <div id="dashboard-name-profile">Username</div>
+                    </div>
+                    {/* <div id="dashboard-quick-message">
+                        Put quick access to user messages here
+                    </div> */}
+
+                    <FormElement  formTitle="Create A Forum" endPoint="forums" passToEndPoint={ [{key: "UserID", value: sampleUserId}] } submitButtonText="Create Forum" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } />
+
+                </div>
+            </div>
         </>
     )
 }

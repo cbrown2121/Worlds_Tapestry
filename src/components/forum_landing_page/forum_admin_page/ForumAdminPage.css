@@ -1,0 +1,23 @@
+.admin-dash-page {
+    display: flex;
+
+    padding: 2rem;
+
+    gap: 4rem;
+}
+
+.admin-user-form {
+    display: flex;
+    align-items: center;
+
+    height: 3rem;
+
+    gap: 2rem;
+}
+
+.user-form-section {
+    display: flex;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}

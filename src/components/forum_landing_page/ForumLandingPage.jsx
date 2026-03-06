@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import "./ForumLandingPage.css";
 import CategoryTab from "./CategoryTab";
 import ForumSection from "./ForumSection";
 import ForumTrendingTab from "./ForumTrendingTab";
-import CategoryCreationForum from "./CategoryCreationForm";
 import defaultIcon from "../../assets/commmunity-default-icon.svg";
+import FormElement from "../form_component/FormElement.jsx";
 
 function ForumLandingPage( props ) {
     const [forumID] = useState(props.forumID)
@@ -81,46 +83,53 @@ function ForumLandingPage( props ) {
             setJoinButtonText("Join Forum");
         } 
         // in the future there should be more depending on the role since leaving should be more involved if theyre the forum owner
-    }
+    } 
 
-  return (
-    <>
-        <div className="forum-landing-page">
-            <div className="forum-landing-main">
-                <ForumSection title="Categories" categoryTabsList=
-                    {categories.map((category) => (
-                        <CategoryTab key={category.CategoryID} {...category}/>
-                    ))}
-                />
-            </div>
-            <div className="forum-landing-side">
-                <div className="forum-information">
-                    <img src={defaultIcon} alt="" className="forum-image" />
-                    <h2 className="forum-name">{ forumName }</h2>
+    return (
+        <>
+            <div className="forum-landing-page main-content">
+                <div className="forum-landing-main">
+                    <ForumSection title="Categories" categoryTabsList=
+                        {categories.map((category) => (
+                            <CategoryTab key={category.CategoryID} {...category}/>
+                        ))}
+                    />
                 </div>
-
-                <button id="forum-join-button" onClick={ joinButtonAction }> {joinButtonText} </button>
-
-                <div className="side-bar-section">
-                    <div className="side-bar-section-title">
-                        <h1>Top Tags</h1>
+                <div className="forum-landing-side">
+                    <div className="forum-information">
+                        <img src={defaultIcon} alt="" className="forum-image" />
+                        <h2 className="forum-name">{ forumName }</h2>
                     </div>
-                    <div className="side-bar-section-container"></div>
-                </div>
 
-                { (userRole == "Admin" || userRole == "Owner") && 
+                    <button id="forum-join-button" onClick={ joinButtonAction }> {joinButtonText} </button>
+
                     <div className="side-bar-section">
                         <div className="side-bar-section-title">
-                            <h1>Admin Dash</h1>
+                            <h1>Top Tags</h1>
                         </div>
-                        <button id="forum-settings" > Forum Settings </button>
-                        <CategoryCreationForum forumID={forumID}/>
+                        <div className="side-bar-section-container"></div>
                     </div>
-                } 
+
+                    { (userRole == "Admin" || userRole == "Owner") && 
+                        <div className="side-bar-section">
+                            <div className="side-bar-section-title">
+                                <h1>Admin Dash</h1>
+                            </div>
+                            <Link key={ `${forumID}-${forumName}-admin` } className="router-link" 
+                            to={ `/Forum/${ forumName.replace(/[ ]/g, "_") }/Admin-Dashboard` } 
+                            state={{ 
+                                forumID: forumID,
+                                forumName: forumName
+                            }}
+                            >
+                                <button id="forum-settings" > Forum Settings </button>
+                            </Link>
+                        </div>
+                    } 
+                </div>
             </div>
-        </div>
-    </>
-  )
+        </>
+    )
 }
 
 export default ForumLandingPage

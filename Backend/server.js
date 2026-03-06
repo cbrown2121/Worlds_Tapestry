@@ -16,6 +16,7 @@ const db = mysql.createPool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port:process.env.DB_PORT,
+  multipleStatements: true
 });
 
 // Test connection
@@ -44,6 +45,21 @@ app.get("/location", (req, res) => {
 // GET users
 app.get("/users", (req, res) => {
   db.query("SELECT * FROM Users", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+// GET users who are in a certain forum
+app.get("/:forumID/users", (req, res) => {
+  const { forumID } = req.params;
+
+  const SQL = 
+              ` SELECT DISTINCT * FROM MemberList 
+              	INNER JOIN Users u ON MemberList.UserID = u.UserID
+                WHERE MemberList.ForumID = ?;`;
+
+  db.query(SQL, [forumID], (err, results) => {
     if (err) return res.status(500).json(err);
     res.json(results);
   });
@@ -176,6 +192,22 @@ app.get("/threads", (req, res) => {
   });
 });
 
+// GET (original post) threads from forums the user is a member of
+app.get("/user-dash-threads/:userID", (req, res) => {
+  const sql = 
+            ` SELECT Threads.ThreadID, Threads.CategoryID, Threads.CreatorID, p.Content, u.UserName FROM Threads
+                INNER JOIN Categories c ON Threads.CategoryID = c.CategoryID
+                INNER JOIN MemberList m ON c.ForumID = m.ForumID
+                INNER JOIN Posts p ON Threads.ThreadID = p.ThreadID
+                INNER JOIN Users u ON Threads.CreatorID = u.UserID
+              WHERE m.UserID = ? AND p.OriginalThreadPost = 1;`; // posts are original threads if their value is 1 (true)
+  
+  db.query(sql, [req.params.userID], (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
 // GET categories for a specific forum
 app.get("/categories/:forumID", (req, res) => {
   const sql = `SELECT * FROM Categories WHERE ForumID = ?`;
@@ -209,17 +241,17 @@ app.get("/posts/:threadID", (req, res) => {
 // POST Endpoints
 // POST forums
 app.post("/forums", (req, res) => {
-  const { ForumName, SearchVisibility, JoinPermissions, AllowMaps, Tags, OwnerID } = req.body;
+  const { ForumName, SearchVisibility, JoinPermissions, AllowMaps, UserID } = req.body; // add in tags later the form currently doesnt support them
 
   // query to insert forum 
   const sql = `
-    INSERT INTO Forums (ForumName, SearchVisibility, JoinPermissions, AllowMaps, Tags, OwnerID)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO Forums (ForumName, SearchVisibility, JoinPermissions, AllowMaps, OwnerID)
+    VALUES (?, ?, ?, ?, ?)
   `;
 
   // datetime- forum id- member count are all generated automatically on mysqls end
 
-  db.query(sql, [ForumName, SearchVisibility, JoinPermissions, AllowMaps, Tags, OwnerID], (err, result) => {
+  db.query(sql, [ForumName, SearchVisibility, JoinPermissions, AllowMaps, UserID], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create forum" });
@@ -234,10 +266,14 @@ app.post("/add-user-to-forum", (req, res) => {
 
   const sql = `
     INSERT INTO MemberList (UserID, ForumID, UserRole)
-    VALUES (?, ?, ?)
+    VALUES (?, ?, ?);
+
+    UPDATE Forums 
+    SET MemberCount = MemberCount + 1 
+    WHERE ForumID = ?;
   `;
 
-  db.query(sql, [UserID, ForumID, UserRole], (err, result) => {
+  db.query(sql, [UserID, ForumID, UserRole, ForumID], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to add user to forum" });
@@ -268,14 +304,14 @@ app.post("/threads", (req, res) => {
 
 // POST categories
 app.post("/category", (req, res) => {
-  const { CategoryName, CategoryDescription, Pinned, ForumID } = req.body;
+  const { CategoryName, CategoryDescription, PinnedStatus, ForumID } = req.body;
 
   const sql = `
     INSERT INTO Categories (CategoryName, Description, Pinned, ForumID)
     VALUES (?, ?, ?, ?)
   `;
 
-  db.query(sql, [CategoryName, CategoryDescription, Pinned, ForumID], (err, result) => {
+  db.query(sql, [CategoryName, CategoryDescription, PinnedStatus, ForumID], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create category" });
@@ -448,9 +484,15 @@ app.delete("/forums/:id", (req, res) => {
 app.delete("/remove-user-from-forum", (req, res) => {
   const { UserID, ForumID } = req.body;
 
-  const sql = "DELETE FROM MemberList WHERE ForumID = ? AND UserID = ?";
+  const sql = `
+    DELETE FROM MemberList WHERE ForumID = ? AND UserID = ?;
 
-  db.query(sql, [ ForumID, UserID ], (err, result) => {
+    UPDATE Forums 
+    SET MemberCount = MemberCount - 1 
+    WHERE ForumID = ?;
+  `;
+
+  db.query(sql, [ ForumID, UserID, ForumID ], (err, result) => {
     if (err) return res.status(500).json(err);
 
     if (result.affectedRows === 0)
@@ -591,6 +633,54 @@ app.put("/posts/:id", (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+});
+
+// PATCH memberlist
+app.patch("/memberlist/:forumID/:userID", (req, res) => {
+  const forumID = req.params.forumID.trim();
+  const userID = req.params.userID.trim();
+
+  // // Whitelisted columns
+  // const allowedFields = [
+  //   "ForumName",
+  //   "Tags",
+  //   "SearchVisibility",
+  //   "JoinPermissions"
+  // ];
+
+  // const updates = [];
+  // const values = [];
+
+  // for (const key in req.body) {
+  //   if (allowedFields.includes(key)) {
+  //     updates.push(`${key} = ?`);
+  //     values.push(req.body[key]);
+  //   }
+  // }
+
+  // if (updates.length === 0) {
+  //   return res.status(400).json({
+  //     message: "No valid fields provided for update"
+  //   });
+  // }
+
+  // values.push(id);
+
+  // const sql = `
+  //   UPDATE Forums
+  //   SET ${updates.join(", ")}
+  //   WHERE ForumID = ?
+  // `;
+
+  // db.query(sql, values, (err, result) => {
+  //   if (err) return res.status(500).json(err);
+
+  //   if (result.affectedRows === 0) {
+  //     return res.status(404).json({ message: "Forum not found" });
+  //   }
+
+  //   res.json({ message: "Forum updated successfully" });
+  // });
 });
 
 // PATCH forums

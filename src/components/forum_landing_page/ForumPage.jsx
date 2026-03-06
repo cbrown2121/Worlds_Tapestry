@@ -9,9 +9,7 @@ function ForumPage() {
 
     return (
         <>
-            <Header />
-            <ForumLandingPage forumID={ location.state.forumID } forumName={ location.state.forumName } /> 
-            <Footer />
+            <ForumLandingPage key={location.pathname} forumID={ location.state.forumID } forumName={ location.state.forumName } /> { /* giving a unique key to the component will force it to rerender. without it the forum links wont work correctly */ }
         </>
     )
 }

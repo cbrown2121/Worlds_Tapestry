@@ -4,6 +4,8 @@
     
     padding: 4rem;
 
+    gap: 10rem;
+
     background: var(--background);
     color: var(--text);
 }
@@ -16,20 +18,20 @@
 
     gap: 4rem;
 
-    width: 33.333%;
+    width: 100%;
 }
 
 /* trending ------------------------------------------------------------------------------------------------------- */
-
+/* 
 #landing-page #landing-left #trending-column {
     display: flex;
     flex-direction: column;
     gap: 4rem;
-}
+} */
 
 /* map ------------------------------------------------------------------------------------------------------- */
 
-#map {
+/* #map {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -50,18 +52,18 @@
     width: 100%;
     border: 3px solid var(--text);
     border-radius: 0.25rem;
-}
+} */
 
 /* right col ------------------------------------------------------------------------------------------------------ */
 
 #landing-page #landing-right {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 4rem;
     width: 50%;
 }
 
-#landing-page #landing-right #my-communities-header {
+/* #landing-page #landing-right #my-communities-header {
     display: flex;
     align-items: center;
     gap: 2rem;
@@ -76,6 +78,38 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    /* align-items: center;
-    justify-content: space-between; */
+} */
+
+#dashboard-profile-overview {
+    margin-top: 6rem;
+    background: var(--light-grey);
+    height: 5rem;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    padding: 2rem;
+    gap: 5rem;
+
+    border-radius: 0.5rem;
+}
+
+#dashboard-profile-overview #dashboard-overview-profile {
+    height: 2rem;
+    width: 2rem;
+
+    background: var(--tertiary);
+    border-radius: 50%;
+}
+
+#dashboard-profile-overview #dashboard-name-profile {
+    font-size: 1rem;
+}
+
+#dashboard-quick-message {
+    background: var(--light-grey);
+    height: 5rem;
+
+    border-radius: 0.5rem;
 }

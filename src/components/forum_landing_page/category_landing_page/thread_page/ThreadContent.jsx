@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
-import "./ThreadPage.css";
+import { useLocation } from 'react-router-dom';
+import "./ThreadContent.css";
 import ThreadPost from "./TheadPost.jsx";
 
 function ThreadContent(props) {
+    const state = useLocation().state;
+
     // const [forumID, setForumID] = useState(props.forumID);
-    const [threadID, setThreadID] = useState(props.threadID);
+    const [threadID, setThreadID] = useState(state.threadID);
     const [posts, setPosts] = useState([]);
     const [ThreadList, setThread] = useState([])
     useEffect(() => {
