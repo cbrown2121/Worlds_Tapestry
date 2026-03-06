@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 
-function FormRow( props ) {
-    const [userID, setUserID] = useState(props.userID);
-    const [forumID, setForumID] = useState(props.forumID);
+const FormRow = (props) => {
+    const [userID] = useState(props.userID);
+    const [forumID] = useState(props.forumID);
 
     const processForm = async (event) => {
         event.preventDefault();
@@ -21,7 +21,17 @@ function FormRow( props ) {
             }).catch(error => console.error(error));
             
         } else if (formData.get("user-forum-name-role") != props.userRole) {
-            console.log("change role")
+
+            fetch(`http://localhost:5000/memberlist-change-role`, {
+                method: "PUT",
+                headers: {
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify({UserID: userID, ForumID: forumID, UserRole: formData.get("user-forum-name-role")})
+            }).then(response => {
+                window.location.reload();
+            }).catch(error => console.error(error));
+
         }
     }
 
@@ -34,9 +44,9 @@ function FormRow( props ) {
                     </div>
                     <div className="user-form-section">
                         <label htmlFor="user-forum-name-role">Role:</label>
-                        <select id="user-forum-name-role" name="user-forum-name-role">
+                        <select defaultValue={ props.userRole } id="user-forum-name-role" name="user-forum-name-role">
                             <option value="Member">Member</option>
-                            <option value="Admin" defaultValue={props.UserRole == "Admin"}>Admin</option>
+                            <option value="Admin">Admin</option>
                         </select>
                     </div>
                     <div className="user-form-section">

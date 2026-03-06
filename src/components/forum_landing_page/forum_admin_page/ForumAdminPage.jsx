@@ -10,15 +10,6 @@ function ForumAdminPage( props ) {
     const [forumName, setForumName] = useState(state.forumName);
     const [forumCategories, setForumCategories] = useState([]);
     const [forumMembers, setForumMembers] = useState([]);
-    
-    // const getForumCategories = () => {
-    //     fetch(`http://localhost:5000/categories/${forumID}`)
-    //     .then(response => response.json())
-    //     .then(categoryList => {
-    //         setForumCategories(categoryList);
-    //         console.log(categoryList)
-    //     }).catch(error => console.error(error));
-    // }
 
     const getForumMembers = () => {
         fetch(`http://localhost:5000/${forumID}/users`)

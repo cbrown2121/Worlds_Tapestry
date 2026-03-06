@@ -20,7 +20,7 @@ function ThreadContent(props) {
 
   return (
     <>
-        <div className="thread-page">
+        <div className="thread-page main-content">
             <div className="thread-header">
                 <div className="thread-name-count">
                     <h1 className="thread-name">Topic Name</h1>

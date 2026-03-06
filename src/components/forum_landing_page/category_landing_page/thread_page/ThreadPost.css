@@ -1,5 +1,6 @@
 .thread-post {
-    border: 2px solid var(--text);
+    /* border: 2px solid var(--text); */
+    border-radius: 1rem;
 
     background: var(--light-grey);
     padding: 1rem 2rem;
@@ -7,9 +8,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    height: 100%;
-    width: 90vw;
+    
+    width: 80vw;
 }
 
 /* left side of post containing post information ========================================================================================================= */
@@ -47,7 +47,16 @@
     gap: 1rem;
 }
 
-.thread-post .post-left .post-like-dislike-date .ratings .rating img {
+.thread-post .post-left .post-like-dislike-date .ratings .rating button {
+    height: 3rem;
+    width: 3rem;
+} 
+
+.thread-post .post-left .post-like-dislike-date .ratings .rating .active {
+    background: var(--background)
+} 
+
+.thread-post .post-left .post-like-dislike-date .ratings .rating button img {
     height: 2rem;
 }
 

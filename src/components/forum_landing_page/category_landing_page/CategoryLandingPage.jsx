@@ -42,6 +42,8 @@ const CategoryLandingPage = ( props ) => {
                         <h2 className="forum-name">{state.categoryName}</h2>
                     </div>
 
+                    <button className="create-thread-button">Create A Thread</button>
+
                     {/* <button id="forum-join-button" > Hi </button>
 
                     <div className="side-bar-section">

@@ -238,6 +238,18 @@ app.get("/posts/:threadID", (req, res) => {
   });
 });
 
+// GET if the user has interated with a post
+app.get("/post-ratings/:PostID/:UserID", (req, res) => {
+  const { PostID, UserID } = req.params;
+
+  const sql = `SELECT * FROM PostRatings WHERE PostID = ? AND UserID = ?`;
+
+  db.query(sql, [PostID, UserID], (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
+});
+
 // POST Endpoints
 // POST forums
 app.post("/forums", (req, res) => {
@@ -608,8 +620,6 @@ app.delete("/users/:id", (req, res) => {
 });
 
 // PUT Endpoints
-// PUT postID **still needs to update content and status**
-
 app.put("/posts/:id", (req, res) => {
   const postID = req.params.id;
   const { likes, dislikes } = req.body;
@@ -630,57 +640,65 @@ app.put("/posts/:id", (req, res) => {
   });
 });
 
+// PUT post and update PostRating table
+app.put("/change-post-rating", (req, res) => {
+  const { postID, likes, dislikes, userID, rating } = req.body;
+
+  let sql;
+  let value_list;
+
+  if (rating == "remove") {
+    sql = ` UPDATE Posts
+            SET likes = ?, dislikes = ?
+            WHERE PostID = ?;
+            
+            DELETE FROM PostRatings WHERE PostID = ? AND UserID = ?`
+  value_list = [likes, dislikes, postID, postID, userID];
+
+  } else {
+    sql = ` UPDATE Posts
+            SET likes = ?, dislikes = ?
+            WHERE PostID = ?;
+
+            INSERT INTO PostRatings (PostID, UserID, Rating)
+            VALUES (?, ?, ?)
+            ON DUPLICATE KEY UPDATE Rating = ?;`
+    value_list = [likes, dislikes, postID, postID, userID, rating, rating];
+  }
+
+  db.query(sql, value_list, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to update post" });
+    }
+
+    res.json({ message: "Post updated" });
+  });
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 
-// PATCH memberlist
-app.patch("/memberlist/:forumID/:userID", (req, res) => {
-  const forumID = req.params.forumID.trim();
-  const userID = req.params.userID.trim();
+// change a user role (this is the only field in the category that will change so i thought making a patch would be overkill)
+app.put("/memberlist-change-role", (req, res) => {
+  const { UserID, ForumID, UserRole } = req.body;
 
-  // // Whitelisted columns
-  // const allowedFields = [
-  //   "ForumName",
-  //   "Tags",
-  //   "SearchVisibility",
-  //   "JoinPermissions"
-  // ];
+  const sql = `
+    UPDATE MemberList
+    SET UserRole = ?
+    WHERE UserID = ? AND ForumID = ?
+  `; 
 
-  // const updates = [];
-  // const values = [];
+  db.query(sql, [UserRole, UserID, ForumID], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to update post" });
+    }
 
-  // for (const key in req.body) {
-  //   if (allowedFields.includes(key)) {
-  //     updates.push(`${key} = ?`);
-  //     values.push(req.body[key]);
-  //   }
-  // }
-
-  // if (updates.length === 0) {
-  //   return res.status(400).json({
-  //     message: "No valid fields provided for update"
-  //   });
-  // }
-
-  // values.push(id);
-
-  // const sql = `
-  //   UPDATE Forums
-  //   SET ${updates.join(", ")}
-  //   WHERE ForumID = ?
-  // `;
-
-  // db.query(sql, values, (err, result) => {
-  //   if (err) return res.status(500).json(err);
-
-  //   if (result.affectedRows === 0) {
-  //     return res.status(404).json({ message: "Forum not found" });
-  //   }
-
-  //   res.json({ message: "Forum updated successfully" });
-  // });
+    res.json({ message: "Post updated" });
+  });
 });
 
 // PATCH forums

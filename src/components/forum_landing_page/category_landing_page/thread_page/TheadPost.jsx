@@ -1,22 +1,42 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import "./ThreadPost.css"
 // import ThreadPost from "./TheadPost"
 import thumbsUpIcon from "../../../../assets/thumbs-up.svg"
 import thumbsDownIcon from "../../../../assets/thumbs-down.svg"
 import profile from "../../../../assets/profile.svg"
 
-function ThreadPost( props ) {
-    const [likeCount, Upvote] = useState(props.likes)
-    const [dislikeCount, Downvote] = useState(props.dislikes)
+const ThreadPost = (props) => {
+    const sampleUserID = 1;
+    
+    const [likeCount, Upvote] = useState(props.likes);
+    const [dislikeCount, Downvote] = useState(props.dislikes);
 
-    const ratingUpdate = async (likeValue, dislikeValue) => {
+    const [likeButtonStatus, setLikeButtonStatus] = useState(document.getElementById("not-active")); // keeps track of if a user has liked a post
+    const [dislikeButtonStatus, setDislikeButtonStatus] = useState(document.getElementById("not-active")); // keeps track of if a user has disliked a post
+
+    // check if the user is in the post ratings list to see if they have already interacted with a post
+    useEffect(() => {       
+        fetch(`http://localhost:5000/post-ratings/${props.PostID}/${sampleUserID}`)
+        .then(response => response.json())
+        .then(response => {
+            if (0 < response.length) { // the user has interacted with the post
+                if (response[0].Rating == "like") {
+                    setLikeButtonStatus("active");
+                } else if (response[0].Rating == "dislike") { // a rating can only be like or dislike. the ifelse is just done to be safe
+                    setDislikeButtonStatus("active");
+                }
+            }
+        }).catch(error => console.error(error));  
+    }, []);
+
+    const ratingUpdate = async (likeValue, dislikeValue, rating) => {
         try { // submit to posts table to update data
-            const response = await fetch(`http://localhost:5000/posts/${props.PostID}`, {
+            const response = await fetch(`http://localhost:5000/change-post-rating`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ likes: likeValue, dislikes: dislikeValue }),
+                body: JSON.stringify({ postID: props.PostID, likes: likeValue, dislikes: dislikeValue, userID: sampleUserID, rating: rating}),
             });
 
             if (!response.ok) {
@@ -28,14 +48,40 @@ function ThreadPost( props ) {
         }
     }
 
+    const interactWithLike = (buttonStatus, likeValue, rating) => {
+        setLikeButtonStatus(buttonStatus); // status determines if the button is highlighted or not
+        ratingUpdate(likeCount + likeValue, dislikeCount, rating);
+        Upvote(likes => likes + likeValue);
+    }
+
+    const interactWithDislike = (buttonStatus, dislikeValue, rating) => {
+        setDislikeButtonStatus(buttonStatus);
+        ratingUpdate(likeCount, dislikeCount + dislikeValue, rating);
+        Downvote(dislikes => dislikes + dislikeValue);
+    }
+
     const upclicked = () => {
-        ratingUpdate(likeCount + 1, dislikeCount);
-        Upvote(likes => likes + 1);
+        if (likeButtonStatus == "active") { // user already liked the post
+            interactWithLike("not-active", -1, "remove"); // remove like
+        } else {
+            if (dislikeButtonStatus == "active") { // user already disliked the post
+                interactWithDislike("not-active", -1, "remove"); // remove dislike ======================================================================= currently buggy
+            }
+
+            interactWithLike("active", 1, "like"); // add like
+        }
     }
 
     const downclick = () => {
-        ratingUpdate(likeCount, dislikeCount + 1);
-        Downvote(dislikes => dislikes + 1);
+        if (dislikeButtonStatus == "active") { // user already disliked the post
+            interactWithDislike("not-active", -1, "remove"); // remove dislike
+        } else {
+            if (likeButtonStatus == "active") { // user already liked the post
+                interactWithLike("not-active", -1, "remove"); // remove like ============================================================================= currently buggy
+            }
+
+            interactWithDislike("active", 1, "dislike"); // add dislike
+        }
     }
 
     return (
@@ -47,12 +93,12 @@ function ThreadPost( props ) {
                     <div className="post-like-dislike-date">
                         <div className="ratings">
                             <div className="rating">
-                                <button type="button" id="Like" onClick={ upclicked }><img src={thumbsUpIcon} alt="upward arrow" /></button>
-                                <p className="like-count">{likeCount}</p>
+                                <button type="button" className={ likeButtonStatus } onClick={ upclicked }><img src={thumbsUpIcon} alt="upward arrow" /></button>
+                                <p className="like-count">{ likeCount }</p>
                             </div>
                             <div className="rating">
-                                <button type="button" id="Dislike" onClick={ downclick }><img src={thumbsDownIcon} alt="downward arrow" /></button>
-                                <p className="dislike-count">{dislikeCount}</p>
+                                <button type="button" className={ dislikeButtonStatus } onClick={ downclick }><img src={thumbsDownIcon} alt="downward arrow" /></button>
+                                <p className="dislike-count">{ dislikeCount }</p>
                             </div>
                         </div>
                         <p className="post-creation-day">{ props.Creation_Date }</p> 

@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 function ThreadTab( props ) {
-    console.log(props)
     const location = useLocation();
     const [recency, setRecency] = useState(null);
 

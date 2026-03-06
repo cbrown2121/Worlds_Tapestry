@@ -19,7 +19,7 @@ export default function ProfilePage() {
 
   return (
     <>
-        <div className="profile-page">
+        <div className="profile-page main-content">
           <div className="profile-container">
             <h2>User Profile</h2>
             <p><strong>UserID:</strong> {user.UserID}</p>
