@@ -6,6 +6,7 @@ import thumbsDownIcon from "../../../../assets/thumbs-down.svg"
 import profile from "../../../../assets/profile.svg"
 
 const ThreadPost = (props) => {
+    console.log(props)
     const sampleUserID = 1;
     const modalID = useId();
     const [text, setText] = useState("");
@@ -150,7 +151,7 @@ const ThreadPost = (props) => {
                         <div className="user-major-details">
                             <img src={profile} alt="" className="user-profile" />
                             <div className="user-name-and-type">
-                                <h1 className="user-name">{props.Creator}</h1>
+                                <h1 className="user-name">{props.UserName}</h1>
                                 <h2 className="user-type">User</h2>
                             </div>
                         </div>
@@ -160,7 +161,7 @@ const ThreadPost = (props) => {
                         <p className="forum-post-count">xxxx Threads started</p> */}
                         </div>
                     </div>
-                    <button className="reply-to-post" >Reply to Post</button>
+                    {/* <button className="reply-to-post" >Reply to Post</button> */}
                     <div className="delete-edit">
                         <button className="delete-button" onClick={deletepost}>Delete</button>
                         <button className="edit-button" command="show-modal" commandfor={modalID}>Edit</button>

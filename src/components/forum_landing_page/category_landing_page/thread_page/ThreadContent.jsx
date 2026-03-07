@@ -9,14 +9,16 @@ function ThreadContent(props) {
     // const [forumID, setForumID] = useState(props.forumID);
     const [threadID, setThreadID] = useState(state.threadID);
     const [posts, setPosts] = useState([]);
-    const [ThreadList, setThread] = useState([])
+    const [ThreadList, setThread] = useState([]);
+
     useEffect(() => {
-            fetch(`http://localhost:5000/posts/${threadID}`) // change later to not be on local host
-            .then(response => response.json())
-            .then(postList => {
-                setPosts(postList)
-            }).catch(error => console.error(error));
-        }, []);
+        fetch(`http://localhost:5000/posts/${threadID}`)
+        .then(response => response.json())
+        .then(postList => {
+            setPosts(postList);
+        }).catch(error => console.error(error));
+    }, []);
+
     // const makePost = async (likeValue, dislikeValue, rating) => {
     //     try { // submit to posts table to update data
     //         const response = await fetch(`http://localhost:5000/posts`, {
@@ -35,13 +37,14 @@ function ThreadContent(props) {
     //         console.log(`Data was submitted unsuccessfully: ${error}`);
     //     }
     // }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
         const userId = props.userID; // demo user
 
-        let userData = {creator : sampleUserID,thread_id : threadID, creation_date : Date.now(), status : "unlocked", replies : "", content : formData.get("postbody"), likes : 0, dislikes : 0, subject : formData.get("Header"), }
+        let userData = { creator : sampleUserID, thread_id : threadID, content : formData.get("postbody") }
         
         try {
             const response = await fetch(`http://localhost:5000/posts`, {
@@ -78,12 +81,6 @@ function ThreadContent(props) {
                 <h1 id="profile-update-title">Create a new post</h1>
                 <form onSubmit={handleSubmit} action="" id="new-post-form">
                     <div className="form-section">
-                        <div className="section-heading">
-                            <h2 className="form-section-header">Subject</h2>
-                        </div>
-                        <div className="section-options">
-                            <input type="text" id="Header" name="Header" placeholder="Put a short subject description here."/>
-                        </div>
                     </div>
                     <div className="form-section">
                         <div className="section-heading">

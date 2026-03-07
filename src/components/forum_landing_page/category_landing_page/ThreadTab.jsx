@@ -48,7 +48,9 @@ function ThreadTab( props ) {
                                 </div>
                             </div>
                             <div className="most-recent-activity">
-                                <p className="most-recent">Recent Activity {recency}</p>
+                                { recency != null &&
+                                    <p className="most-recent">Recent Activity {recency}</p>
+                                } 
                             </div>
                     </div>
                 </div>

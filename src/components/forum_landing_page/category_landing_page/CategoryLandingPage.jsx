@@ -28,7 +28,7 @@ const CategoryLandingPage = ( props ) => {
 
     return (
         <>
-            <div className="forum-landing-page">
+            <div className="forum-landing-page main-content">
                 <div className="forum-landing-main">
                     <ForumSection title="Threads" categoryTabsList=
                         {threads.map((thread) => (

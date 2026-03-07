@@ -230,7 +230,7 @@ app.get("/threads/:categoryID", (req, res) => {
 
 // GET posts for specific threads
 app.get("/posts/:threadID", (req, res) => {
-  const sql = `SELECT * FROM Posts WHERE ThreadID = ?`;
+  const sql = `SELECT * FROM Posts INNER JOIN Users u ON Posts.UserID = u.UserID WHERE ThreadID = ?;`;
 
   db.query(sql, [req.params.threadID], (err, result) => {
     if (err) return res.status(500).json(err);
@@ -353,15 +353,15 @@ app.post("/userpins", (req, res) => {
 });
 
 app.post("/posts", (req, res) => {
-  const { creator, thread_id, creation_date, status, replies, content, likes, dislikes, subject } = req.body;
+  const { creator, thread_id, content } = req.body;
 
   // query for posting likes
   const sql = ` 
-    INSERT INTO Posts (UserID, ThreadID, Created_Time, Status, Replies, Content, likes, dislikes, subject )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO Posts (UserID, ThreadID, Content)
+    VALUES (?, ?, ?)
   `;
 
-  db.query(sql, [creator, thread_id, creation_date, status, replies, content, likes, dislikes, subject], (err, result) => {
+  db.query(sql, [creator, thread_id, content], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create post" });
