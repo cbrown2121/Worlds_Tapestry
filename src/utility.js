@@ -1,9 +1,11 @@
 const getRecencyString = (difference, type) => {
     let ending = (difference === 1) ? type : `${type}s`;
-    return `${difference} ${ending} Ago`
+    return `${difference} ${ending} Ago`;
 }
 
 export const calculateRecency = (mostRecent) => { 
+    if (mostRecent == null) return null;
+    
     const mostRecentTime = new Date(mostRecent);
     const currentTime = new Date();
     

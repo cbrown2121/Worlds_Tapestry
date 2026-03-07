@@ -7,7 +7,7 @@ function CommunityTab( props ) {
     const [recency, setRecency] = useState(null);
     
     useEffect(() => {
-        setRecency(calculateRecency(props.MostRecentActivity))
+        setRecency(calculateRecency(props.MostRecentActivity));
     },[]);
 
     return (
@@ -27,7 +27,9 @@ function CommunityTab( props ) {
 
                     <div className="tab-information">
                         <div className="tab-name">{props.ForumName}</div>
-                        <p className="most-recent">Recent Activity {recency}</p>
+                        { recency != null &&
+                            <p className="most-recent">Recent Activity {recency}</p>
+                        }
                     </div>
                 </div>
 

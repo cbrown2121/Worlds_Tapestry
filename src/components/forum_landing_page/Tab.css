@@ -9,8 +9,9 @@
     height: 10rem;
     width: 80%;
 
-    background: var(--light-grey);
-    border-radius: 1rem;
+    /* background: var(--light-grey); */
+    border: 1px solid var(--text);
+    border-radius: 0.25rem;
 }
 
 .landing-tab {
@@ -32,7 +33,7 @@
     height: 90%;
     width: 15%;
 
-    border-radius: 1rem;
+    border-radius: 0.25rem;
 }
 
 .thread-tab .icon-or-image {

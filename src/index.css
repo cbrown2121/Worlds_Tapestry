@@ -37,6 +37,10 @@ html, body, #root {
   /* scrollbar-width: none; */
 }
 
+.main-content {
+    min-height: calc(100vh - 5rem - 4rem); /* 5rem is header size 4rem is footer size*/
+}
+
 /* prevent horizontal scroll WITHOUT breaking Google Maps */
 body {
   overflow-x: hidden;
