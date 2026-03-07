@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useId } from "react"
 import "./ThreadPost.css"
 // import ThreadPost from "./TheadPost"
 import thumbsUpIcon from "../../../../assets/thumbs-up.svg"
@@ -7,7 +7,8 @@ import profile from "../../../../assets/profile.svg"
 
 const ThreadPost = (props) => {
     const sampleUserID = 1;
-    
+    const modalID = useId();
+    const [text, setText] = useState("");
     const [likeCount, Upvote] = useState(props.likes);
     const [dislikeCount, Downvote] = useState(props.dislikes);
 
@@ -15,18 +16,18 @@ const ThreadPost = (props) => {
     const [dislikeButtonStatus, setDislikeButtonStatus] = useState(document.getElementById("not-active")); // keeps track of if a user has disliked a post
 
     // check if the user is in the post ratings list to see if they have already interacted with a post
-    useEffect(() => {       
+    useEffect(() => {
         fetch(`http://localhost:5000/post-ratings/${props.PostID}/${sampleUserID}`)
-        .then(response => response.json())
-        .then(response => {
-            if (0 < response.length) { // the user has interacted with the post
-                if (response[0].Rating == "like") {
-                    setLikeButtonStatus("active");
-                } else if (response[0].Rating == "dislike") { // a rating can only be like or dislike. the ifelse is just done to be safe
-                    setDislikeButtonStatus("active");
+            .then(response => response.json())
+            .then(response => {
+                if (0 < response.length) { // the user has interacted with the post
+                    if (response[0].Rating == "like") {
+                        setLikeButtonStatus("active");
+                    } else if (response[0].Rating == "dislike") { // a rating can only be like or dislike. the ifelse is just done to be safe
+                        setDislikeButtonStatus("active");
+                    }
                 }
-            }
-        }).catch(error => console.error(error));  
+            }).catch(error => console.error(error));
     }, []);
 
     const ratingUpdate = async (likeValue, dislikeValue, rating) => {
@@ -36,7 +37,7 @@ const ThreadPost = (props) => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ postID: props.PostID, likes: likeValue, dislikes: dislikeValue, userID: sampleUserID, rating: rating}),
+                body: JSON.stringify({ postID: props.PostID, likes: likeValue, dislikes: dislikeValue, userID: sampleUserID, rating: rating }),
             });
 
             if (!response.ok) {
@@ -84,24 +85,64 @@ const ThreadPost = (props) => {
         }
     }
 
+    const deletepost = async () => {
+        try { // submit to posts table to update data
+            const response = await fetch(`http://localhost:5000/posts/${props.PostID}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ Content: "This post has been deleted." }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Network response error");
+            }
+
+        } catch (error) {
+            console.log(`Data was submitted unsuccessfully: ${error}`);
+        }
+        window.location.reload(); // reload window to show that profile has been updated.
+    }
+
+    const editpost = async () => {
+        try { // submit to posts table to update data
+            const response = await fetch(`http://localhost:5000/posts/${props.PostID}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({Content: text + "     This post has been edited."}),
+            });
+
+            if (!response.ok) {
+                throw new Error("Network response error");
+            }
+
+        } catch (error) {
+            console.log(`Data was submitted unsuccessfully: ${error}`);
+        }
+        window.location.reload(); // reload window to show that profile has been updated.
+    }
+
     return (
         <>
             <div className="thread-post">
                 <div className="post-left">
                     {/* <h1 className="post-subject">{subject}</h1> */}
-                    <p className="post-content">{ props.Content }</p>
+                    <p className="post-content">{props.Content}</p>
                     <div className="post-like-dislike-date">
                         <div className="ratings">
                             <div className="rating">
-                                <button type="button" className={ likeButtonStatus } onClick={ upclicked }><img src={thumbsUpIcon} alt="upward arrow" /></button>
-                                <p className="like-count">{ likeCount }</p>
+                                <button type="button" className={likeButtonStatus} onClick={upclicked}><img src={thumbsUpIcon} alt="upward arrow" /></button>
+                                <p className="like-count">{likeCount}</p>
                             </div>
                             <div className="rating">
-                                <button type="button" className={ dislikeButtonStatus } onClick={ downclick }><img src={thumbsDownIcon} alt="downward arrow" /></button>
-                                <p className="dislike-count">{ dislikeCount }</p>
+                                <button type="button" className={dislikeButtonStatus} onClick={downclick}><img src={thumbsDownIcon} alt="downward arrow" /></button>
+                                <p className="dislike-count">{dislikeCount}</p>
                             </div>
                         </div>
-                        <p className="post-creation-day">{ props.Creation_Date }</p> 
+                        <p className="post-creation-day">{props.Created_Time}</p>
                     </div>
                 </div>
                 <div className="post-right">
@@ -109,7 +150,7 @@ const ThreadPost = (props) => {
                         <div className="user-major-details">
                             <img src={profile} alt="" className="user-profile" />
                             <div className="user-name-and-type">
-                                <h1 className="user-name">{ props.Creator }</h1>
+                                <h1 className="user-name">{props.Creator}</h1>
                                 <h2 className="user-type">User</h2>
                             </div>
                         </div>
@@ -120,6 +161,25 @@ const ThreadPost = (props) => {
                         </div>
                     </div>
                     <button className="reply-to-post" >Reply to Post</button>
+                    <div className="delete-edit">
+                        <button className="delete-button" onClick={deletepost}>Delete</button>
+                        <button className="edit-button" command="show-modal" commandfor={modalID}>Edit</button>
+                    </div>
+                    <dialog id={modalID} className="edit-field" >
+                        <div className="edit-container"><input
+                            className="text-field"
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                            placeholder={props.Content}
+                            name= "ContentEdit"
+                        />
+                            <button onClick={editpost} className="submit">
+                                Submit
+                            </button>
+                            <button className="Close" command="close" commandfor={modalID} value="cancel">
+                                Close
+                            </button></div>
+                    </dialog>
                 </div>
             </div>
         </>
