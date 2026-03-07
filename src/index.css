@@ -22,14 +22,12 @@
   --lightest-grey: #efefef;
   --dark-grey: #B7B7B7;
   --darkest-grey: #333333;
-  --sidebar-header-outline: #1b809a;
 }
 
 html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
-  min-height: 100vh; /* Ensures body is at least viewport height */
 }
 
 * {
@@ -49,114 +47,7 @@ body {
   text-decoration: inherit;
 }
 
-#page-content {
-    width: 100%;
-    display: flex;
-}
-
-/* website content --------------------------------------------------------------------------------------------------------------------------------------- */
-#website-content {
-    background: var(--secondary);
-}
-
-/* SIDEBAR ----------------------------------------------------------------------------------------------------------------------------------------------- */
-
-#sidebar {
-  flex: 2;
-
-  /* height: 100%; */
-  /* width: 15vw; */
-
-  background: var(--light-grey);
-}
-
-/* MAIN CONTENT AREA -------------------------------------------------------------------------------------------------------------------------------------- */
-#main-page{
-    display: flex;
-    justify-content: space-between;
-
-    height: calc(100vh - 5rem); /* 5rem is header size */
-}
-
-.sidebar {
-    height: calc(100vh - 5rem);
-    background: var(--secondary);
-
-    border-right: 2px solid var(--sidebar-header-outline);
-}
-
-.sidebar #create-forum-button {
-    margin-top: 2rem;
-    height: 3rem;
-    width: 100%;
-
-    font-size: 1rem;
-
-    background: var(--background);
-    border: 1px solid var(--background);
-}
-
-#sidebar-left {
-    width: 15vw;
-
-    padding: 1rem;
-}
-
-#sidebar-left .forum-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem
-}
-
-#sidebar-left .forum-list p {
-    margin-bottom: 1rem
-}
-
-#sidebar-left .forum-list h1 {
-    font-size: 1.25rem;
-}
-
-#second-sidebar {
-    width: 1vw;
-}
-
-#main-content {
-    width: 100%;
-    
-    /* min-height: 100%; */
-    /* overflow-y: scroll; */
-
-    -ms-overflow-style: none;  /* hide scrollbar for edge */
-    scrollbar-width: none;  /* hide scrollbar for firefox */
-
-    /* border-radius: 2rem; */
-
-    background: var(--background);
-    /* flex: 10; */
-    /* display: flex;
-    flex-direction: column; */
-}
-
-/* hide scrollbar for chrome / safari / opera */
-#main-content::-webkit-scrollbar {
-  display: none;
-}
-
-.main-content { /* ill change this later so we dont have an id and class with the same name */
-    /* min-height: 100vh; */
-    overflow-y: auto;
-    height: calc(100vh - 5rem); /* 5rem is header size */
-
-    -ms-overflow-style: none;  /* hide scrollbar for edge */
-    scrollbar-width: none;  /* hide scrollbar for firefox */
-}
-
-/* hide scrollbar for chrome / safari / opera */
-.main-content::-webkit-scrollbar {
-  display: none;
-}
-
-/* HEADER ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* HEADER */
 
 #header {
     display: flex;
@@ -168,7 +59,6 @@ body {
 
     height: 5rem;
     background: var(--secondary);
-    border-bottom: 2px solid var(--sidebar-header-outline);
 }
 
 /* right side of header --------------------------------------------------------------------------------------------- */
@@ -230,19 +120,17 @@ body {
     height: 2.5rem;
 }
 
-/* FOOTER -------------------------------------------------------------------------------------------------------------------------------- */
-
+/* FOOTER */
 #footer {
-    /* display: flex; */
+    display: flex;
     
-    height: 1.6vh;
-    overflow: hidden;
-    /* width: 100vw; */
+    height: 4rem;
+    width: 100vw;
 
-    background: var(--secondary);
+    background: var(--tertiary);
 }
 
-/* #footer-left {
+#footer-left {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -258,4 +146,4 @@ body {
     text-decoration: none;
     color: var(--darkest-grey);
     font-weight: 500;
-} */
+}
