@@ -354,15 +354,15 @@ app.post("/userpins", (req, res) => {
 
 // POST posts
 app.post("/posts", (req, res) => {
-  const { creator, creation_date, status, replies, content, likes, dislikes, subject } = req.body;
+  const { creator, thread_id, creation_date, status, replies, content, likes, dislikes, subject } = req.body;
 
   // query for posting likes
   const sql = ` 
-    INSERT INTO Posts (Creator, Creation_Date, Status, Replies, Content, likes, dislikes, subject )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO Posts (UserID, ThreadID, Created_Time, Status, Replies, Content, likes, dislikes, subject )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
-  db.query(sql, [creator, creation_date, status, replies, content, likes, dislikes, subject], (err, result) => {
+  db.query(sql, [creator, thread_id, creation_date, status, replies, content, likes, dislikes, subject], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create post" });
