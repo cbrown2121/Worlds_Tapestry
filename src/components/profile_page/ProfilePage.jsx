@@ -3,7 +3,6 @@ import Header from "../Header.jsx";
 import Footer from "../Footer.jsx";
 import MessagesPage from "../messages_page/MessagesPage.jsx";
 import "./ProfilePage.css"
-import ProfileUpdateForm from "./ProfileUpdateForm.jsx";
 import FormElement from "../form_component/FormElement.jsx";
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -38,4 +37,3 @@ export default function ProfilePage() {
     </>
   )
 }
-
