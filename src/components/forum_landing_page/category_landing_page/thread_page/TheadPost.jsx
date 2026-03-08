@@ -6,7 +6,6 @@ import thumbsDownIcon from "../../../../assets/thumbs-down.svg"
 import profile from "../../../../assets/profile.svg"
 
 const ThreadPost = (props) => {
-    console.log(props)
     const sampleUserID = 1;
     const modalID = useId();
     const [text, setText] = useState("");
@@ -93,7 +92,7 @@ const ThreadPost = (props) => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ Content: "This post has been deleted." }),
+                body: JSON.stringify({ Deleted: 1 }),
             });
 
             if (!response.ok) {
@@ -156,31 +155,34 @@ const ThreadPost = (props) => {
                             </div>
                         </div>
                         <div className="user-minor-details">
-                            {/* <p className="forum-join-date">User since: xx/xx/xxxx</p>
-                        <p className="thread-start-count">xxxx Posts</p>
-                        <p className="forum-post-count">xxxx Threads started</p> */}
+
                         </div>
                     </div>
                     {/* <button className="reply-to-post" >Reply to Post</button> */}
-                    <div className="delete-edit">
-                        <button className="delete-button" onClick={deletepost}>Delete</button>
-                        <button className="edit-button" command="show-modal" commandfor={modalID}>Edit</button>
-                    </div>
-                    <dialog id={modalID} className="edit-field" >
-                        <div className="edit-container"><input
-                            className="text-field"
-                            value={text}
-                            onChange={(e) => setText(e.target.value)}
-                            placeholder={props.Content}
-                            name= "ContentEdit"
-                        />
-                            <button onClick={editpost} className="submit">
-                                Submit
-                            </button>
-                            <button className="Close" command="close" commandfor={modalID} value="cancel">
-                                Close
-                            </button></div>
-                    </dialog>
+                    { sampleUserID == props.UserID &&
+                        <>
+                            <div className="delete-edit">
+                                <button className="delete-button" onClick={deletepost}>Delete</button>
+                                <button className="edit-button" command="show-modal" commandfor={modalID}>Edit</button>
+                            </div>
+                            <dialog id={modalID} className="edit-field" >
+                                <div className="edit-container"><input
+                                    className="text-field"
+                                    value={text}
+                                    onChange={(e) => setText(e.target.value)}
+                                    placeholder={props.Content}
+                                    name= "ContentEdit"
+                                />
+                                    <button onClick={editpost} className="submit">
+                                        Submit
+                                    </button>
+                                    <button className="Close" command="close" commandfor={modalID} value="cancel">
+                                        Close
+                                    </button></div>
+                            </dialog>
+                        </>
+                    }
+                    
                 </div>
             </div>
         </>

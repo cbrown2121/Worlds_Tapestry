@@ -31,3 +31,8 @@
     font-size: 1.25rem;
     font-weight: 500;
 }
+
+.thread-page form {
+    width: 80vw;
+    background: red;
+}

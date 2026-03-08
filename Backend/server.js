@@ -851,7 +851,8 @@ app.patch("/posts/:id", (req, res) => {
     "Status",
     "Replies",
     "Content",
-    "Subject"
+    "Subject",
+    "Deleted"
   ];
 
   const updates = [];

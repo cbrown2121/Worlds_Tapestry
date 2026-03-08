@@ -8,12 +8,17 @@ export const calculateRecency = (mostRecent) => {
     
     const mostRecentTime = new Date(mostRecent);
     const currentTime = new Date();
+
+    const writtenDate = `${mostRecentTime.getDate()}/${mostRecentTime.getMonth()}/${mostRecentTime.getYear()}`;
     
+    // return year difference as x years ago
     const yearDifference = Math.abs(mostRecentTime.getYear() - currentTime.getYear());
-    if (yearDifference != 0) return getRecencyString(yearDifference, "Year");
+    // if (yearDifference != 0) return getRecencyString(yearDifference, "Year"); 
+    if (yearDifference != 0) return writtenDate; // just return the date
 
     const monthDifference = Math.abs(mostRecentTime.getMonth() - currentTime.getMonth());
-    if (monthDifference != 0) return getRecencyString(monthDifference, "Month");
+    // if (monthDifference != 0) return getRecencyString(monthDifference, "Month");
+    if (monthDifference != 0) return writtenDate; // just return the date
 
     const dayDifference = Math.abs(mostRecentTime.getDay() - currentTime.getDay());
     if (dayDifference != 0) return getRecencyString(dayDifference, "Day");

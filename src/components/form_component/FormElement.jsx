@@ -18,8 +18,10 @@ function FormElement( props ) {
 
         for (let i = 0; i < props.passToEndPoint.length; i++) {
             let keyPair = props.passToEndPoint[i];
-             processedData[keyPair.key] = keyPair.value;
+            processedData[keyPair.key] = keyPair.value;
         }
+
+        console.log(processedData)
 
         try { // submit to forum table
             const response = await fetch(`http://localhost:5000/${ props.endPoint }`, {
@@ -40,7 +42,7 @@ function FormElement( props ) {
             console.log(`Data was submitted unsuccessfully: ${error}`);
         }
 
-        window.location.reload(); // reload window to show data change
+        // window.location.reload(); // reload window to show data change
     }
 
     return (
