@@ -1,13 +1,13 @@
-/* #form-component {
+/* .form-component {
     background: var(--background);
     color: var(--text);
 } */
 
-#form-component #form-title {
+.form-component .form-title {
     margin-bottom: 2rem;
 }
 
-#form-component form {
+.form-component form {
     /* border: 2px solid var(--text); */
     border-radius: 0.5rem;
     
@@ -18,7 +18,7 @@
     color: var(--text);
 }
 
-#form-component form .form-section {
+.form-component form .form-section {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -26,27 +26,27 @@
     margin-bottom: 2rem;
 }
 
-#form-component form .form-section .section-heading {
+.form-component form .form-section .section-heading {
     display: flex;
     flex-direction: column;
     /* align-items: center; */
 }
 
-#form-component form .form-section .section-heading h2 {
+.form-component form .form-section .section-heading h2 {
     font-size: 1.5rem;
 }
 
-#form-component form .form-section .section-options, #form-component form .form-section .form-radio-buttons {
+.form-component form .form-section .section-options, .form-component form .form-section .form-radio-buttons {
     display: flex;
     gap: 2rem;
 }
 
-#form-component form .form-section .section-options, #form-component form .form-section .form-radio-buttons .form-radion-button-label {
+.form-component form .form-section .section-options, .form-component form .form-section .form-radio-buttons .form-radion-button-label {
     display: flex;
     gap: 2rem;
 }
 
-#form-component form .form-section .section-options input[type="text"]  {
+.form-component form .form-section .section-options input[type="text"]  {
     height: 3rem;
     font-size: 1.5rem;
 
@@ -55,7 +55,7 @@
     text-align: center;
 }
 
-#form-component form button {
+.form-component form button {
     border: 2px solid var(--text);
     border-radius: 0.25rem;
     
@@ -68,6 +68,13 @@
     width: 100%;
 } 
 
-#form-component form button:active{
+.form-component form button:active{
     background: var(--secondary);
+}
+
+.form-list-element {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+
+    gap: 1rem;
 }

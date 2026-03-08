@@ -131,7 +131,8 @@ function ForumLandingPage( props ) {
                             state={{ 
                                 forumID: forumID,
                                 forumName: forumName,
-                                forumMaps: props.forumMap
+                                forumMaps: props.forumMap,
+                                userRole: userRole
                             }}
                             >
                                 <button className="forum-settings" > Forum Settings </button>

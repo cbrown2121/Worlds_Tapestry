@@ -2,62 +2,39 @@ import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 
 const FormRow = (props) => {
-    const [userID] = useState(props.userID);
+    const [userName] = useState(props.forumMember.UserName);
+    const [userID] = useState(props.forumMember.UserID);
+    const [userRole] = useState(props.forumMember.UserRole);
+    const [adminPrivilege] = useState(props.adminUserRole);
     const [forumID] = useState(props.forumID);
 
-    const processForm = async (event) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
+    console.log(props);
 
-        if (formData.get("remove-member") == "1") {
-            fetch(`http://localhost:5000/remove-user-from-forum`, {
-                method: "DELETE",
-                headers: {
-                "Content-Type": "application/json"
-                },
-                body: JSON.stringify({UserID: userID, ForumID: forumID})
-            }).then(response => {
-                window.location.reload();
-            }).catch(error => console.error(error));
-            
-        } else if (formData.get("user-forum-name-role") != props.userRole) {
-
-            fetch(`http://localhost:5000/memberlist-change-role`, {
-                method: "PUT",
-                headers: {
-                "Content-Type": "application/json"
-                },
-                body: JSON.stringify({UserID: userID, ForumID: forumID, UserRole: formData.get("user-forum-name-role")})
-            }).then(response => {
-                window.location.reload();
-            }).catch(error => console.error(error));
-
-        }
-    }
+    const [privilegeOverUser] = useState((userRole == "Member" || adminPrivilege == "Owner"));
 
     return (
         <>
-            <div className="form-list-element">
-                <form onSubmit={ processForm } className="admin-user-form" action="" >
-                    <div className="user-form-section">
-                        <p>Username: {props.username}</p>
-                    </div>
-                    <div className="user-form-section">
-                        <label htmlFor="user-forum-name-role">Role:</label>
-                        <select defaultValue={ props.userRole } id="user-forum-name-role" name="user-forum-name-role">
-                            <option value="Member">Member</option>
-                            <option value="Admin">Admin</option>
-                        </select>
-                    </div>
-                    <div className="user-form-section">
-                        <label htmlFor="remove-member">Remove Member</label>
-                        <input type="checkbox" id="remove-member" name="remove-member" value="1"/>
-                    </div>
-                    <button className="submit-form-button" type="submit"> Submit </button>
-                </form>
+            <div className={`form-list-element admin-can-change-${privilegeOverUser}`}>
+                <div className="user-form-section">
+                    <p>Username: {userName}</p>
+                </div>
+                <div className="user-form-section">
+                    <label htmlFor="user-forum-name-role">Role:</label>
+                    <select disabled={!privilegeOverUser} defaultValue={ userRole } id={`${userID}-change-role`} name={`${userID}-change-role`}>
+                        <option value="Member">Member</option>
+                        <option value="Admin">Admin</option>
+                        { userRole == "Owner" && 
+                            <option value="Owner">Owner</option>
+                        }
+                    </select>
+                </div>
+                <div className="user-form-section">
+                    <label htmlFor="remove-member">Remove Member</label>
+                    <input disabled={!privilegeOverUser} type="checkbox" id={`${userID}-user-remove`} name={`${userID}-user-remove`} value="1"/>
+                </div>
             </div>
         </>
     )
 }
 
-export default FormRow
+export default FormRow;

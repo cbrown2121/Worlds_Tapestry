@@ -443,6 +443,27 @@ app.post("/events", (req, res) => {
   });
 });
 
+// POST bug report
+app.post("/bug-reports", (req, res) => {
+  const { IssueType, Subject } = req.body;
+
+  // query for posting reports
+  // **Currently does not allow for a duplicate forumID**
+  const sql = ` 
+    INSERT INTO Reports (IssueType, Subject)
+    VALUES (?, ?)
+  `;
+
+  db.query(sql, [IssueType, Subject], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to create report" });
+    }
+
+    res.json({ message: "report created", id: result.insertId });
+  });
+});
+
 // POST reports
 app.post("/reports", (req, res) => {
   const { forum_id, page_link, issue_type, subject, form_submit} = req.body;

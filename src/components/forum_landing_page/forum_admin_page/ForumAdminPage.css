@@ -21,3 +21,15 @@
     align-items: center;
     gap: 1rem;
 }
+
+.admin-dash-nav-buttons {
+    height: 5rem;
+}
+
+.active {
+    background: var(--tertiary);
+}
+
+.admin-dash-nav-buttons:hover {
+    background: var(--secondary);
+}

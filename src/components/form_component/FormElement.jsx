@@ -21,6 +21,8 @@ function FormElement( props ) {
             processedData[keyPair.key] = keyPair.value;
         }
 
+        console.log(processedData);
+
         try {
             const response = await fetch(`http://localhost:5000/${ props.endPoint }`, {
                 method: props.method,
@@ -46,8 +48,8 @@ function FormElement( props ) {
 
     return (
         <>
-            <div id="form-component">
-                <h1 id="form-title"> { props.formTitle } </h1>
+            <div id={props.formID} className="form-component">
+                <h1 className="form-title"> { props.formTitle } </h1>
                 <form onSubmit={ handleSubmit } action="">
 
                     {sections.map((section) => {
