@@ -5,6 +5,7 @@ import CategoryLandingPage from "./components/forum_landing_page/category_landin
 import ThreadContent from "./components/forum_landing_page/category_landing_page/thread_page/ThreadContent.jsx";
 import ProfilePage from "./components/profile_page/ProfilePage.jsx";
 import Layout from "./components/Layout.jsx";
+import MapPage from "./components/map_page/MapPage.jsx";
 
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
@@ -42,6 +43,10 @@ function App() {
 
             <Route path="/Forum/:forumName/Admin-Dashboard" element={<Layout />}>
               <Route index element={<ForumAdminPage />}/>
+            </Route>
+
+            <Route path="/map" element={<Layout />}>
+              <Route index element={<MapPage />} />
             </Route>
         </Routes>
       </BrowserRouter>

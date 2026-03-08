@@ -83,8 +83,9 @@ function ForumLandingPage( props ) {
             setJoinButtonText("Join Forum");
         } 
         // in the future there should be more depending on the role since leaving should be more involved if theyre the forum owner
-    } 
-
+    }
+    
+    
     return (
         <>
             <div className="forum-landing-page main-content">
@@ -102,6 +103,17 @@ function ForumLandingPage( props ) {
                     </div>
 
                     <button id="forum-join-button" onClick={ joinButtonAction }> {joinButtonText} </button>
+
+                    <Link
+                        className="router-link"
+                        to="/map"
+                        state={{
+                            forumID: forumID,
+                            forumName: forumName
+                        }}
+                        >
+                        <button id="forum-map-button">View Forum on Map</button>
+                    </Link>
 
                     <div className="side-bar-section">
                         <div className="side-bar-section-title">

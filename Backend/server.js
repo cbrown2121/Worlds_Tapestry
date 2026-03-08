@@ -335,20 +335,20 @@ app.post("/category", (req, res) => {
 
 // POST userpins
 app.post("/userpins", (req, res) => {
-  const { pin_id, user_id, coordinates, visibility } = req.body;
+  const { user_id, visibility, longitude, latitude, title, description, location_id } = req.body;
 
   const sql = `
-    INSERT INTO Threads (ThreadID, PostID, WhoCanPost)
-    VALUES (?, ?, ?)
+    INSERT INTO Userpins ( UserID, Visibility, Longitude, Latitude, Title, Description, LocationID)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
-  db.query(sql, [pin_id, post_id, who_can_post], (err, result) => {
+  db.query(sql, [ user_id, visibility, longitude, latitude, title, description, location_id], (err, result) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: "Failed to create thread" });
+      return res.status(500).json({ error: "Failed to create pin" });
     }
 
-    res.json({ message: "Thread created", id: result.insertId });
+    res.json({ message: "Pin created", id: result.insertId });
   });
 });
 

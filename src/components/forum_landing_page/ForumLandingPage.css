@@ -94,6 +94,13 @@
     font-size: 1rem;   
 }
 
+#forum-map-button {
+    background: var(--light-grey);
+    border: none;
+    height: 3rem;
+    width: 100%;
+    font-size: 1rem;
+}
 /* .forum-landing-page .forum-landing-side #add-category-button {
     background: var(--light-grey);
     border: none;
