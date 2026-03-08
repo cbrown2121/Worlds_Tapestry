@@ -75,7 +75,7 @@ function ThreadContent(props) {
                 }
             })}
 
-            <FormElement  formTitle="Add to the discussion" endPoint="posts" passToEndPoint={ [{key: "creator", value: sampleUserID}, {key: "thread_id", value: threadID}] } submitButtonText="Create Post" sections={ [forumTextSection] } />
+            <FormElement  formTitle="Add to the discussion" method="POST" endPoint="posts" passToEndPoint={ [{key: "creator", value: sampleUserID}, {key: "thread_id", value: threadID}] } submitButtonText="Create Post" sections={ [forumTextSection] } />
         </div>
     </>
   )

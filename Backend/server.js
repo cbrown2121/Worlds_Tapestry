@@ -123,6 +123,15 @@ app.get("/forums/:forumID", (req, res) => {
   });
 });
 
+app.get("/maps/:forumID", (req, res) => {
+  const sql = `SELECT * FROM Maps WHERE ForumID = ?`;
+
+  db.query(sql, [req.params.forumID], (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
+});
+
 // GET forums that the user is in
 app.get("/usersforums/:userID", (req, res) => {
   // a forum will only be returned if there is a row in the UsersInForum table where the primary key is the given UserID
@@ -672,6 +681,28 @@ app.put("/change-post-rating", (req, res) => {
     }
 
     res.json({ message: "Post updated" });
+  });
+});
+
+// PUT lat long into map
+app.put("/map/update-lat-long", (req, res) => {
+  const { ForumID, latitude, longitude } = req.body;
+
+  if (isNaN(latitude) || isNaN(longitude)) { // should move this to actual code and not backend. ill work on it later
+    return res.status(500).json({ error: "Failed to update Maps- Input is invalid" });
+  }
+
+  let sql = ` UPDATE Maps
+              SET Latitude = ?, Longitude = ?
+              WHERE ForumID = ?;`
+
+  db.query(sql, [latitude, longitude, ForumID], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to update Maps" });
+    }
+
+    res.json({ message: "Map updated" });
   });
 });
 

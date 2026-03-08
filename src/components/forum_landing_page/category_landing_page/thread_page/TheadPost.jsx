@@ -4,8 +4,10 @@ import "./ThreadPost.css"
 import thumbsUpIcon from "../../../../assets/thumbs-up.svg"
 import thumbsDownIcon from "../../../../assets/thumbs-down.svg"
 import profile from "../../../../assets/profile.svg"
+import { calculateRecency, getDate } from "../../../../utility.js";
 
 const ThreadPost = (props) => {
+    console.log(props)
     const sampleUserID = 1;
     const modalID = useId();
     const [text, setText] = useState("");
@@ -142,7 +144,7 @@ const ThreadPost = (props) => {
                                 <p className="dislike-count">{dislikeCount}</p>
                             </div>
                         </div>
-                        <p className="post-creation-day">{props.Created_Time}</p>
+                        <p className="post-creation-day">{getDate(props.Created_Time)}</p>
                     </div>
                 </div>
                 <div className="post-right">

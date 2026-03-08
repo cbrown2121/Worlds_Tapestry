@@ -52,7 +52,7 @@ function LandingPage() {
     return (
         <>
             <div id="landing-page" className="main-content">
-                <div id="landing-left"><FormElement  formTitle="Create A Forum" endPoint="forums" passToEndPoint={ [{key: "UserID", value: sampleUserId}] } submitButtonText="Create Forum" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } />
+                <div id="landing-left"><FormElement  formTitle="Create A Forum" endPoint="forums" method="POST" passToEndPoint={ [{key: "UserID", value: sampleUserId}] } submitButtonText="Create Forum" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } />
                     
                 </div>
                 <div id="landing-right">

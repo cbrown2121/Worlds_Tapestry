@@ -21,11 +21,9 @@ function FormElement( props ) {
             processedData[keyPair.key] = keyPair.value;
         }
 
-        console.log(processedData)
-
         try { // submit to forum table
             const response = await fetch(`http://localhost:5000/${ props.endPoint }`, {
-                method: "POST",
+                method: props.method,
                 headers: {
                 "Content-Type": "application/json"
                 },
@@ -36,13 +34,16 @@ function FormElement( props ) {
                 throw new Error("Network response error");
             }
 
+            console.log(processedData)
+
             const result = await response.json();
+            console.log(result);
 
         } catch (error) {
             console.log(`Data was submitted unsuccessfully: ${error}`);
         }
 
-        // window.location.reload(); // reload window to show data change
+        window.location.reload(); // reload window to show data change
     }
 
     return (

@@ -94,7 +94,7 @@
     font-size: 1rem;   
 }
 
-#forum-map-button {
+button {
     background: var(--light-grey);
     border: none;
     height: 3rem;

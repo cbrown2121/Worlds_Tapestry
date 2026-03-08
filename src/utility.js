@@ -1,3 +1,26 @@
+const convertToLocalTime = (UTCTime) => {
+    let offset = new Date().getTimezoneOffset() / 60;
+
+    UTCTime.setHours(UTCTime.getHours() - offset);
+    
+    return UTCTime;
+}
+
+export const getDate = (dateTime) => {
+    const date = convertToLocalTime(new Date(dateTime));
+
+    let hour = date.getHours();
+    let amPM = "AM";
+
+    if (12 <= hour) {
+        hour = hour % 12;
+
+        amPM = "PM";
+    }
+
+    return `${date.getMonth() + 1}/${date.getDay() + 1}/${date.getFullYear()}`;
+}
+
 const getRecencyString = (difference, type) => {
     let ending = (difference === 1) ? type : `${type}s`;
     return `${difference} ${ending} Ago`;
@@ -5,30 +28,19 @@ const getRecencyString = (difference, type) => {
 
 export const calculateRecency = (mostRecent) => { 
     if (mostRecent == null) return null;
-    
-    const mostRecentTime = new Date(mostRecent);
+
     const currentTime = new Date();
+    const mostRecentTime = convertToLocalTime(new Date(mostRecent)); // in UTC but we convert to local time below
 
-    const writtenDate = `${mostRecentTime.getDate()}/${mostRecentTime.getMonth()}/${mostRecentTime.getYear()}`;
-    
-    // return year difference as x years ago
-    const yearDifference = Math.abs(mostRecentTime.getYear() - currentTime.getYear());
-    // if (yearDifference != 0) return getRecencyString(yearDifference, "Year"); 
-    if (yearDifference != 0) return writtenDate; // just return the date
+    const milliseconds = Math.abs(currentTime - mostRecentTime);
 
-    const monthDifference = Math.abs(mostRecentTime.getMonth() - currentTime.getMonth());
-    // if (monthDifference != 0) return getRecencyString(monthDifference, "Month");
-    if (monthDifference != 0) return writtenDate; // just return the date
+    const secondsPassed = Math.floor(milliseconds / 1000);
+    const minutesPassed = Math.floor(Math.abs(secondsPassed / 60));
+    const hoursPassed = Math.floor(Math.abs(minutesPassed / 60));
+    const date = getDate(mostRecent);
 
-    const dayDifference = Math.abs(mostRecentTime.getDay() - currentTime.getDay());
-    if (dayDifference != 0) return getRecencyString(dayDifference, "Day");
-    
-    const hourDifference = Math.abs(mostRecentTime.getHours() - currentTime.getHours());
-    if (hourDifference != 0) return getRecencyString(hourDifference, "Hour");
-
-    const minuteDifference = Math.abs(mostRecentTime.getMinutes() - currentTime.getMinutes());
-    if (minuteDifference != 0) return getRecencyString(minuteDifference, "Minute");
-
-    const secondDifference = Math.abs(mostRecentTime.getSeconds() - currentTime.getSeconds());
-    if (secondDifference != 0) return getRecencyString(secondDifference, "Second");
+    if (secondsPassed < 60) return getRecencyString(secondsPassed, "Second");
+    if (minutesPassed < 60) return getRecencyString(minutesPassed, "Minute");
+    if (hoursPassed < 24) return getRecencyString(hoursPassed, "Hour");
+    return date;
 }

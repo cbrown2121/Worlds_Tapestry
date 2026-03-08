@@ -6,7 +6,6 @@ import CategoryTab from "./CategoryTab";
 import ForumSection from "./ForumSection";
 import ForumTrendingTab from "./ForumTrendingTab";
 import defaultIcon from "../../assets/commmunity-default-icon.svg";
-import FormElement from "../form_component/FormElement.jsx";
 
 function ForumLandingPage( props ) {
     const [forumID] = useState(props.forumID)
@@ -85,7 +84,6 @@ function ForumLandingPage( props ) {
         // in the future there should be more depending on the role since leaving should be more involved if theyre the forum owner
     }
     
-    
     return (
         <>
             <div className="forum-landing-page main-content">
@@ -104,16 +102,17 @@ function ForumLandingPage( props ) {
 
                     <button id="forum-join-button" onClick={ joinButtonAction }> {joinButtonText} </button>
 
-                    <Link
-                        className="router-link"
-                        to="/map"
-                        state={{
+                    { (props.forumMap == 1) &&
+                        <Link key={ `${forumID}-${forumName}-map` } className="router-link" 
+                        to={ `/Forum/${ forumName.replace(/[ ]/g, "_") }/Map` } 
+                        state={{ 
                             forumID: forumID,
                             forumName: forumName
                         }}
                         >
-                        <button id="forum-map-button">View Forum on Map</button>
-                    </Link>
+                            <button className="forum-map" > Forum Map </button>
+                        </Link>
+                    }
 
                     <div className="side-bar-section">
                         <div className="side-bar-section-title">
@@ -131,11 +130,13 @@ function ForumLandingPage( props ) {
                             to={ `/Forum/${ forumName.replace(/[ ]/g, "_") }/Admin-Dashboard` } 
                             state={{ 
                                 forumID: forumID,
-                                forumName: forumName
+                                forumName: forumName,
+                                forumMaps: props.forumMap
                             }}
                             >
-                                <button id="forum-settings" > Forum Settings </button>
+                                <button className="forum-settings" > Forum Settings </button>
                             </Link>
+
                         </div>
                     } 
                 </div>

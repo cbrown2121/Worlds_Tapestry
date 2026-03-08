@@ -8,6 +8,7 @@ function ForumAdminPage( props ) {
     const state = useLocation().state;
     const [forumID, setForumID] = useState(state.forumID);
     const [forumName, setForumName] = useState(state.forumName);
+    const [forumMap] = useState(state.forumMaps);
     const [forumCategories, setForumCategories] = useState([]);
     const [forumMembers, setForumMembers] = useState([]);
 
@@ -35,16 +36,27 @@ function ForumAdminPage( props ) {
         ]
     };
 
+    // latitude, longitude 42.42598922454695, -82.69651895016172
+
+    let mapLatSection = { type: "text", sectionTitle: "Center Latitude", sectionID:"latitude" };
+
+    let mapLongSection = { type: "text", sectionTitle: "Center Longitude", sectionID:"longitude" };
+
     return (
         <>
             <div className="admin-dash-page main-content">
-                <FormElement  formTitle="Add A New Category" endPoint="category" passToEndPoint={ [{key: "ForumID", value: forumID}] } submitButtonText="Create Category" sections={ [categoryNameSection, categoryDescription, categoryPinStatus] } />
+                <FormElement  formTitle="Add A New Category" endPoint="category" method="POST" passToEndPoint={ [{key: "ForumID", value: forumID}] } submitButtonText="Create Category" sections={ [categoryNameSection, categoryDescription, categoryPinStatus] } />
                 
                 <div className="user-forms">
                     {forumMembers.map((member) => {
                         if (member.UserRole != "Owner") return <FormRow key={member.UserID} username={member.UserName} userID={member.UserID} userRole={member.UserRole} forumID={forumID}/>
                     })}
                 </div>
+                
+                { (forumMap == 1) && 
+                    <FormElement  formTitle="Change Map Center" endPoint="map/update-lat-long" method="PUT" passToEndPoint={ [{key: "ForumID", value: forumID}] } submitButtonText="Submit" sections={ [mapLatSection, mapLongSection] } />
+                }
+                
             </div>
         </>
     )
