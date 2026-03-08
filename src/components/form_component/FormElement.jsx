@@ -21,7 +21,7 @@ function FormElement( props ) {
             processedData[keyPair.key] = keyPair.value;
         }
 
-        try { // submit to forum table
+        try {
             const response = await fetch(`http://localhost:5000/${ props.endPoint }`, {
                 method: props.method,
                 headers: {
@@ -33,8 +33,6 @@ function FormElement( props ) {
             if (!response.ok) {
                 throw new Error("Network response error");
             }
-
-            console.log(processedData)
 
             const result = await response.json();
             console.log(result);
