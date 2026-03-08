@@ -23,6 +23,8 @@ function LandingPage() {
         }).catch(error => console.error(error));
     }, []);
 
+    let forumNameSection = { type: "text", sectionTitle: "Forum Name", sectionID:"ForumName" };
+
     let forumVisbilitySection = {
         type: "radio", sectionTitle: "Forum Visibility", sectionID:"ForumVisibility",
         options: [
@@ -50,8 +52,8 @@ function LandingPage() {
     return (
         <>
             <div id="landing-page" className="main-content">
-                <div id="landing-left"><FormElement  formTitle="Create A Forum" endPoint="forums" method="POST" passToEndPoint={ [{key: "UserID", value: sampleUserId}] } submitButtonText="Create Forum" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } />
-                    
+                <div id="landing-left">
+                    <FormElement  formTitle="Create A Forum" endPoint="forums" method="POST" passToEndPoint={ [{key: "UserID", value: sampleUserId}] } submitButtonText="Create Forum" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } />
                 </div>
                 <div id="landing-right">
                     <div id="my-communities-header">
