@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Link } from 'react-router-dom';
 import logo from "../assets/logo_letters_framed.png"
 
 function Footer() {
@@ -13,10 +14,29 @@ function Footer() {
           </div>
           
 
-          <a href="" className="footer-link" id="about-us">About Us</a>
-          <a href="" className="footer-link" id="about-us">Guidelines</a>
-          <a href="" className="footer-link" id="about-us">FAQs</a>
-          <a href="" className="footer-link" id="about-us">Report</a>
+          <Link className="router-link" 
+                to={ `/About` } 
+          >
+            <p>About Us</p>
+          </Link>
+
+          <Link className="router-link" 
+                to={ `/Guidelines` } 
+          >
+            <p>Guidelines</p>
+          </Link>
+          
+          <Link className="router-link" 
+                to={ `/FAQ` } 
+          >
+            <p>FAQ</p>
+          </Link>
+          
+          <Link className="router-link" 
+                to={ `/Report` } 
+          >
+            <p>Report</p>
+          </Link>
         </div>
 
         <div id="footer-right"></div>

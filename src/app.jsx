@@ -6,6 +6,10 @@ import ThreadContent from "./components/forum_landing_page/category_landing_page
 import ProfilePage from "./components/profile_page/ProfilePage.jsx";
 import Layout from "./components/Layout.jsx";
 import ForumMapPage from "./components/forum_landing_page/forum_map_page/ForumMapPage.jsx";
+import FAQPage from "./components/footer_links/FAQPage.jsx";
+import AboutPage from "./components/footer_links/AboutPage.jsx";
+import GuidelinesPage from "./components/footer_links/GuidelinesPage.jsx";
+import ReportPage from "./components/footer_links/ReportPage.jsx";
 
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
@@ -47,6 +51,22 @@ function App() {
 
             <Route path="/Forum/:forumName/Map" element={<Layout />}>
               <Route index element={<ForumMapPage />}/>
+            </Route>
+
+            <Route path="/FAQ" element={<Layout />}>
+              <Route index element={<FAQPage />}/>
+            </Route>
+
+            <Route path="/About" element={<Layout />}>
+              <Route index element={<AboutPage />}/>
+            </Route>
+
+            <Route path="/Guidelines" element={<Layout />}>
+              <Route index element={<GuidelinesPage />}/>
+            </Route>
+
+            <Route path="/Report" element={<Layout />}>
+              <Route index element={<ReportPage />}/>
             </Route>
         </Routes>
       </BrowserRouter>
