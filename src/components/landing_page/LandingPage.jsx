@@ -23,8 +23,6 @@ function LandingPage() {
         }).catch(error => console.error(error));
     }, []);
 
-    let forumNameSection = { type: "text", sectionTitle: "Forum Name", sectionID:"ForumName" };
-
     let forumVisbilitySection = {
         type: "radio", sectionTitle: "Forum Visibility", sectionID:"ForumVisibility",
         options: [

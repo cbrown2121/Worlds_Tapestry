@@ -4,6 +4,7 @@ import Footer from "../Footer.jsx";
 import MessagesPage from "../messages_page/MessagesPage.jsx";
 import "./ProfilePage.css"
 import ProfileUpdateForm from "./ProfileUpdateForm.jsx";
+import FormElement from "../form_component/FormElement.jsx";
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
   const userId = "1"; // demo user
@@ -17,6 +18,9 @@ export default function ProfilePage() {
 
   if (!user) return <div style={{ padding: 20 }}>Loading profile...</div>;
 
+  let forumUserNameSection = { type: "text", sectionTitle: "Username", sectionID:"UserName" };
+  let forumEmailSection = { type: "text", sectionTitle: "Email", sectionID:"Email" };
+
   return (
     <>
         <div className="profile-page main-content">
@@ -25,10 +29,10 @@ export default function ProfilePage() {
             <p><strong>UserID:</strong> {user.UserID}</p>
             <p><strong>UserName:</strong> {user.UserName}</p>
             <p><strong>Email:</strong> {user.Email}</p>
-            <p><strong>Role:</strong> {user.Role}</p>
             <p><strong>CreationDate:</strong> {user.CreationDate}</p>
           </div>
-          <ProfileUpdateForm userID = {userId}/>
+
+        <FormElement  formTitle="Create A Forum" endPoint={`users/${userId}`} method="PATCH" passToEndPoint={ [{key: "UserID", value: userId}] } submitButtonText="Update Profile" sections={ [forumUserNameSection, forumEmailSection] } />
         <MessagesPage/>
         </div>
     </>
