@@ -1,190 +1,244 @@
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from "@react-google-maps/api";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
+const OAKLAND_CENTER = {
+  lat: 42.6804,
+  lng: -83.1956,
+};
+
 const ForumMapPage = () => {
-    const location = useLocation();
-    const forumData = location.state;
-    const [locations, setLocations] = useState([]);
-    const [userPins, setUserPins] = useState([]);
-    const [menuPosition, setMenuPosition] = useState(null);
-    const [clickedLatLng, setClickedLatLng] = useState(null);
-    const [currentLocationID, setCurrentLocationID] = useState(null);
+  const location = useLocation();
+  const forumData = location.state || {};
 
-    const [center, setCenter] = useState({
-        lat: 0,
-        lng: 0,
-    });
+  const [userPins, setUserPins] = useState([]);
+  const [menuPosition, setMenuPosition] = useState(null);
+  const [clickedLatLng, setClickedLatLng] = useState(null);
 
-    useEffect(() => {
-        fetch(`http://localhost:5000/maps/${forumData.forumID}`)
-        .then((response) => response.json())
-        .then((forumData) => {
-            if (forumData.length == 1) {
-                setCenter({lat: forumData[0].Latitude, lng: forumData[0].Longitude});
-            }
-    })});
+  const [pinTitle, setPinTitle] = useState("");
+  const [pinDescription, setPinDescription] = useState("");
+  const [pinVisibility, setPinVisibility] = useState("Public");
 
-    const { isLoaded } = useJsApiLoader({
-        id: "google-map-script",
-        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_KEY,
-    });
+  const [currentLocationID, setCurrentLocationID] = useState(null);
+  const [center, setCenter] = useState(OAKLAND_CENTER);
+
+  const [selectedPin, setSelectedPin] = useState(null);
+
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_KEY,
+  });
+
+  useEffect(() => {
+    if (forumData?.locationID) {
+      setCurrentLocationID(forumData.locationID);
+    }
+
+    if (forumData?.latitude && forumData?.longitude) {
+      setCenter({
+        lat: forumData.latitude,
+        lng: forumData.longitude,
+      });
+    }
+  }, [forumData]);
 
     const loadPins = () => {
-        fetch("http://localhost:5000/userpins")
+    fetch("http://localhost:5000/userpins")
         .then((response) => response.json())
         .then((pinList) => {
-            if (currentLocationID) {
-            const filteredPins = pinList.filter(
-                (pin) => String(pin.LocationID) === String(currentLocationID)
-            );
-            setUserPins(filteredPins);
-            } else {
-            setUserPins(pinList);
-            }
+        console.log("pins from backend:", pinList);
+        setUserPins(pinList);
         })
         .catch((error) => console.error(error));
     };
 
     useEffect(() => {
-        loadPins();
-    }, [currentLocationID]);
+    loadPins();
+    }, []);
 
-    const updateMap = (locationName) => {
-        const index = getIndex(locationName, locations);
+  useEffect(() => {
+    loadPins(currentLocationID);
+  }, [currentLocationID]);
 
-        if (index !== -1) {
-        setCenter({
-            lat: parseFloat(locations[index].Latitude),
-            lng: parseFloat(locations[index].Longitute),
-        });
+  const handleRightClick = (event) => {
+    event.domEvent.preventDefault();
 
-        setCurrentLocationID(locations[index].LocationID);
-        }
+    setMenuPosition({
+      x: event.domEvent.clientX,
+      y: event.domEvent.clientY,
+    });
+
+    setClickedLatLng({
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
+    });
+  };
+
+  const handlePlacePin = () => {
+    console.log("Place pin clicked");
+
+    if (!clickedLatLng) return;
+
+    if (!pinTitle.trim()) {
+      alert("Pin must have a title");
+      return;
+    }
+
+    const newPin = {
+      user_id: 1,
+      visibility: pinVisibility,
+      longitude: clickedLatLng.lng,
+      latitude: clickedLatLng.lat,
+      title: pinTitle,
+      description: pinDescription,
+      location_id: currentLocationID,
     };
 
-    const handleRightClick = (event) => {
-        event.domEvent.preventDefault();
+    fetch("http://localhost:5000/userpins", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newPin),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        loadPins(currentLocationID);
 
-        setMenuPosition({
-        x: event.domEvent.clientX,
-        y: event.domEvent.clientY,
-        });
+        setPinTitle("");
+        setPinDescription("");
+        setPinVisibility("Public");
 
-        setClickedLatLng({
-        lat: event.latLng.lat(),
-        lng: event.latLng.lng(),
-        });
-    };
-
-    const handlePlacePin = () => {
-        if (!clickedLatLng || !currentLocationID) return;
-
-        const newPin = {
-        user_id: 1,
-        visibility: "Public",
-        longitude: clickedLatLng.lng,
-        latitude: clickedLatLng.lat,
-        title: "New Pin",
-        description: "User placed pin",
-        location_id: currentLocationID,
-        };
-
-        fetch("http://localhost:5000/userpins", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newPin),
-        })
-        .then((response) => response.json())
-        .then(() => {
-            loadPins();
-            setMenuPosition(null);
-            setClickedLatLng(null);
-        })
-        .catch((error) => console.error(error));
-    };
-
-    const handleDeletePin = (pinID) => {
-        fetch(`http://localhost:5000/userpins/${pinID}`, {
-        method: "DELETE",
-        })
-        .then((response) => response.json())
-        .then(() => {
-            loadPins();
-        })
-        .catch((error) => console.error(error));
-    };
-
-    const handleMapClick = () => {
         setMenuPosition(null);
-    };
+        setClickedLatLng(null);
+      })
+      .catch((error) => console.error(error));
+  };
 
-    if (!isLoaded) return <div>Loading map...</div>;
+  const handleDeletePin = (pinID) => {
+    fetch(`http://localhost:5000/userpins/${pinID}`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then(() => {
+        loadPins();
+        setSelectedPin(null);
+      })
+      .catch((error) => console.error(error));
+  };
 
-    return (
-        <div style={{ height: "100vh", width: "100%", position: "relative" }}>
-        {menuPosition && (
-            <div
-            onClick={(e) => {
-                e.stopPropagation();
-                handlePlacePin();
-            }}
-            style={{
-                position: "fixed",
-                top: menuPosition.y,
-                left: menuPosition.x,
-                background: "white",
-                border: "1px solid #ccc",
-                padding: "6px 10px",
-                borderRadius: "6px",
-                cursor: "pointer",
-                zIndex: 9999,
-                boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
-            }}
-            >
+  const handleMapClick = () => {
+    setMenuPosition(null);
+  };
+
+  if (!isLoaded) return <div>Loading map...</div>;
+
+  return (
+    <>
+      {/* Pin Form (outside map container) */}
+      {menuPosition && (
+        <div
+          style={{
+            position: "fixed",
+            top: menuPosition.y,
+            left: menuPosition.x,
+            background: "white",
+            border: "1px solid #ccc",
+            padding: "10px",
+            borderRadius: "6px",
+            zIndex: 10000,
+            boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+            width: "200px",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Title"
+            value={pinTitle}
+            onChange={(e) => setPinTitle(e.target.value)}
+            style={{ width: "100%", marginBottom: "6px" }}
+          />
+
+          <textarea
+            placeholder="Description"
+            value={pinDescription}
+            onChange={(e) => setPinDescription(e.target.value)}
+            style={{ width: "100%", marginBottom: "6px" }}
+          />
+
+          <select
+            value={pinVisibility}
+            onChange={(e) => setPinVisibility(e.target.value)}
+            style={{ width: "100%", marginBottom: "6px" }}
+          >
+            <option value="Public">Public</option>
+            <option value="Private">Private</option>
+          </select>
+
+          <button onClick={handlePlacePin} style={{ width: "100%" }}>
             Place Pin
-            </div>
-        )}
+          </button>
+        </div>
+      )}
 
-        {forumData && (
-            <div
+      {/* Map container */}
+      <div style={{ height: "100vh", width: "100%", position: "relative" }}>
+        {forumData.forumName && (
+          <div
             style={{
-                position: "absolute",
-                top: 10,
-                left: 10,
-                zIndex: 1000,
-                background: "white",
-                padding: "10px",
-                borderRadius: "6px",
-                boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+              position: "absolute",
+              top: 10,
+              left: 10,
+              zIndex: 1000,
+              background: "white",
+              padding: "10px",
+              borderRadius: "6px",
+              boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
             }}
-            >
+          >
             Showing forum: {forumData.forumName}
-            </div>
+          </div>
         )}
 
         <GoogleMap
-            mapContainerStyle={{ width: "100%", height: "100%" }}
-            center={center}
-            zoom={13}
-            onRightClick={handleRightClick}
-            onClick={handleMapClick}
+          mapContainerStyle={{ width: "100%", height: "100%" }}
+          center={center}
+          zoom={13}
+          onRightClick={handleRightClick}
+          onClick={handleMapClick}
         >
-            {userPins.map((pin) => (
+          {userPins.map((pin) => (
             <Marker
-                key={pin.PinID}
-                position={{
+              key={pin.PinID}
+              position={{
                 lat: parseFloat(pin.Latitude),
                 lng: parseFloat(pin.Longitude),
-                }}
-                onClick={() => handleDeletePin(pin.PinID)}
+              }}
+              onClick={() => setSelectedPin(pin)}
             />
-            ))}
+          ))}
+
+          {selectedPin && (
+            <InfoWindow
+                position={{
+                lat: parseFloat(selectedPin.Latitude),
+                lng: parseFloat(selectedPin.Longitude),
+                }}
+                onCloseClick={() => setSelectedPin(null)}
+            >
+                <div style={{ maxWidth: "220px" }}>
+                <h3 style={{ margin: "0 0 8px 0" }}>{selectedPin.Title}</h3>
+                <p style={{ margin: "0 0 10px 0" }}>{selectedPin.Description}</p>
+                <button onClick={() => handleDeletePin(selectedPin.PinID)}>
+                    Delete Pin
+                </button>
+                </div>
+            </InfoWindow>
+            )}
         </GoogleMap>
-        </div>
-    );
-}
+      </div>
+    </>
+  );
+};
 
 export default ForumMapPage;

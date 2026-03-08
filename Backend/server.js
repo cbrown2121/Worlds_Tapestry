@@ -259,6 +259,27 @@ app.get("/post-ratings/:PostID/:UserID", (req, res) => {
   });
 });
 
+// GET location data for a forum (center of map)
+app.get("/maps/:forumID", (req, res) => {
+  const forumID = req.params.forumID;
+
+  const sql = `
+    SELECT l.LocationID, l.Latitude, l.Longitude
+    FROM Locations l
+    JOIN Forums f ON f.LocationID = l.LocationID
+    WHERE f.ForumID = ?
+  `;
+
+  db.query(sql, [forumID], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to load forum map location" });
+    }
+
+    res.json(results);
+  });
+});
+
 // POST Endpoints
 // POST forums
 app.post("/forums", (req, res) => {
@@ -344,14 +365,14 @@ app.post("/category", (req, res) => {
 
 // POST userpins
 app.post("/userpins", (req, res) => {
-  const { user_id, visibility, longitude, latitude, title, description, location_id } = req.body;
+  const { user_id, visibility, longitude, latitude, title, description} = req.body;
 
   const sql = `
-    INSERT INTO Userpins ( UserID, Visibility, Longitude, Latitude, Title, Description, LocationID)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO Userpins ( UserID, Visibility, Longitude, Latitude, Title, Description)
+    VALUES (?, ?, ?, ?, ?, ?)
   `;
 
-  db.query(sql, [ user_id, visibility, longitude, latitude, title, description, location_id], (err, result) => {
+  db.query(sql, [ user_id, visibility, longitude, latitude, title, description], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create pin" });
@@ -360,6 +381,8 @@ app.post("/userpins", (req, res) => {
     res.json({ message: "Pin created", id: result.insertId });
   });
 });
+
+
 
 app.post("/posts", (req, res) => {
   const { creator, thread_id, content } = req.body;
@@ -382,15 +405,15 @@ app.post("/posts", (req, res) => {
 
 // POST location
 app.post("/location", (req, res) => {
-  const { location_id, location_name, reviews, status, latitude, longitute } = req.body;
+  const { location_id, location_name, reviews, status, latitude, longitude } = req.body;
 
   // query for posting locations
   const sql = ` 
-    INSERT INTO Location (LocationID, LocationName, Reviews, Status, Latitude, Longitute)
+    INSERT INTO Location (LocationID, LocationName, Reviews, Status, Latitude, Longitude)
     VALUES (?, ?, ?, ?, ?, ?)
   `;
 
-  db.query(sql, [location_id, location_name, reviews, status, latitude, longitute], (err, result) => {
+  db.query(sql, [location_id, location_name, reviews, status, latitude, longitude], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create location" });
@@ -402,7 +425,7 @@ app.post("/location", (req, res) => {
 
 //POST events
 app.post("/events", (req, res) => {
-  const { event_id, location_id, event_name, reviews, status, latitude, longitute } = req.body;
+  const { event_id, location_id, event_name, reviews, status, latitude, longitude } = req.body;
 
   // query for posting events
   const sql = ` 
@@ -410,7 +433,7 @@ app.post("/events", (req, res) => {
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
-  db.query(sql, [event_id, location_id, event_name, reviews, status, latitude, longitute], (err, result) => {
+  db.query(sql, [event_id, location_id, event_name, reviews, status, latitude, longitude], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create event" });
