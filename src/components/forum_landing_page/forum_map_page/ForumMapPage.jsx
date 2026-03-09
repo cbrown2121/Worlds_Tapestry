@@ -137,7 +137,7 @@ const ForumMapPage = () => {
     <>
       {/* Pin Form (outside map container) */}
       {menuPosition && (
-        <div
+        <div 
           style={{
             position: "fixed",
             top: menuPosition.y,
@@ -182,7 +182,7 @@ const ForumMapPage = () => {
       )}
 
       {/* Map container */}
-      <div style={{ height: "100vh", width: "100%", position: "relative" }}>
+      <div className="main-content" style={{ height: "90vh", width: "100%", position: "relative" }}>
         {forumData.forumName && (
           <div
             style={{

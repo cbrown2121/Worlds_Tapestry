@@ -383,7 +383,6 @@ app.post("/userpins", (req, res) => {
 });
 
 
-
 app.post("/posts", (req, res) => {
   const { creator, thread_id, content } = req.body;
 
