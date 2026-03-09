@@ -57,7 +57,7 @@ function App() {
               <Route index element={<FAQPage />}/>
             </Route>
 
-            <Route path="/About" element={<Layout />}>
+            <Route path="/AboutUs" element={<Layout />}>
               <Route index element={<AboutUsPage />}/>
             </Route>
 

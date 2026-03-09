@@ -15,7 +15,7 @@ function Footer() {
           
 
           <Link className="router-link" 
-                to={ `/About` } 
+                to={ `/AboutUs` } 
           >
             <p>About Us</p>
           </Link>
