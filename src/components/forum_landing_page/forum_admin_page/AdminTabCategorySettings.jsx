@@ -14,8 +14,8 @@ function AdminTabCategorySettings( props ) {
     let categoryPinStatus = {
         type: "radio", sectionTitle: "Pinned Status", sectionID:"PinnedStatus",
         options: [
-            {label:"Pinned", id:"PinnedStatus", value:"0", defaultChecked: false},
-            {label:"Not Pinned", id:"PinnedStatus", value:"1", defaultChecked: true},
+            {label:"Pinned", id:"PinnedStatus", value:"1", defaultChecked: false},
+            {label:"Not Pinned", id:"PinnedStatus", value:"0", defaultChecked: true},
         ]
     };
     
