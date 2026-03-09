@@ -1,31 +1,18 @@
-// @ts-nocheck
+a// @ts-nocheck
 /* eslint-env node */
 
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2");
-require("dotenv").config();
+require("dotenv").config({ path: __dirname + "/.env" });
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-// =======================
-// DATABASE CONNECTION
-// =======================
-
-const db = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
-});
-
-// =======================
-// BASIC TEST ROUTES
-// =======================
+// =============================
+// HEALTH / TEST ROUTES
+// =============================
 
 app.get("/", (req, res) => {
   res.send("Backend is running ✅");
@@ -35,43 +22,28 @@ app.get("/api/health", (req, res) => {
   res.json({ ok: true });
 });
 
-app.get("/debug-tables", (req, res) => {
-  db.query("SHOW TABLES", (err, results) => {
+const db = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+});
+
+// Test connection
+app.get("/test-db", (req, res) => {
+  db.query("SELECT 1 AS ok", (err, results) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: "SHOW TABLES failed" });
+      return res.status(500).json({ error: "Database connection failed" });
     }
-
-    res.json(results);
+    res.json({ message: "Database connected!", results });
   });
 });
 
-app.get("/debug-create-follows-table", (req, res) => {
-  db.query(
-    `CREATE TABLE IF NOT EXISTS user_follows (
-      follow_id INT AUTO_INCREMENT PRIMARY KEY,
-      follower_id INT NOT NULL,
-      following_id INT NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      UNIQUE (follower_id, following_id)
-    )`,
-    (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Create table failed" });
-      }
-
-      res.json({ ok: true, message: "user_follows table created" });
-    }
-  );
-});
-
-// =======================
-// BASIC DATA ROUTES
-// =======================
-
-app.get("/users", (req, res) => {
-  db.query("SELECT * FROM Users", (err, results) => {
+// REAL DATA ROUTE
+app.get("/location", (req, res) => {
+  db.query("SELECT * FROM location", (err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Query failed" });
@@ -80,75 +52,40 @@ app.get("/users", (req, res) => {
   });
 });
 
-app.get("/forums", (req, res) => {
-  db.query("SELECT * FROM Forums", (err, results) => {
+app.get("/users", (req, res) => {
+  db.query("SELECT * FROM users", (err, results) => {
     if (err) return res.status(500).json(err);
     res.json(results);
   });
 });
 
-app.get("/posts", (req, res) => {
-  db.query("SELECT * FROM Posts", (err, results) => {
-    if (err) return res.status(500).json(err);
-    res.json(results);
-  });
-});
-
-app.get("/events", (req, res) => {
-  db.query("SELECT * FROM Events", (err, results) => {
-    if (err) return res.status(500).json(err);
-    res.json(results);
-  });
-});
-
-app.get("/reports", (req, res) => {
-  db.query("SELECT * FROM Reports", (err, results) => {
-    if (err) return res.status(500).json(err);
-    res.json(results);
-  });
-});
-
-app.get("/userpins", (req, res) => {
-  db.query("SELECT * FROM Userpins", (err, results) => {
-    if (err) return res.status(500).json(err);
-    res.json(results);
-  });
-});
-
-// =======================
+// =============================
 // USER PROFILE ROUTES
-// =======================
+// =============================
 
-// Get one user by ID
+// Get a single user profile
 app.get("/api/users/:id", (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
-  db.query(
-    `SELECT * FROM Users
-     WHERE UserID = ?`,
-    [id],
-    (err, results) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Query failed" });
-      }
-
-      if (results.length === 0) {
-        return res.status(404).json({ error: "User not found" });
-      }
-
-      res.json(results[0]);
+  db.query("SELECT * FROM users WHERE UserID = ?", [id], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Query failed" });
     }
-  );
+    if (results.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json(results[0]);
+  });
 });
 
 // Update a user profile
 app.put("/api/users/:id", (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const { UserName, Email, Role } = req.body;
 
   db.query(
-    `UPDATE Users
+    `UPDATE users
      SET UserName = COALESCE(?, UserName),
          Email = COALESCE(?, Email),
          Role = COALESCE(?, Role)
@@ -159,15 +96,56 @@ app.put("/api/users/:id", (req, res) => {
         console.error(err);
         return res.status(500).json({ error: "Update failed" });
       }
-
       res.json({ ok: true, affectedRows: result.affectedRows });
     }
   );
 });
 
-// =======================
-// DIRECT MESSAGES
-// =======================
+app.get("/forums", (req, res) => {
+  db.query("SELECT * FROM forums", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+app.get("/posts", (req, res) => {
+  db.query("SELECT * FROM posts", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+app.get("/events", (req, res) => {
+  db.query("SELECT * FROM events", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+app.get("/Reports", (req, res) => {
+  db.query("SELECT * FROM Reports", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+app.get("/userpins", (req, res) => {
+  db.query("SELECT * FROM userpins", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+app.get("/Messages", (req, res) => {
+  db.query("SELECT * FROM Messages", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+// =============================
+// DIRECT MESSAGING ROUTES
+// =============================
 
 // Get conversation between two users
 app.get("/api/messages/conversation", (req, res) => {
@@ -189,13 +167,12 @@ app.get("/api/messages/conversation", (req, res) => {
         console.error(err);
         return res.status(500).json({ error: "Query failed" });
       }
-
       res.json(results);
     }
   );
 });
 
-// Send a message
+// Send a new message
 app.post("/api/messages", (req, res) => {
   const { SenderID, ReceiverID, MessageText } = req.body;
 
@@ -214,60 +191,63 @@ app.post("/api/messages", (req, res) => {
         console.error(err);
         return res.status(500).json({ error: "Insert failed" });
       }
-
       res.json({ ok: true, MessageID: result.insertId });
     }
   );
 });
 
-// =======================
-// FOLLOW SYSTEM
-// =======================
+// =============================
+// FOLLOW SYSTEM ROUTES
+// =============================
 
 // Follow a user
 app.post("/api/follows", (req, res) => {
-  const { follower_id, following_id } = req.body;
+  const { FollowerID, FollowingID } = req.body;
 
-  if (!follower_id || !following_id) {
-    return res.status(400).json({ error: "follower_id and following_id are required" });
+  if (!FollowerID || !FollowingID) {
+    return res
+      .status(400)
+      .json({ error: "FollowerID and FollowingID are required" });
   }
 
-  if (Number(follower_id) === Number(following_id)) {
+  if (Number(FollowerID) === Number(FollowingID)) {
     return res.status(400).json({ error: "Users cannot follow themselves" });
   }
 
   db.query(
     `INSERT INTO user_follows (follower_id, following_id)
      VALUES (?, ?)`,
-    [follower_id, following_id],
+    [FollowerID, FollowingID],
     (err, result) => {
       if (err) {
         console.error(err);
 
         if (err.code === "ER_DUP_ENTRY") {
-          return res.status(409).json({ error: "Already following user" });
+          return res.status(409).json({ error: "User is already followed" });
         }
 
         return res.status(500).json({ error: "Follow failed" });
       }
 
-      res.json({ ok: true, follow_id: result.insertId });
+      res.json({ ok: true, followId: result.insertId });
     }
   );
 });
 
 // Unfollow a user
 app.delete("/api/follows", (req, res) => {
-  const { follower_id, following_id } = req.body;
+  const { FollowerID, FollowingID } = req.body;
 
-  if (!follower_id || !following_id) {
-    return res.status(400).json({ error: "follower_id and following_id are required" });
+  if (!FollowerID || !FollowingID) {
+    return res
+      .status(400)
+      .json({ error: "FollowerID and FollowingID are required" });
   }
 
   db.query(
     `DELETE FROM user_follows
      WHERE follower_id = ? AND following_id = ?`,
-    [follower_id, following_id],
+    [FollowerID, FollowingID],
     (err, result) => {
       if (err) {
         console.error(err);
@@ -279,15 +259,15 @@ app.delete("/api/follows", (req, res) => {
   );
 });
 
-// Get followers of a user
+// Get all followers of a user
 app.get("/api/users/:id/followers", (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   db.query(
     `SELECT u.*
-     FROM user_follows f
-     JOIN Users u ON f.follower_id = u.UserID
-     WHERE f.following_id = ?`,
+     FROM user_follows uf
+     JOIN users u ON uf.follower_id = u.UserID
+     WHERE uf.following_id = ?`,
     [id],
     (err, results) => {
       if (err) {
@@ -300,15 +280,15 @@ app.get("/api/users/:id/followers", (req, res) => {
   );
 });
 
-// Get users a person is following
+// Get all users a user is following
 app.get("/api/users/:id/following", (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   db.query(
     `SELECT u.*
-     FROM user_follows f
-     JOIN Users u ON f.following_id = u.UserID
-     WHERE f.follower_id = ?`,
+     FROM user_follows uf
+     JOIN users u ON uf.following_id = u.UserID
+     WHERE uf.follower_id = ?`,
     [id],
     (err, results) => {
       if (err) {
@@ -321,12 +301,14 @@ app.get("/api/users/:id/following", (req, res) => {
   );
 });
 
-// Check follow status
+// Check whether one user follows another
 app.get("/api/follows/status", (req, res) => {
   const { followerId, followingId } = req.query;
 
   if (!followerId || !followingId) {
-    return res.status(400).json({ error: "followerId and followingId are required" });
+    return res
+      .status(400)
+      .json({ error: "followerId and followingId are required" });
   }
 
   db.query(
@@ -345,44 +327,21 @@ app.get("/api/follows/status", (req, res) => {
   );
 });
 
-// =======================
-// OTHER EXISTING ROUTES
-// =======================
-
 app.get("/threads", (req, res) => {
-  db.query("SELECT * FROM Threads", (err, results) => {
+  db.query("SELECT * FROM threads", (err, results) => {
     if (err) return res.status(500).json(err);
     res.json(results);
   });
 });
 
-app.get("/categories", (req, res) => {
-  db.query("SELECT * FROM Categories", (err, results) => {
+app.get("/forumsettings", (req, res) => {
+  db.query("SELECT * FROM forumsettings", (err, results) => {
     if (err) return res.status(500).json(err);
     res.json(results);
   });
 });
 
-app.get("/maps", (req, res) => {
-  db.query("SELECT * FROM Maps", (err, results) => {
-    if (err) return res.status(500).json(err);
-    res.json(results);
-  });
-});
-
-app.get("/memberlist", (req, res) => {
-  db.query("SELECT * FROM MemberList", (err, results) => {
-    if (err) return res.status(500).json(err);
-    res.json(results);
-  });
-});
-
-// =======================
-// START SERVER
-// =======================
-
-const PORT = process.env.PORT || 5050;
-
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
