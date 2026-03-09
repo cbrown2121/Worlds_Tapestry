@@ -14,13 +14,13 @@ const FormRow = (props) => {
 
     return (
         <>
-            <div className={`form-list-element admin-can-change-${privilegeOverUser}`}>
+            <div className={`form-list-element admin-can-change-${privilegeOverUser}`}> 
                 <div className="user-form-section">
                     <p>Username: {userName}</p>
                 </div>
                 <div className="user-form-section">
                     <label htmlFor="user-forum-name-role">Role:</label>
-                    <select disabled={!privilegeOverUser} defaultValue={ userRole } id={`${userID}-change-role`} name={`${userID}-change-role`}>
+                    <select disabled={!privilegeOverUser || userRole == "Owner"} defaultValue={ userRole } id={`${userID}-change-role`} name={`${userID}-change-role`}>
                         <option value="Member">Member</option>
                         <option value="Admin">Admin</option>
                         { userRole == "Owner" && 
@@ -30,7 +30,7 @@ const FormRow = (props) => {
                 </div>
                 <div className="user-form-section">
                     <label htmlFor="remove-member">Remove Member</label>
-                    <input disabled={!privilegeOverUser} type="checkbox" id={`${userID}-user-remove`} name={`${userID}-user-remove`} value="1"/>
+                    <input disabled={!privilegeOverUser || userRole == "Owner"} type="checkbox" id={`${userID}-user-remove`} name={`${userID}-user-remove`} value="1"/>
                 </div>
             </div>
         </>
