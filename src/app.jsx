@@ -7,7 +7,7 @@ import ProfilePage from "./components/profile_page/ProfilePage.jsx";
 import Layout from "./components/Layout.jsx";
 import ForumMapPage from "./components/forum_landing_page/forum_map_page/ForumMapPage.jsx";
 import FAQPage from "./components/footer_links/FAQPage.jsx";
-import AboutPage from "./components/footer_links/AboutPage.jsx";
+import AboutUsPage from "./components/footer_links/AboutPage.jsx";
 import GuidelinesPage from "./components/footer_links/GuidelinesPage.jsx";
 import ReportPage from "./components/footer_links/ReportPage.jsx";
 
@@ -58,7 +58,7 @@ function App() {
             </Route>
 
             <Route path="/About" element={<Layout />}>
-              <Route index element={<AboutPage />}/>
+              <Route index element={<AboutUsPage />}/>
             </Route>
 
             <Route path="/Guidelines" element={<Layout />}>
