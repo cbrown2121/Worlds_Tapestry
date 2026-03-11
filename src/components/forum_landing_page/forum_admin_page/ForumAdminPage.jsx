@@ -35,7 +35,7 @@ function ForumAdminPage( props ) {
                 <div className="admin-dash-sidebar">
                     <button id="admin-dash-member-settings-button" className="admin-dash-nav-buttons active" value="member" onClick={ handleTabSwitch }>Member Settings</button>
                     <button id="admin-dash-category-settings-button" className="admin-dash-nav-buttons" value="category" onClick={ handleTabSwitch } >Categories</button>
-                    <button id="admin-dash-forum-settings-button" className="admin-dash-nav-buttons" value="forum" onClick={ handleTabSwitch }>Forum Settings</button>
+                    <button id="admin-dash-forum-settings-button" className="admin-dash-nav-buttons" value="forum" onClick={ handleTabSwitch }>Community Settings</button>
                     { forumMap && 
                         <button id="admin-dash-map-settings-button" className="admin-dash-nav-buttons" value="map" onClick={ handleTabSwitch }>Map Settings</button>
                     }

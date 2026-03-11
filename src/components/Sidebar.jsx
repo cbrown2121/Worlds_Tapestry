@@ -40,7 +40,7 @@ const Sidebar = ( props ) => { // currently this runs twice because there is a l
             })}
         </div>
 
-        {/* <button onClick={startForumCreation} id="create-forum-button" >Create Forum</button> */}
+        {/* <button onClick={startForumCreation} id="create-forum-button" >Create Community</button> */}
       </div>
     </>
   )

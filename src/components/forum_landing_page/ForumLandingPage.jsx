@@ -13,7 +13,7 @@ function ForumLandingPage( props ) {
     const [categories, setCategories] = useState([]);
 
     const [userRole, setUserRole] = useState(null);
-    const [joinButtonText, setJoinButtonText] = useState("Join Forum");
+    const [joinButtonText, setJoinButtonText] = useState("Join Community");
 
     const sampleUserID = 1;
     
@@ -32,7 +32,7 @@ function ForumLandingPage( props ) {
 
             if (userRole.length == 1) { // the response will return nothing if the user is not in the forum. it should never be higher than 1 since a user cannot be in a forum twice.
                 setUserRole(userRole[0].UserRole); // the array only has one element so this is safe
-                setJoinButtonText("Leave Forum");
+                setJoinButtonText("Leave Community");
             }
 
         }).catch(error => console.error(error));
@@ -66,7 +66,7 @@ function ForumLandingPage( props ) {
             }).then(response => response.json()).catch(error => console.error(error));
 
             setUserRole("member");
-            setJoinButtonText("Leave Forum");
+            setJoinButtonText("Leave Community");
             
 
         } else { // user is leaving the forum. 
@@ -79,7 +79,7 @@ function ForumLandingPage( props ) {
             }).then(response => response.json()).catch(error => console.error(error));
 
             setUserRole(null);
-            setJoinButtonText("Join Forum");
+            setJoinButtonText("Join Community");
         } 
         // in the future there should be more depending on the role since leaving should be more involved if theyre the forum owner
     }
@@ -110,7 +110,7 @@ function ForumLandingPage( props ) {
                             forumName: forumName
                         }}
                         >
-                            <button className="forum-map" > Forum Map </button>
+                            <button className="forum-map" > Community Map </button>
                         </Link>
                     }
 
@@ -135,7 +135,7 @@ function ForumLandingPage( props ) {
                                 userRole: userRole
                             }}
                             >
-                                <button className="forum-settings" > Forum Settings </button>
+                                <button className="forum-settings" > Community Settings </button>
                             </Link>
 
                         </div>

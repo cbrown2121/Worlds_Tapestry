@@ -14,7 +14,7 @@ function Header( currentPage ) {
   return (
     <>
       <div id="header">
-        <div id="header-right">
+        <div id="header-left">
             <Link className="router-link" to="/">
               <img src={logo} alt="" id="logo" />
             </Link>
@@ -22,7 +22,7 @@ function Header( currentPage ) {
               <h1 id="website-title">World's Tapestry</h1>
             </Link>
         </div>
-        <div id="header-left">
+        <div id="header-right">
           <SearchBar/>
           {/* <img src={messageIcon} alt="" id="message-icon" /> */}
           <Link className="router-link" to="/Profile">

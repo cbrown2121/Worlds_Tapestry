@@ -31,7 +31,7 @@ export default function ProfilePage() {
             <p><strong>CreationDate:</strong> {user.CreationDate}</p>
           </div>
 
-        <FormElement  formTitle="Create A Forum" endPoint={`users/${userId}`} method="PATCH" passToEndPoint={ [{key: "UserID", value: userId}] } submitButtonText="Update Profile" sections={ [forumUserNameSection, forumEmailSection] } />
+        <FormElement  formTitle="Create A Community" endPoint={`users/${userId}`} method="PATCH" passToEndPoint={ [{key: "UserID", value: userId}] } submitButtonText="Update Profile" sections={ [forumUserNameSection, forumEmailSection] } />
         <MessagesPage/>
         </div>
     </>

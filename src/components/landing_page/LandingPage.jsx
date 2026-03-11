@@ -23,10 +23,10 @@ function LandingPage() {
         }).catch(error => console.error(error));
     }, []);
 
-    let forumNameSection = { type: "text", sectionTitle: "Forum Name", sectionID:"ForumName" };
+    let forumNameSection = { type: "text", sectionTitle: "Community Name", sectionID:"ForumName" };
 
     let forumVisbilitySection = {
-        type: "radio", sectionTitle: "Forum Visibility", sectionID:"ForumVisibility",
+        type: "radio", sectionTitle: "Community Visibility", sectionID:"ForumVisibility",
         options: [
             {label:"Searchable", id:"SearchVisibility", value:"Searchable", defaultChecked: true},
             {label:"Hidden", id:"SearchVisibility", value:"Hidden", defaultChecked: false},
@@ -34,7 +34,7 @@ function LandingPage() {
     };
 
     let forumJoinSection = {
-        type: "radio", sectionTitle: "Forum Join Settings", sectionID:"ForumJoinPermissions",
+        type: "radio", sectionTitle: "Community Join Settings", sectionID:"ForumJoinPermissions",
         options: [
             {label:"Anyone", id:"JoinPermissions", value:"Anyone", defaultChecked: true},
             {label:"Invite Only", id:"JoinPermissions", value:"Invite Only", defaultChecked: false},
@@ -53,7 +53,7 @@ function LandingPage() {
         <>
             <div id="landing-page" className="main-content">
                 <div id="landing-left">
-                    <FormElement  formTitle="Create A Forum" endPoint="forums" method="POST" passToEndPoint={ [{key: "UserID", value: sampleUserId}] } submitButtonText="Create Forum" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } />
+                    <FormElement  formTitle="Create A Community" endPoint="forums" method="POST" passToEndPoint={ [{key: "UserID", value: sampleUserId}] } submitButtonText="Create Community" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } />
                 </div>
                 <div id="landing-right">
                     <div id="my-communities-header">

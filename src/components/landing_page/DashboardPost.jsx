@@ -29,7 +29,7 @@ const DashBoardPost = ( props ) => {
 
                 <div className="dashboard-post-links">
                     <button>Go To Post</button>
-                    <button>Go To Forum</button>
+                    <button>Go To Community</button>
                 </div>
             </div>
         </>
