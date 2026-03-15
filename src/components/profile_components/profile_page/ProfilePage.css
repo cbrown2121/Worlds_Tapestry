@@ -14,26 +14,38 @@
 
 .profile-container .profile-left-side {
     display: flex;
+    align-items: center;
     flex-direction: column;
+
+    border: 1px solid var(--text);
+
+    padding: 1rem;
+    border-radius: 0.25rem;
 }
 
-.profile-container .profile-left-side {
-    display: flex;
-    flex-direction: column;
+.profile-container .profile-left-side .user-profile-image {
+    height: 10rem;
+    width: 10rem;
+
+    background: var(--secondary);
+    padding: 1rem;
 }
 
 /* user profile data */
 
 .profile-container .profile-left-side .user-profile-data {
     display: flex;
+    align-items: center;
     flex-direction: column;
 }
 
 /* rows in user profile data */
 
 .profile-container .profile-left-side .user-profile-data .profile-row {
-    display: grid;
-    grid-template-columns: 0.5fr 1fr;
+    display: flex;
+    align-items: center;
+
+    gap: 1rem;
 }
 
 .profile-container .profile-left-side .user-relationship {

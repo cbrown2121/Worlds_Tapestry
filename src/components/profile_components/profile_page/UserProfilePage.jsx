@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import MessagesPage from "../messages_page/MessagesPage.jsx";
 import UserProfileData from "./UserProfileData.jsx";
+import Icon from "../../../assets/profile.svg"
 import "./ProfilePage.css";
 
 export default function UserProfilePage(props) {
@@ -104,7 +105,9 @@ export default function UserProfilePage(props) {
   return (
     <div className="profile-container">
       <div className="profile-left-side">
-        <UserProfileData userID={pageOwnerID} />
+
+        <img src={Icon} alt="" className="user-profile-image" />
+        <UserProfileData userID={pageOwnerID} viewer={"user"} />
 
         <div className="relationship-elements">
           <h2 className="user-relationship">

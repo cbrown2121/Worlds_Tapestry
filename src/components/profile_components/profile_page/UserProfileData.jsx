@@ -3,6 +3,7 @@ import MessagesPage from "../messages_page/MessagesPage.jsx";
 import "./ProfilePage.css";
 
 export default function UserProfileData(props) {
+    // props user id and viewer (either user or owner- user sees less than owner)
     const [userID] = useState(props.userID);
     const [userName, setUserName] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
@@ -27,22 +28,23 @@ export default function UserProfileData(props) {
 
     let content = (!userName || !userEmail) ? <div> Loading profile... </div> : 
             <>
-                <h2>User Profile</h2>
                 <div className="profile-row">
-                    <p className="profile-label">Username: </p>
                     <p className="profile-content">{userName}</p>
                 </div>
+                { props.viewer == "owner" &&
+                    <div className="profile-row">
+                        <p className="profile-content">{userEmail}</p>
+                    </div>
+                }
                 <div className="profile-row">
-                    <p className="profile-label">Email: </p>
-                    <p className="profile-content">{userEmail}</p>
-                </div>
-                <div className="profile-row">
-                    <p className="profile-label">Following: </p>
-                    <p className="profile-content">{userFollowingCount}</p>
-                </div>
-                <div className="profile-row">
-                    <p className="profile-label">Followers: </p>
-                    <p className="profile-content">{userFollowerCount}</p>
+                    <div className="profile-row">
+                        <p className="profile-label">Following: </p>
+                        <p className="profile-content">{userFollowingCount}</p>
+                    </div>
+                    <div className="profile-row">
+                        <p className="profile-label">Followers: </p>
+                        <p className="profile-content">{userFollowerCount}</p>
+                    </div>
                 </div>
             </>
 
