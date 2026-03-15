@@ -39,7 +39,7 @@ html, body, #root {
 }
 
 .main-content {
-    min-height: calc(100vh - 5rem - 4rem); /* 5rem is header size 4rem is footer size*/
+    min-height: 100vh;
 }
 /*#endregion ROOT*/
 

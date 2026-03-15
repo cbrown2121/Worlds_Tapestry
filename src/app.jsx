@@ -3,7 +3,7 @@ import ForumPage from "./components/forum_landing_page/ForumPage.jsx"
 import ForumAdminPage from "./components/forum_landing_page/forum_admin_page/ForumAdminPage.jsx"
 import CategoryLandingPage from "./components/forum_landing_page/category_landing_page/CategoryLandingPage.jsx";
 import ThreadContent from "./components/forum_landing_page/category_landing_page/thread_page/ThreadContent.jsx";
-import ProfilePage from "./components/profile_page/ProfilePage.jsx";
+import ProfilePage from "./components/profile_components/profile_page/ProfilePage.jsx";
 import Layout from "./components/Layout.jsx";
 import ForumMapPage from "./components/forum_landing_page/forum_map_page/ForumMapPage.jsx";
 import FAQPage from "./components/footer_links/FAQPage.jsx";

@@ -5,11 +5,9 @@ import messageIcon from "../assets/message-icon.svg"
 import profileIcon from "../assets/profile.svg"
 import SearchBar from "./SearchBar.jsx"
 
-function Header( currentPage ) {
-  const changePage = (newPage) => {
-    currentPage = newPage;
-    console.log(newPage)
-  }
+const Header = () => {
+  const sampleUserID = 1;
+  const sampleUserPageID = 2;
 
   return (
     <>
@@ -25,7 +23,12 @@ function Header( currentPage ) {
         <div id="header-right">
           <SearchBar/>
           {/* <img src={messageIcon} alt="" id="message-icon" /> */}
-          <Link className="router-link" to="/Profile">
+          <Link className="router-link" to="/Profile"
+            state={{ 
+                currentUserID: sampleUserID,
+                userPageID: sampleUserPageID,
+            }}
+          >
             <div id="profile">
               <img src={profileIcon} alt="" id="profile-icon" />
             </div>

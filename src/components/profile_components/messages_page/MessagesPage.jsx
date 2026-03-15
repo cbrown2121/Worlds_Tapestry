@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
+import "./MessagesPage.css";
 
-export default function MessagesPage() {
-  const user1 = "1";   // you (demo)
-  const user2 = "2";  // other user (demo)
+export default function MessagesPage(props) {
+  // props: currentUserID (user viewing page) userPageID (users page)
+  const [currentUserID] = useState(props.currentUserID);
+  const [userPageID] = useState(props.userPageID);
 
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
 
   const loadConversation = () => {
-    fetch(`http://localhost:5000/messages/conversation/${user1}-${user2}`)
+    fetch(`http://localhost:5000/messages/conversation/${currentUserID}-${userPageID}`)
       .then((res) => res.json())
-      .then((data) => setMessages(data))
+      .then((data) => {
+        setMessages(data);
+      })
       .catch((err) => console.error(err));
   };
 
@@ -25,8 +29,8 @@ export default function MessagesPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        SenderID: user1,
-        ReceiverID: user2,
+        SenderID: currentUserID,
+        ReceiverID: userPageID,
         MessageText: text,
       }),
     });
@@ -36,30 +40,31 @@ export default function MessagesPage() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
+    <div className="messages-section">
       <h2>Direct Messages</h2>
-      <p>Chat: {user1} ↔ {user2}</p>
+      <p>Chat: {currentUserID} ↔ {userPageID}</p>
 
-      <div style={{ border: "1px solid #ccc", padding: 12, borderRadius: 8, maxWidth: 600 }}>
+      <div className="messages">
         {messages.map((m) => (
           <div key={m.MessageID} style={{ marginBottom: 8 }}>
-            <strong>{m.SenderID === user1 ? "You" : `User ${m.SenderID}`}:</strong>{" "}
+            <strong>{m.SenderID === currentUserID ? "You" : `User ${m.SenderID}`}:</strong>{" "}
             {m.MessageText}
           </div>
         ))}
       </div>
 
-      <div style={{ marginTop: 12 }}>
+      <div className="send-new-massage">
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Type a message..."
           style={{ width: 420, padding: 8 }}
         />
-        <button onClick={sendMessage} style={{ marginLeft: 8, padding: "8px 12px" }}>
+        <button onClick={sendMessage}>
           Send
         </button>
       </div>
+
     </div>
   );
 }

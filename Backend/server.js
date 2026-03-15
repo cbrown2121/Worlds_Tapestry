@@ -161,6 +161,18 @@ app.get("/posts", (req, res) => {
   });
 });
 
+// GET user from user ID
+app.get("/user/:userID", (req, res) => {
+  const userID = req.userID;
+
+  const SQL = `SELECT * FROM Users WHERE UserID = ?`;
+
+  db.query(SQL, [req.params.userID], (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
 // GET events
 app.get("/events", (req, res) => {
   db.query("SELECT * FROM Events", (err, results) => {
@@ -280,6 +292,28 @@ app.get("/maps/:forumID", (req, res) => {
   });
 });
 
+// GET relationship between users 
+app.get("/relationship/:User1/:User2", (req, res) => {
+  const { User1, User2 } = req.params;
+
+  // checking if user x follows user y
+  // also checking if user y follows user x
+  const sql = `
+    SELECT * FROM UserRelationships WHERE
+    (FollowingUser = ? AND FollowedUser = ?)
+    OR (FollowingUser = ? AND FollowedUser = ?) ;
+  `;
+
+  db.query(sql, [User1, User2, User2, User1], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to find relationship" });
+    }
+
+    res.json(result);
+  });
+});
+
 // POST Endpoints
 // POST forums
 app.post("/forums", (req, res) => {
@@ -323,6 +357,77 @@ app.post("/add-user-to-forum", (req, res) => {
 
     res.json({ message: "User membership with forum created", id: result.insertId });
   });
+});
+
+// Follow a user
+app.post("/follow", (req, res) => {
+  const { FollowerID, FolloweeID } = req.body;
+
+  // relationship defaults to following
+  const SQL = ` INSERT INTO UserRelationships (FollowingUser, FollowedUser)
+              VALUES (?, ?);`
+
+  db.query(SQL, [FollowerID, FolloweeID], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to add user relationship" });
+    }
+
+    res.json(result);
+  });
+});
+
+app.post("/follow-mutual", (req, res) => {
+  const { FollowerID, FolloweeID } = req.body;
+
+  // if the user is following someone that follows them
+  // update the relationship status for both users
+  const SQL = `INSERT INTO UserRelationships (FollowingUser, FollowedUser, Relationship)
+               VALUES (?, ?, "Mutuals");
+               
+               UPDATE UserRelationships
+               SET Relationship = "Mutuals"
+               WHERE FollowingUser = ? AND FollowedUser = ?` 
+
+  db.query(SQL, [FollowerID, FolloweeID, FolloweeID, FollowerID], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to add user relationship" });
+    }
+
+    res.json(result);
+  });
+});
+
+app.post("/follow", (req, res) => {
+  const { FollowerID, FolloweeID } = req.body;
+
+  if (!follower_id || !following_id) {
+    return res.status(400).json({ error: "follower_id and following_id are required" });
+  }
+
+  if (Number(follower_id) === Number(following_id)) {
+    return res.status(400).json({ error: "Users cannot follow themselves" });
+  }
+
+  db.query(
+    `INSERT INTO user_follows (follower_id, following_id)
+     VALUES (?, ?)`,
+    [follower_id, following_id],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+
+        if (err.code === "ER_DUP_ENTRY") {
+          return res.status(409).json({ error: "Already following user" });
+        }
+
+        return res.status(500).json({ error: "Follow failed" });
+      }
+
+      res.json({ ok: true, follow_id: result.insertId });
+    }
+  );
 });
 
 // POST threads
@@ -647,6 +752,69 @@ app.delete("/userpins/:id", (req, res) => {
 
     res.json({ message: "User pin deleted" });
   });
+});
+
+// Unfollow a user
+app.post("/unfollow", (req, res) => {
+  const { FollowerID, FolloweeID } = req.body;
+
+  const SQL = `DELETE FROM UserRelationships
+               WHERE FollowingUser = ? AND FollowedUser = ?`
+
+  db.query(SQL, [FollowerID, FolloweeID], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to remove user relationship" });
+    }
+
+    res.json(result);
+  });
+});
+
+// unfollow a mutual
+app.post("/unfollow-mutual", (req, res) => {
+  const { FollowerID, FolloweeID } = req.body;
+
+  // if the user is unfollowing someone that follows them
+  // update the relationship status for both users
+  const SQL = `DELETE FROM UserRelationships
+               WHERE FollowingUser = ? AND FollowedUser = ?;
+               
+               UPDATE UserRelationships
+               SET Relationship = "Following"
+               WHERE FollowingUser = ? AND FollowedUser = ?` 
+
+  db.query(SQL, [FollowerID, FolloweeID, FolloweeID, FollowerID], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to remove user relationship" });
+    }
+
+    res.json(result);
+  });
+});
+
+// Unfollow a user
+app.delete("/api/follows", (req, res) => {
+  const { follower_id, following_id } = req.body;
+
+  if (!follower_id || !following_id) {
+    return res.status(400).json({ error: "follower_id and following_id are required" });
+  }
+
+  db.query(
+    `DELETE FROM user_follows
+     WHERE follower_id = ? AND following_id = ?`,
+    [follower_id, following_id],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Unfollow failed" });
+      }
+
+      res.json({ ok: true, affectedRows: result.affectedRows });
+    }
+  );
 });
 
 // DELETE Users
