@@ -280,6 +280,40 @@ app.get("/maps/:forumID", (req, res) => {
   });
 });
 
+app.get("/maps/forum/:forumID", (req, res) => {
+  const { forumID } = req.params;
+
+  const sql = `SELECT * FROM Maps WHERE ForumID = ? LIMIT 1`;
+
+  db.query(sql, [forumID], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to fetch map" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: "No map found for this forum" });
+    }
+
+    res.json(results[0]);
+  });
+});
+
+app.get("/userpins/map/:mapID", (req, res) => {
+  const { mapID } = req.params;
+
+  const sql = `SELECT * FROM Userpins WHERE MapID = ?`;
+
+  db.query(sql, [mapID], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to fetch pins" });
+    }
+
+    res.json(results);
+  });
+});
+
 // POST Endpoints
 // POST forums
 app.post("/forums", (req, res) => {
@@ -365,14 +399,14 @@ app.post("/category", (req, res) => {
 
 // POST userpins
 app.post("/userpins", (req, res) => {
-  const { user_id, visibility, longitude, latitude, title, description} = req.body;
+  const { user_id, map_id, visibility, longitude, latitude, title, description} = req.body;
 
   const sql = `
-    INSERT INTO Userpins ( UserID, Visibility, Longitude, Latitude, Title, Description)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO Userpins ( UserID, MapID, Visibility, Longitude, Latitude, Title, Description)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
-  db.query(sql, [ user_id, visibility, longitude, latitude, title, description], (err, result) => {
+  db.query(sql, [ user_id, map_id, visibility, longitude, latitude, title, description], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create pin" });

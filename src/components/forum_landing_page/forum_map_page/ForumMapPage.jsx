@@ -19,9 +19,8 @@ const ForumMapPage = () => {
   const [pinDescription, setPinDescription] = useState("");
   const [pinVisibility, setPinVisibility] = useState("Public");
 
-  const [currentLocationID, setCurrentLocationID] = useState(null);
+  const [currentMapID, setCurrentMapID] = useState(null);
   const [center, setCenter] = useState(OAKLAND_CENTER);
-
   const [selectedPin, setSelectedPin] = useState(null);
 
   const { isLoaded } = useJsApiLoader({
@@ -30,10 +29,6 @@ const ForumMapPage = () => {
   });
 
   useEffect(() => {
-    if (forumData?.locationID) {
-      setCurrentLocationID(forumData.locationID);
-    }
-
     if (forumData?.latitude && forumData?.longitude) {
       setCenter({
         lat: forumData.latitude,
@@ -42,23 +37,43 @@ const ForumMapPage = () => {
     }
   }, [forumData]);
 
-    const loadPins = () => {
-    fetch("http://localhost:5000/userpins")
-        .then((response) => response.json())
-        .then((pinList) => {
+  const getMapForForum = () => {
+    if (!forumData?.forumID) return;
+
+    fetch(`http://localhost:5000/maps/forum/${forumData.forumID}`)
+      .then((response) => response.json())
+      .then((mapData) => {
+        console.log("map from backend:", mapData);
+
+        // adjust this depending on your backend response shape
+        if (mapData && mapData.MapID) {
+          setCurrentMapID(mapData.MapID);
+        }
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const loadPins = (mapID) => {
+    if (!mapID) return;
+
+    fetch(`http://localhost:5000/userpins/map/${mapID}`)
+      .then((response) => response.json())
+      .then((pinList) => {
         console.log("pins from backend:", pinList);
         setUserPins(pinList);
-        })
-        .catch((error) => console.error(error));
-    };
-
-    useEffect(() => {
-    loadPins();
-    }, []);
+      })
+      .catch((error) => console.error(error));
+  };
 
   useEffect(() => {
-    loadPins(currentLocationID);
-  }, [currentLocationID]);
+    getMapForForum();
+  }, [forumData]);
+
+  useEffect(() => {
+    if (currentMapID) {
+      loadPins(currentMapID);
+    }
+  }, [currentMapID]);
 
   const handleRightClick = (event) => {
     event.domEvent.preventDefault();
@@ -75,9 +90,12 @@ const ForumMapPage = () => {
   };
 
   const handlePlacePin = () => {
-    console.log("Place pin clicked");
-
     if (!clickedLatLng) return;
+
+    if (!currentMapID) {
+      alert("No map found for this forum");
+      return;
+    }
 
     if (!pinTitle.trim()) {
       alert("Pin must have a title");
@@ -86,12 +104,12 @@ const ForumMapPage = () => {
 
     const newPin = {
       user_id: 1,
+      map_id: currentMapID,
       visibility: pinVisibility,
       longitude: clickedLatLng.lng,
       latitude: clickedLatLng.lat,
       title: pinTitle,
       description: pinDescription,
-      location_id: currentLocationID,
     };
 
     fetch("http://localhost:5000/userpins", {
@@ -103,12 +121,11 @@ const ForumMapPage = () => {
     })
       .then((response) => response.json())
       .then(() => {
-        loadPins(currentLocationID);
+        loadPins(currentMapID);
 
         setPinTitle("");
         setPinDescription("");
         setPinVisibility("Public");
-
         setMenuPosition(null);
         setClickedLatLng(null);
       })
@@ -121,7 +138,7 @@ const ForumMapPage = () => {
     })
       .then((response) => response.json())
       .then(() => {
-        loadPins();
+        loadPins(currentMapID);
         setSelectedPin(null);
       })
       .catch((error) => console.error(error));
@@ -135,9 +152,8 @@ const ForumMapPage = () => {
 
   return (
     <>
-      {/* Pin Form (outside map container) */}
       {menuPosition && (
-        <div 
+        <div
           style={{
             position: "fixed",
             top: menuPosition.y,
@@ -181,7 +197,6 @@ const ForumMapPage = () => {
         </div>
       )}
 
-      {/* Map container */}
       <div className="main-content" style={{ height: "90vh", width: "100%", position: "relative" }}>
         {forumData.forumName && (
           <div
@@ -220,21 +235,21 @@ const ForumMapPage = () => {
 
           {selectedPin && (
             <InfoWindow
-                position={{
+              position={{
                 lat: parseFloat(selectedPin.Latitude),
                 lng: parseFloat(selectedPin.Longitude),
-                }}
-                onCloseClick={() => setSelectedPin(null)}
+              }}
+              onCloseClick={() => setSelectedPin(null)}
             >
-                <div style={{ maxWidth: "220px" }}>
+              <div style={{ maxWidth: "220px" }}>
                 <h3 style={{ margin: "0 0 8px 0" }}>{selectedPin.Title}</h3>
                 <p style={{ margin: "0 0 10px 0" }}>{selectedPin.Description}</p>
                 <button onClick={() => handleDeletePin(selectedPin.PinID)}>
-                    Delete Pin
+                  Delete Pin
                 </button>
-                </div>
+              </div>
             </InfoWindow>
-            )}
+          )}
         </GoogleMap>
       </div>
     </>
