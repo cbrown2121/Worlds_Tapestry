@@ -1,0 +1,53 @@
+.profile-page {
+   
+}
+
+.profile-container {
+    padding: 1.5rem;
+
+    display: flex;
+
+    gap: 10rem;
+}
+
+/* left side with user data and follow status */
+
+.profile-container .profile-left-side {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    border: 1px solid var(--text);
+
+    padding: 1rem;
+    border-radius: 0.25rem;
+}
+
+.profile-container .profile-left-side .user-profile-image {
+    height: 10rem;
+    width: 10rem;
+
+    background: var(--secondary);
+    padding: 1rem;
+}
+
+/* user profile data */
+
+.profile-container .profile-left-side .user-profile-data {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* rows in user profile data */
+
+.profile-container .profile-left-side .user-profile-data .profile-row {
+    display: flex;
+    align-items: center;
+
+    gap: 1rem;
+}
+
+.profile-container .profile-left-side .user-relationship {
+    font-size: 1rem;
+}
