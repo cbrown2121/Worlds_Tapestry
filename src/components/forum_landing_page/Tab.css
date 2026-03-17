@@ -128,3 +128,22 @@
 .thread-tab .tab-stats .most-recent-activity {
     width: 100%;
 }
+
+/* styling for tabs returned in search results */
+
+.search-results .tab { 
+    height: 5rem;
+    width: 50%;
+}
+
+.search-results .tab .icon-or-image {
+    display: none;
+}
+
+/* .search-results .tab .tab-name {
+    font-size: 36px;
+}
+
+.search-results .tab .tab-name-text {
+    font-size: 36px;
+} */

@@ -18,12 +18,6 @@ const SearchPage = () => {
     const [posts, setPosts] = useState([]);
     const [user, setUsers] = useState([]);
 
-    // const sampleForumId = 1;
-    // const sampleUserId = 1;
-
-    // const requestForAllForums = `http://localhost:5000/forums`; // only for testing purposes
-    // const requestForUserForums = `http://localhost:5000/usersforums/${sampleForumId}`; // the route that will be used in the final deployment
-    
     useEffect(() => {
         const fetchQueryResults = async () => {
             setForums(await universalDatabaseFetch(`search-forums/${query}`));
@@ -39,32 +33,68 @@ const SearchPage = () => {
     return (
         <>
             <div className="main-content">
-                <div className="forum-matches">   { /* searches forum name and tags */ }
-                    {forums.map((forum) => {
-                        return <CommunityTab key={ forum.ForumID } {...forum} />
-                    })}
+                <div className="forum-matches search-results">   { /* searches forum name and tags */ }
+                    <h1 className="forum-matches-title">Forums</h1> 
+                    
+                    { 0 < forums.length &&
+                        forums.map((forum) => {
+                            return <CommunityTab key={ forum.ForumID } {...forum} />
+                        })
+                    }
+
+                    { forums.length == 0 &&
+                        <>No forums found</>
+                    }
+
                 </div>
 
-                <div className="category-matches">  { /* searches category description */ }
-                    {categories.map((category) => {
-                        return <CategoryTab key={category.CategoryID} {...category} />
-                    })}
+                <div className="category-matches search-results">  { /* searches category description */ }
+                    <h1 className="category-matches-title">Categories</h1>
+
+                    { 0 < categories.length &&
+                        categories.map((category) => {
+                            return <CategoryTab key={category.CategoryID} {...category} />
+                        })
+                    }
+
+                    { categories.length == 0 &&
+                        <>No categories found</>
+                    }
+
                 </div>
 
-                <div className="thread-matches"> { /* only first post in thread searches content (should search subject as well once subject is implemented) */ }
-                    {threads.map((thread) => {
-                        return <ThreadPost key={thread.ThreadID} {...thread}/>
-                    })}
+                <div className="thread-matches search-results"> { /* only first post in thread searches content (should search subject as well once subject is implemented) */ }
+                    <h1 className="threads-matches-title">Threads</h1>
+
+                    { 0 < threads.length &&
+                        threads.map((thread) => {
+                            return <ThreadPost key={`${thread.ThreadID}-${thread.ForumID}`} {...thread}/>
+                        })
+                    }
+
+                    { threads.length == 0 &&
+                        <>No threads found</>
+                    }
+
                 </div>
 
-                <div className="post-matches">  { /* searches content of all non original thread posts */ }
-                    {posts.map((post) => {
-                        return <ThreadPost key={`${post.ThreadID}-${post.PostID}`} {...post}/>
-                    })}
+                <div className="post-matches search-results">  { /* searches content of all non original thread posts */ }
+                    <h1 className="post-matches-title">Posts</h1>
+
+                    { 0 < posts.length &&
+                        posts.map((post) => {
+                            return <ThreadPost key={`${post.ThreadID}-${post.PostID}`} {...post}/>
+                        })
+                    }
+
+                    { posts.length == 0 &&
+                        <>No post found</>
+                    }
+
                 </div>
             </div>
         </>
     )
 }
 
-export default SearchPage
+export default SearchPage;
