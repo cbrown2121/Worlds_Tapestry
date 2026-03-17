@@ -1,3 +1,5 @@
+// DATE TIME FUNCTIONS ==================================================================
+
 const convertToLocalTime = (UTCTime) => {
     let offset = new Date().getTimezoneOffset() / 60;
 
@@ -43,4 +45,47 @@ export const calculateRecency = (mostRecent) => {
     if (minutesPassed < 60) return getRecencyString(minutesPassed, "Minute");
     if (hoursPassed < 24) return getRecencyString(hoursPassed, "Hour");
     return date;
+}
+
+// GET
+export const universalDatabaseFetch = async (endpoint) => {
+    try {
+        const response = await fetch(`http://localhost:5000/${ endpoint }`, {
+            method: "GET",
+            headers: {
+            "Content-Type": "application/json"
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Network response error");
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.log(`Data was submitted unsuccessfully: ${error}`);
+    }
+}
+
+// POST PUT DELETE
+export const universalDatabaseInteraction = async (method, endpoint, body) => {
+    try {
+        const response = await fetch(`http://localhost:5000/${ endpoint }`, {
+            method: method,
+            headers: {
+            "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body),
+        });
+
+        if (!response.ok) {
+            throw new Error("Network response error");
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.log(`Data was submitted unsuccessfully: ${error}`);
+    }
 }

@@ -26,7 +26,7 @@ const Header = () => {
           <Link className="router-link" to="/Profile"
             state={{ 
                 currentUserID: sampleUserID,
-                userPageID: sampleUserPageID,
+                userPageID: sampleUserID,
             }}
           >
             <div id="profile">

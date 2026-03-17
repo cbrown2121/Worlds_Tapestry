@@ -10,6 +10,7 @@ import FAQPage from "./components/footer_links/FAQPage.jsx";
 import AboutUsPage from "./components/footer_links/AboutPage.jsx";
 import GuidelinesPage from "./components/footer_links/GuidelinesPage.jsx";
 import ReportPage from "./components/footer_links/ReportPage.jsx";
+import SearchPage from "./components/search_page/SearchPage.jsx";
 
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
@@ -68,6 +69,11 @@ function App() {
             <Route path="/Report" element={<Layout />}>
               <Route index element={<ReportPage />}/>
             </Route>
+
+            <Route path="/Search/:query" element={<Layout />}>
+              <Route index element={<SearchPage />}/>
+            </Route>
+
         </Routes>
       </BrowserRouter>
     </>

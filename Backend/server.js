@@ -348,6 +348,108 @@ app.get("/relationship/:User1/:User2", (req, res) => {
   });
 });
 
+// GET forums from users search query
+app.get("/search-forums/:query", (req, res) => {
+  const { query } = req.params;
+
+  const sql = `
+    SELECT * FROM Forums WHERE concat(ForumName, Tags) LIKE "%${query}%";
+  `;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to search data" });
+    }
+
+    res.json(result);
+  });
+});
+
+// GET categories from users search query
+app.get("/search-categories/:query", (req, res) => {
+  const { query } = req.params;
+
+  const sql = `
+    SELECT f.ForumID, f.ForumName, c.CategoryName, c.CategoryDescription, c.MostRecentActivity, f.SearchVisibility 
+    FROM Categories c JOIN Forums f ON c.ForumID = f.ForumID 
+    WHERE concat(CategoryName, CategoryDescription) LIKE "%${query}%";
+  `;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to search data" });
+    }
+
+    res.json(result);
+  });
+});
+
+// GET threads form user search query
+app.get("/search-threads/:query", (req, res) => {
+  const { query } = req.params;
+
+  const sql = `
+    SELECT p.ThreadID, PostID, ThreadName, Content, CategoryName, ForumName
+    FROM Posts p 
+    JOIN Threads t ON p.ThreadID = t.ThreadID 
+    JOIN Categories c ON t.CategoryID = c.CategoryID
+    JOIN Forums f ON c.ForumID = f.ForumID
+    WHERE concat(ThreadName, Content) LIKE "%${query}%" AND OriginalThreadPost = 1;
+  `;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to search data" });
+    }
+
+    res.json(result);
+  });
+});
+
+// GET posts from users search query
+app.get("/search-posts/:query", (req, res) => {
+  const { query } = req.params;
+
+  const sql = `
+    SELECT p.ThreadID, PostID, ThreadName, Content, CategoryName, ForumName
+    FROM Posts p 
+    JOIN Threads t ON p.ThreadID = t.ThreadID 
+    JOIN Categories c ON t.CategoryID = c.CategoryID
+    JOIN Forums f ON c.ForumID = f.ForumID
+    WHERE concat(ThreadName, Content) LIKE "%${query}%" AND OriginalThreadPost = 0;
+  `;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to search data" });
+    }
+
+    res.json(result);
+  });
+});
+
+// GET users from users search query
+app.get("/search-users/:query", (req, res) => {
+  const { query } = req.params;
+
+  const sql = `
+    SELECT * FROM Users WHERE UserName LIKE "%${query}%";
+  `;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to search data" });
+    }
+
+    res.json(result);
+  });
+});
+
 // POST Endpoints
 // POST forums
 app.post("/forums", (req, res) => {
@@ -488,7 +590,7 @@ app.post("/category", (req, res) => {
   const { CategoryName, CategoryDescription, PinnedStatus, ForumID } = req.body;
 
   const sql = `
-    INSERT INTO Categories (CategoryName, Description, Pinned, ForumID)
+    INSERT INTO Categories (CategoryName, CategoryDescription, Pinned, ForumID)
     VALUES (?, ?, ?, ?)
   `;
 
@@ -507,7 +609,7 @@ app.post("/userpins", (req, res) => {
   const { user_id, map_id, visibility, longitude, latitude, title, description} = req.body;
 
   const sql = `
-    INSERT INTO Userpins ( UserID, MapID, Visibility, Longitude, Latitude, Title, Description)
+    INSERT INTO Userpins ( UserID, MapID, Visibility, Longitude, Latitude, Title, CategoryDescription)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 

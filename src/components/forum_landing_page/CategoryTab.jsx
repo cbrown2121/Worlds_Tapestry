@@ -10,14 +10,19 @@ function CategoryTab( props ) {
     const location = useLocation(); 
     const [recency, setRecency] = useState(null);
 
+    const [forumName] = useState(props.ForumName);
+    const [forumID] = useState(props.ForumID);
+    const [categoryID] = useState(props.CategoryID);
+    const [categoryName, setCategoryName] = useState(props.CategoryName);
+
     useEffect(() => {
         setRecency(calculateRecency(props.MostRecentActivity))
     },[]);
 
-    let categoryName = <div className="tab-name"><p className="tab-name-text">{props.CategoryName}</p></div>;;
+    let categoryNameTab = <div className="tab-name"><p className="tab-name-text">{props.CategoryName}</p></div>;;
 
     if (props.Pinned == 1) {
-        categoryName = 
+        categoryNameTab = 
                         <div className="tab-name">
                             <p className="tab-name-text">{props.CategoryName}</p> 
                             
@@ -28,11 +33,12 @@ function CategoryTab( props ) {
     return (
         <>
             <Link className="router-link" 
-                    to={ `${ location.pathname }/category/${ props.CategoryName.replace(/[ ]/g, "_") }` }  // change later so this includes the forum name from the previous link
+                    to={ `/Forum/${ forumName.replace(/[ ]/g, "_") }/category/${ categoryName.replace(/[ ]/g, "_") }` }  // change later so this includes the forum name from the previous link
                     state={{ 
-                        forumID: props.ForumID,
-                        categoryID: props.CategoryID, 
-                        categoryName: props.CategoryName
+                        forumID: forumID,
+                        forumName: forumName,
+                        categoryID: categoryID, 
+                        categoryName: categoryName
                     }}
             >
 
@@ -40,7 +46,7 @@ function CategoryTab( props ) {
                     <div className="icon-or-image"></div>
 
                     <div className="tab-information">
-                        {categoryName}
+                        {categoryNameTab}
                         <div className="tab-description">
                             <p className="tab-description-text">{props.Description}</p>
                         </div>

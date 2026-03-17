@@ -7,7 +7,6 @@ import profile from "../../../../assets/profile.svg"
 import { calculateRecency, getDate } from "../../../../utility.js";
 
 const ThreadPost = (props) => {
-    console.log(props)
     const sampleUserID = 1;
     const modalID = useId();
     const [text, setText] = useState("");

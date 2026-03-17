@@ -90,7 +90,7 @@ function ForumLandingPage( props ) {
                 <div className="forum-landing-main">
                     <ForumSection title="Categories" categoryTabsList=
                         {categories.map((category) => (
-                            <CategoryTab key={category.CategoryID} {...category}/>
+                            <CategoryTab key={category.CategoryID} ForumName={forumName} {...category}/>
                         ))}
                     />
                 </div>

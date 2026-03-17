@@ -10,8 +10,10 @@ import ThreadTab from "./ThreadTab.jsx"
 const CategoryLandingPage = ( props ) => {
     const state = useLocation().state;
 
-    const [forumID, setForumID] = useState(state.forumID);
-    const [categoryID, setCategoryID] = useState(state.categoryID);
+    const [forumID] = useState(state.forumID);
+    const [forumName] = useState(state.forumName);
+    const [categoryName] = useState(state.categoryName);
+    const [categoryID] = useState(state.categoryID);
     const [threads, setThreads] = useState([]);
 
     useEffect(() => { 
@@ -32,7 +34,7 @@ const CategoryLandingPage = ( props ) => {
                 <div className="forum-landing-main">
                     <ForumSection title="Threads" categoryTabsList=
                         {threads.map((thread) => (
-                            <ThreadTab key={thread.ThreadID} {...thread} />
+                            <ThreadTab key={thread.ThreadID} CategoryName={categoryName} ForumName={forumName} {...thread} />
                         ))}
                     />
                 </div>

@@ -38,6 +38,13 @@ html, body, #root {
   /* scrollbar-width: none; */
 }
 
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none; /* removes blue border around input fields on mac ================ */
+}
+
 .main-content {
     min-height: 100vh;
 }
@@ -89,7 +96,8 @@ body {
 /*#endregion LEFT HEADER*/
 
 /*#region =======RIGHT HEADER ICONS======= */
-/* _____SEARCH BAR_____ */
+
+/* Search bar v =========================== */
 #search-bar {
     display: flex;
     align-items: center;
@@ -103,9 +111,13 @@ body {
     padding: 0.8rem;
 }
 
-#search-bar #search-bar-text {
-    color: var(--searchbar-text);
+#search-bar input[type=text] {
+    color: var(--text);
+    border: none;
+    
+    width: 100%;
 }
+/* Search bar ^ =========================== */
 
 #message-icon {
     height: 3.5rem;
@@ -125,7 +137,6 @@ body {
 #profile-icon {
     height: 1.5rem;
 }
-/*#endregion RIGHT HEADER ICONS*/
 
 /*#region =======FOOTER======= */
 #footer {
