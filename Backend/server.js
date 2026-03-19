@@ -90,10 +90,11 @@ app.get("/messages/conversation/:user1-:user2", (req, res) => {
   }
 
   db.query(
-    `SELECT *
-     FROM Messages
-     WHERE (SenderID = ? AND ReceiverID = ?)
-        OR (SenderID = ? AND ReceiverID = ?)
+    `SELECT 
+     MessageID, SenderID, ReceiverID, MessageText, SentAt, UserName
+     FROM Messages JOIN Users on SenderID = UserID
+     WHERE (SenderID = 1 AND ReceiverID = 2)
+        OR (SenderID = 2 AND ReceiverID = 1)
      ORDER BY SentAt ASC, MessageID ASC`,
     [user1, user2, user2, user1],
     (err, results) => {

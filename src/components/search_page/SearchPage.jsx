@@ -33,6 +33,9 @@ const SearchPage = () => {
     return (
         <>
             <div className="main-content">
+                <h1 className="results-title">
+                    Search Results for: { query }
+                </h1>
                 <div className="forum-matches search-results">   { /* searches forum name and tags */ }
                     <h1 className="forum-matches-title">Forums</h1> 
                     

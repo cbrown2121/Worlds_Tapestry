@@ -42,12 +42,11 @@ export default function MessagesPage(props) {
   return (
     <div className="messages-section">
       <h2>Direct Messages</h2>
-      <p>Chat: {currentUserID} ↔ {userPageID}</p>
 
       <div className="messages">
         {messages.map((m) => (
           <div key={m.MessageID} style={{ marginBottom: 8 }}>
-            <strong>{m.SenderID === currentUserID ? "You" : `User ${m.SenderID}`}:</strong>{" "}
+            <strong>{m.SenderID === currentUserID ? "You" : `${m.UserName}`}:</strong>{" "}
             {m.MessageText}
           </div>
         ))}
