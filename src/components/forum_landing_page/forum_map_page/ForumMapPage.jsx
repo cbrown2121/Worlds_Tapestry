@@ -23,6 +23,9 @@ const ForumMapPage = () => {
   const [center, setCenter] = useState(OAKLAND_CENTER);
   const [selectedPin, setSelectedPin] = useState(null);
 
+  // Temporary: matches ForumLandingPage until real login is implemented
+  const currentUserID = 1;
+
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_KEY,
@@ -45,7 +48,6 @@ const ForumMapPage = () => {
       .then((mapData) => {
         console.log("map from backend:", mapData);
 
-        // adjust this depending on your backend response shape
         if (mapData && mapData.MapID) {
           setCurrentMapID(mapData.MapID);
         }
@@ -103,7 +105,7 @@ const ForumMapPage = () => {
     }
 
     const newPin = {
-      user_id: 1,
+      user_id: currentUserID,
       map_id: currentMapID,
       visibility: pinVisibility,
       longitude: clickedLatLng.lng,
@@ -122,7 +124,6 @@ const ForumMapPage = () => {
       .then((response) => response.json())
       .then(() => {
         loadPins(currentMapID);
-
         setPinTitle("");
         setPinDescription("");
         setPinVisibility("Public");
@@ -135,9 +136,19 @@ const ForumMapPage = () => {
   const handleDeletePin = (pinID) => {
     fetch(`http://localhost:5000/userpins/${pinID}`, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userID: currentUserID }),
     })
-      .then((response) => response.json())
-      .then(() => {
+      .then(async (response) => {
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.message || "Failed to delete pin");
+          return;
+        }
+
         loadPins(currentMapID);
         setSelectedPin(null);
       })
@@ -197,7 +208,10 @@ const ForumMapPage = () => {
         </div>
       )}
 
-      <div className="main-content" style={{ height: "90vh", width: "100%", position: "relative" }}>
+      <div
+        className="main-content"
+        style={{ height: "90vh", width: "100%", position: "relative" }}
+      >
         {forumData.forumName && (
           <div
             style={{
@@ -243,10 +257,16 @@ const ForumMapPage = () => {
             >
               <div style={{ maxWidth: "220px" }}>
                 <h3 style={{ margin: "0 0 8px 0" }}>{selectedPin.Title}</h3>
-                <p style={{ margin: "0 0 10px 0" }}>{selectedPin.Description}</p>
-                <button onClick={() => handleDeletePin(selectedPin.PinID)}>
-                  Delete Pin
-                </button>
+                <p style={{ margin: "0 0 6px 0" }}>{selectedPin.Description}</p>
+                <p style={{ margin: "0 0 10px 0" }}>
+                  Created by: {selectedPin.UserName}
+                </p>
+
+                {Number(selectedPin.UserID) === Number(currentUserID) && (
+                  <button onClick={() => handleDeletePin(selectedPin.PinID)}>
+                    Delete Pin
+                  </button>
+                )}
               </div>
             </InfoWindow>
           )}

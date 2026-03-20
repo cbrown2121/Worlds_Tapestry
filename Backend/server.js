@@ -191,17 +191,31 @@ app.get("/Reports", (req, res) => {
 });
 
 // GET userpins
-app.get("/userpins", (req, res) => {
-  db.query("SELECT * FROM Userpins", (err, results) => {
-    if (err) return res.status(500).json(err);
-    res.json(results);
-  });
-});
+app.get("/userpins/map/:mapID", (req, res) => {
+  const { mapID } = req.params;
 
-// GET messages
-app.get("/Messages", (req, res) => {
-  db.query("SELECT * FROM Messages", (err, results) => {
-    if (err) return res.status(500).json(err);
+  const sql = `
+    SELECT 
+      p.PinID,
+      p.UserID,
+      p.MapID,
+      p.Visibility,
+      p.Longitude,
+      p.Latitude,
+      p.Title,
+      p.Description,
+      u.UserName
+    FROM Userpins p
+    INNER JOIN Users u ON p.UserID = u.UserID
+    WHERE p.MapID = ?
+  `;
+
+  db.query(sql, [mapID], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to fetch pins" });
+    }
+
     res.json(results);
   });
 });
@@ -315,7 +329,21 @@ app.get("/maps/forum/:forumID", (req, res) => {
 app.get("/userpins/map/:mapID", (req, res) => {
   const { mapID } = req.params;
 
-  const sql = `SELECT * FROM Userpins WHERE MapID = ?`;
+  const sql = `
+    SELECT 
+      p.PinID,
+      p.UserID,
+      p.MapID,
+      p.Visibility,
+      p.Longitude,
+      p.Latitude,
+      p.Title,
+      p.Description,
+      u.UserName
+    FROM Userpins p
+    INNER JOIN Users u ON p.UserID = u.UserID
+    WHERE p.MapID = ?
+  `;
 
   db.query(sql, [mapID], (err, results) => {
     if (err) {
@@ -448,6 +476,30 @@ app.get("/search-users/:query", (req, res) => {
     }
 
     res.json(result);
+  });
+});
+
+app.get("/current-user", (req, res) => {
+  // replace this with however your app tracks the logged-in user
+  const currentUserID = req.session?.userID;
+
+  if (!currentUserID) {
+    return res.status(401).json({ message: "No user logged in" });
+  }
+
+  const sql = `SELECT UserID, UserName FROM Users WHERE UserID = ?`;
+
+  db.query(sql, [currentUserID], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to fetch current user" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(results[0]);
   });
 });
 
@@ -610,7 +662,7 @@ app.post("/userpins", (req, res) => {
   const { user_id, map_id, visibility, longitude, latitude, title, description} = req.body;
 
   const sql = `
-    INSERT INTO Userpins ( UserID, MapID, Visibility, Longitude, Latitude, Title, CategoryDescription)
+    INSERT INTO Userpins ( UserID, MapID, Visibility, Longitude, Latitude, Title, Description)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
@@ -879,13 +931,24 @@ app.delete("/threads/:id", (req, res) => {
 
 // DELETE UserPins
 app.delete("/userpins/:id", (req, res) => {
-  const id = req.params.id.trim();
+  const pinID = req.params.id.trim();
+  const { userID } = req.body;
 
-  db.query("DELETE FROM Userpins WHERE PinID = ?", [id], (err, result) => {
-    if (err) return res.status(500).json(err);
+  if (!userID) {
+    return res.status(400).json({ message: "userID is required" });
+  }
 
-    if (result.affectedRows === 0)
-      return res.status(404).json({ message: "Pin not found" });
+  const sql = `DELETE FROM Userpins WHERE PinID = ? AND UserID = ?`;
+
+  db.query(sql, [pinID, userID], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to delete pin" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(403).json({ message: "You can only delete your own pins" });
+    }
 
     res.json({ message: "User pin deleted" });
   });

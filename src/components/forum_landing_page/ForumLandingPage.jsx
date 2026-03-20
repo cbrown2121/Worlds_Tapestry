@@ -107,7 +107,8 @@ function ForumLandingPage( props ) {
                         to={ `/Forum/${ forumName.replace(/[ ]/g, "_") }/Map` } 
                         state={{ 
                             forumID: forumID,
-                            forumName: forumName
+                            forumName: forumName,
+                            currentUserID: props.currentUserID
                         }}
                         >
                             <button className="forum-map" > Community Map </button>
