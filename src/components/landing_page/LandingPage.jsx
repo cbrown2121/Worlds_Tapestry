@@ -12,14 +12,15 @@ import { LoginForm } from "../form_component/LoginForm.jsx";
 
 function LandingPage() {
     const [forumList, setForumList] = useState([]);
-
     const { user, loggedIn } = useContext(UserContext);
+
+    let landingPageText = (loggedIn()) ? "Your Communities" : "Communities";
 
     useEffect(() => {
         let fetchUrl = `public-forums`;
 
         if (loggedIn()) {
-            fetchUrl = `usersforums/${user.UserID}`
+            fetchUrl = `user-forums/${user.UserID}`
         }
 
         universalDatabaseFetch(fetchUrl).then(forumList => {
@@ -64,7 +65,7 @@ function LandingPage() {
                 <div id="landing-right">
                     <div id="my-communities-header">
                         <img id="my-communities-header-icon" src={bookIcon} alt="" />
-                        <h1 id="my-communities-header-text" >Communities</h1>
+                        <h1 id="my-communities-header-text" >{landingPageText}</h1>
                     </div>
                     
                     <div id="my-communities">

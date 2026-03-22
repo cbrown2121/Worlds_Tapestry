@@ -109,7 +109,7 @@ app.get("/messages/conversation/:user1-:user2", (req, res) => {
 
 // GET forums
 app.get("/forums", (req, res) => {
-  db.query("SELECT * FROM Forums ORDER BY MostRecentActivity DESC", (err, results) => {
+  db.query("SELECT * FROM Forums", (err, results) => {
     if (err) return res.status(500).json(err);
     res.json(results);
   });
@@ -144,9 +144,9 @@ app.get("/maps/:forumID", (req, res) => {
 });
 
 // GET forums that the user is in
-app.get("/usersforums/:userID", (req, res) => {
+app.get("/user-forums/:userID", (req, res) => {
   // a forum will only be returned if there is a row in the UsersInForum table where the primary key is the given UserID
-  const sql = `SELECT * FROM Forums forums WHERE EXISTS (SELECT 1 FROM MemberList WHERE ForumID = forums.ForumID AND UserID = ?)`; 
+  const sql = `SELECT * FROM Forums forums WHERE EXISTS (SELECT 1 FROM MemberList WHERE ForumID = forums.ForumID AND UserID = ?) ORDER BY MostRecentActivity DESC`; 
 
   db.query(sql, [req.params.userID], (err, result) => {
     if (err) return res.status(500).json(err);
