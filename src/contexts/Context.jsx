@@ -37,8 +37,12 @@ export const UserProvider = ({ children }) => {
     deleteCookie("WP-username");
   }
 
+  const loggedIn = () => {
+    return user.UserID !== null && user.UserName !== null;
+  }
+
   return (
-    <UserContext.Provider value={{ user, setUser, logOutUser }}>
+    <UserContext.Provider value={{ user, setUser, logOutUser, loggedIn }}>
       {children}
     </UserContext.Provider>
   );

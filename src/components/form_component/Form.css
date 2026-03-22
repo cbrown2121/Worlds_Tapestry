@@ -79,7 +79,7 @@
     gap: 1rem;
 }
 
-/* STYLING FOR FORM THAT IS MEANT TO BE IN THE MIDDLE OF THE PAGE */
+/* STYLING FOR LOGIN FORM THAT IS MEANT TO BE IN THE MIDDLE OF THE PAGE */
 .login-form {
     position: absolute;
     top: 50vh;

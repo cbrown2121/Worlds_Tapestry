@@ -9,9 +9,9 @@ import { UserContext } from "../../contexts/Context.jsx";
 import "./HeaderFooterStyle.css";
 
 export const Header = () => {
-  const { user } = useContext(UserContext);
+  const { user, loggedIn } = useContext(UserContext);
 
-  let userTools = (user.UserID !== null) ? <UserTools/> :  <Login/>;
+  let userTools = (loggedIn()) ? <UserTools/> :  <Login/>;
 
   return (
     <>

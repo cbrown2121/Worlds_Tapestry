@@ -15,6 +15,8 @@ const Login = () => {
         setShowLogInForm(!showLogInForm);
     }
 
+    // move to be on its own page instead of being a floating form on any page
+
     return (
         <>
             <div className="login" onClick={ handleButtonPress }>

@@ -16,7 +16,7 @@ function ForumLandingPage( props ) {
     const [userRole, setUserRole] = useState(null);
     const [joinButtonText, setJoinButtonText] = useState("Join Community");
 
-    const { user } = useContext(UserContext);
+    const { user, loggedIn } = useContext(UserContext);
     
     const getForumCategories = () => {
         fetch(`http://localhost:5000/categories/${forumID}`)
@@ -41,7 +41,10 @@ function ForumLandingPage( props ) {
 
     useEffect(() => {
         getForumCategories();
-        getUserRoleInForum();
+
+        if (loggedIn()) {
+            getUserRoleInForum();
+        }
     }, []);
 
     const createCategories = (categoriesList) => {
@@ -101,7 +104,9 @@ function ForumLandingPage( props ) {
                         <h2 className="forum-name">{ forumName }</h2>
                     </div>
 
-                    <button id="forum-join-button" onClick={ joinButtonAction }> {joinButtonText} </button>
+                    { loggedIn() &&
+                        <button id="forum-join-button" onClick={ joinButtonAction }> {joinButtonText} </button>
+                    }
 
                     { (props.forumMap == 1) &&
                         <Link key={ `${forumID}-${forumName}-map` } className="router-link" 

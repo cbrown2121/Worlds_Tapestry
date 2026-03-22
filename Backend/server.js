@@ -109,7 +109,17 @@ app.get("/messages/conversation/:user1-:user2", (req, res) => {
 
 // GET forums
 app.get("/forums", (req, res) => {
-  db.query("SELECT * FROM Forums", (err, results) => {
+  db.query("SELECT * FROM Forums ORDER BY MostRecentActivity DESC", (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+// GET public forums
+app.get("/public-forums", (req, res) => {
+  const SQL = `SELECT * FROM Forums WHERE SearchVisibility != "Hidden" ORDER BY MostRecentActivity DESC;`
+
+  db.query(SQL, (err, results) => {
     if (err) return res.status(500).json(err);
     res.json(results);
   });
