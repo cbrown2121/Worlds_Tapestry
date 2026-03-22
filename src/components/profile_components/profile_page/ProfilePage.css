@@ -51,3 +51,10 @@
 .profile-container .profile-left-side .user-relationship {
     font-size: 1rem;
 }
+
+/* logout button */
+.logout-button {
+    margin-top: 2rem;
+    width: 10rem;
+    border: 1px solid var(--text);
+}

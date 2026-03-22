@@ -154,6 +154,16 @@ app.get("/forum-membership/:forumID/:userID", (req, res) => {
   });
 });
 
+//get a user from a username and passworkd
+app.get("/user/:UserName-:Password", (req, res) => {
+  const sql = `SELECT * FROM Users WHERE UserName = ? AND Password = ?;`; 
+
+  db.query(sql, [req.params.UserName, req.params.Password], (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
+});
+
 // GET posts
 app.get("/posts", (req, res) => {
   db.query("SELECT * FROM Posts", (err, results) => {

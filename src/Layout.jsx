@@ -1,8 +1,8 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
-import Header from "../components/Header.jsx";
-import Footer from "../components/Footer.jsx";
+import Header from "./components/header_footer/Header.jsx";
+import Footer from "./components/header_footer/Footer.jsx";
 
 function Layout() { // this page is to set a layout so we dont need to add the header and footer to each page
     return (

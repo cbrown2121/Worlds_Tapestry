@@ -1,17 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import UserProfilePage from "./UserProfilePage.jsx"
 import CurrentUserProfilePage from "./CurrentUserProfilePage.jsx";
 import { useLocation } from 'react-router-dom';
+import { UserContext } from "../../../contexts/Context.jsx";
 import "./ProfilePage.css";
 
 export default function ProfilePage() {
   // props passed through location state
-  const currentUserID = useLocation().state.currentUserID;
+  const { user } = useContext(UserContext);
   const userPageID = useLocation().state.userPageID;
 
-  const [viewingOwnPage] = useState(currentUserID == userPageID);
+  const [viewingOwnPage] = useState(user.UserID == userPageID);
 
-  let content = (viewingOwnPage) ? <CurrentUserProfilePage currentUserID={currentUserID} /> : <UserProfilePage currentUserID={currentUserID} userPageID={userPageID} />;
+  let content = (viewingOwnPage) ? <CurrentUserProfilePage /> : <UserProfilePage userPageID={userPageID} />;
 
   return (
     <>

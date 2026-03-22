@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import FormTextSection from "./FormTextSection.jsx";
 import FormRadioSection from "./FormRadioSection.jsx";
+import { UserContext } from "../../contexts/Context.jsx";
 import "./Form.css"
 
 function FormElement( props ) {
     const [sections, setSections] = useState( props.sections );
-    const sampleUserID = 1;
+    const { user } = useContext(UserContext);
 
     const handleSubmit = async (event) => {
         event.preventDefault();

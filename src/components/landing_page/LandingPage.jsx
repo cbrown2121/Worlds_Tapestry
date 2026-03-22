@@ -1,16 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import bookIcon from "../../assets/book-icon.svg";
 import "./LandingPage.css";
 import CommunityTab from "./CommunityTab";
 import TrendingTab from "./TrendingTab";
 import FormElement from "../form_component/FormElement.jsx";
+import { UserContext } from "../../contexts/Context.jsx";
 
 // for now the "my communities" section is all the forums in our database
 
 function LandingPage() {
     const [forumList, setForumList] = useState([]);
     const sampleForumId = 1;
-    const sampleUserId = 1;
+    const { user } = useContext(UserContext);
 
     const requestForAllForums = `http://localhost:5000/forums`; // only for testing purposes
     const requestForUserForums = `http://localhost:5000/usersforums/${sampleForumId}`; // the route that will be used in the final deployment
@@ -53,7 +54,7 @@ function LandingPage() {
         <>
             <div id="landing-page" className="main-content">
                 <div id="landing-left">
-                    <FormElement  formTitle="Create A Community" endPoint="forums" method="POST" passToEndPoint={ [{key: "UserID", value: sampleUserId}] } submitButtonText="Create Community" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } />
+                    <FormElement  formTitle="Create A Community" endPoint="forums" method="POST" passToEndPoint={ [{key: "UserID", value: user.UserID}] } submitButtonText="Create Community" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } />
                 </div>
                 <div id="landing-right">
                     <div id="my-communities-header">

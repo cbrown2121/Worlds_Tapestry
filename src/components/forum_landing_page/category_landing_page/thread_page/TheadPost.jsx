@@ -1,13 +1,14 @@
-import { useState, useEffect, useId } from "react"
+import { useState, useEffect, useId, useContext } from "react"
 import "./ThreadPost.css"
 // import ThreadPost from "./TheadPost"
 import thumbsUpIcon from "../../../../assets/thumbs-up.svg"
 import thumbsDownIcon from "../../../../assets/thumbs-down.svg"
 import profile from "../../../../assets/profile.svg"
+import { UserContext } from "../../../../contexts/Context.jsx"
 import { calculateRecency, getDate } from "../../../../utility.js";
 
 const ThreadPost = (props) => {
-    const sampleUserID = 1;
+    const { user } = useContext(UserContext);
     const modalID = useId();
     const [text, setText] = useState("");
     const [likeCount, Upvote] = useState(props.likes);
@@ -18,7 +19,7 @@ const ThreadPost = (props) => {
 
     // check if the user is in the post ratings list to see if they have already interacted with a post
     useEffect(() => {
-        fetch(`http://localhost:5000/post-ratings/${props.PostID}/${sampleUserID}`)
+        fetch(`http://localhost:5000/post-ratings/${props.PostID}/${user.UserID}`)
             .then(response => response.json())
             .then(response => {
                 if (0 < response.length) { // the user has interacted with the post
@@ -38,7 +39,7 @@ const ThreadPost = (props) => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ postID: props.PostID, likes: likeValue, dislikes: dislikeValue, userID: sampleUserID, rating: rating }),
+                body: JSON.stringify({ postID: props.PostID, likes: likeValue, dislikes: dislikeValue, userID: user.UserID, rating: rating }),
             });
 
             if (!response.ok) {
@@ -160,7 +161,7 @@ const ThreadPost = (props) => {
                         </div>
                     </div>
                     {/* <button className="reply-to-post" >Reply to Post</button> */}
-                    { sampleUserID == props.UserID &&
+                    { user.UserID == props.UserID &&
                         <>
                             <div className="delete-edit">
                                 <button className="delete-button" onClick={deletepost}>Delete</button>
