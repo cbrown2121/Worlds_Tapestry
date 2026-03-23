@@ -1,6 +1,7 @@
-import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, Marker, InfoWindow, Polyline, useJsApiLoader } from "@react-google-maps/api";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import userPinIcon from "../../../assets/user_pin.png";
 
 const OAKLAND_CENTER = {
   lat: 42.6804,
@@ -12,6 +13,7 @@ const ForumMapPage = () => {
   const forumData = location.state || {};
 
   const [userPins, setUserPins] = useState([]);
+  const [roadStatuses, setRoadStatuses] = useState([]);
   const [menuPosition, setMenuPosition] = useState(null);
   const [clickedLatLng, setClickedLatLng] = useState(null);
 
@@ -22,8 +24,8 @@ const ForumMapPage = () => {
   const [currentMapID, setCurrentMapID] = useState(null);
   const [center, setCenter] = useState(OAKLAND_CENTER);
   const [selectedPin, setSelectedPin] = useState(null);
+  const [selectedRoadStatus, setSelectedRoadStatus] = useState(null);
 
-  // Temporary: matches ForumLandingPage until real login is implemented
   const currentUserID = 1;
 
   const { isLoaded } = useJsApiLoader({
@@ -38,6 +40,17 @@ const ForumMapPage = () => {
         lng: forumData.longitude,
       });
     }
+  }, [forumData]);
+
+  useEffect(() => {
+    if (!forumData?.forumID) return;
+
+    fetch(`http://localhost:5000/road-status/${forumData.forumID}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setRoadStatuses(data);
+      })
+      .catch((error) => console.error(error));
   }, [forumData]);
 
   const getMapForForum = () => {
@@ -77,6 +90,35 @@ const ForumMapPage = () => {
     }
   }, [currentMapID]);
 
+  const getRoadStyle = (type) => {
+    if (type === "closed") {
+      return {
+        strokeColor: "#d32f2f",
+        strokeOpacity: 1,
+        strokeWeight: 5,
+      };
+    }
+
+    return {
+      strokeColor: "#f57c00",
+      strokeOpacity: 1,
+      strokeWeight: 5,
+    };
+  };
+
+  const getRoadIcon = (type) => {
+    if (!window.google) return undefined;
+
+    return {
+      path: window.google.maps.SymbolPath.CIRCLE,
+      scale: 8,
+      fillColor: type === "closed" ? "#d32f2f" : "#f57c00",
+      fillOpacity: 1,
+      strokeColor: "#ffffff",
+      strokeWeight: 2,
+    };
+  };
+
   const handleRightClick = (event) => {
     event.domEvent.preventDefault();
 
@@ -89,6 +131,9 @@ const ForumMapPage = () => {
       lat: event.latLng.lat(),
       lng: event.latLng.lng(),
     });
+
+    setSelectedPin(null);
+    setSelectedRoadStatus(null);
   };
 
   const handlePlacePin = () => {
@@ -157,6 +202,8 @@ const ForumMapPage = () => {
 
   const handleMapClick = () => {
     setMenuPosition(null);
+    setSelectedPin(null);
+    setSelectedRoadStatus(null);
   };
 
   if (!isLoaded) return <div>Loading map...</div>;
@@ -229,6 +276,70 @@ const ForumMapPage = () => {
           </div>
         )}
 
+      <div
+        style={{
+          position: "absolute",
+          top: 10,
+          right: 70,
+          zIndex: 1000,
+          background: "white",
+          padding: "10px 14px",
+          borderRadius: "6px",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+        }}
+      >
+        <div style={{ fontWeight: "bold", marginBottom: "6px" }}>Map Legend</div>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "16px", // spacing between items
+            flexWrap: "wrap", // prevents overflow on smaller screens
+          }}
+        >
+          {/* User Pin */}
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <img
+              src={userPinIcon}
+              alt="User Pin"
+              style={{
+                width: "16px",
+                height: "20px",
+                marginRight: "6px",
+              }}
+            />
+            <span>User Pin</span>
+          </div>
+
+          {/* Road Closed */}
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{
+                width: "20px",
+                height: "4px",
+                background: "#d32f2f",
+                marginRight: "6px",
+              }}
+            />
+            <span>Closed</span>
+          </div>
+
+          {/* Construction */}
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{
+                width: "20px",
+                height: "4px",
+                background: "#f57c00",
+                marginRight: "6px",
+              }}
+            />
+            <span>Construction</span>
+          </div>
+        </div>
+      </div>
+
         <GoogleMap
           mapContainerStyle={{ width: "100%", height: "100%" }}
           center={center}
@@ -236,6 +347,30 @@ const ForumMapPage = () => {
           onRightClick={handleRightClick}
           onClick={handleMapClick}
         >
+          {roadStatuses.map((status) => (
+            <Polyline
+              key={`line-${status.id}`}
+              path={status.path}
+              options={getRoadStyle(status.type)}
+              onClick={() => {
+                setSelectedRoadStatus(status);
+                setSelectedPin(null);
+              }}
+            />
+          ))}
+
+          {roadStatuses.map((status) => (
+            <Marker
+              key={`marker-${status.id}`}
+              position={status.iconPosition}
+              icon={getRoadIcon(status.type)}
+              onClick={() => {
+                setSelectedRoadStatus(status);
+                setSelectedPin(null);
+              }}
+            />
+          ))}
+
           {userPins.map((pin) => (
             <Marker
               key={pin.PinID}
@@ -243,7 +378,14 @@ const ForumMapPage = () => {
                 lat: parseFloat(pin.Latitude),
                 lng: parseFloat(pin.Longitude),
               }}
-              onClick={() => setSelectedPin(pin)}
+                icon={{
+                url: userPinIcon,
+                scaledSize: new window.google.maps.Size(30, 40),
+              }}
+              onClick={() => {
+                setSelectedPin(pin);
+                setSelectedRoadStatus(null);
+              }}
             />
           ))}
 
@@ -267,6 +409,21 @@ const ForumMapPage = () => {
                     Delete Pin
                   </button>
                 )}
+              </div>
+            </InfoWindow>
+          )}
+
+          {selectedRoadStatus && (
+            <InfoWindow
+              position={selectedRoadStatus.iconPosition}
+              onCloseClick={() => setSelectedRoadStatus(null)}
+            >
+              <div style={{ maxWidth: "220px" }}>
+                <h3 style={{ margin: "0 0 8px 0" }}>{selectedRoadStatus.title}</h3>
+                <p style={{ margin: "0 0 8px 0" }}>{selectedRoadStatus.description}</p>
+                <p style={{ margin: 0 }}>
+                  Status: {selectedRoadStatus.type}
+                </p>
               </div>
             </InfoWindow>
           )}

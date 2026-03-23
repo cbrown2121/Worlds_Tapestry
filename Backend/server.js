@@ -503,6 +503,43 @@ app.get("/current-user", (req, res) => {
   });
 });
 
+app.get("/road-status/:forumID", async (req, res) => {
+  try {
+    // Later: replace this with a real DOT / 511 / ArcGIS fetch
+    const roadStatuses = [
+      {
+        id: "closure-101",
+        type: "closed",
+        title: "Road Closed",
+        description: "Main St closed for utility repair",
+        iconPosition: { lat: 42.6842, lng: -83.2041 },
+        path: [
+          { lat: 42.6842, lng: -83.2041 },
+          { lat: 42.6848, lng: -83.2025 },
+          { lat: 42.6855, lng: -83.2008 }
+        ]
+      },
+      {
+        id: "construction-202",
+        type: "construction",
+        title: "Construction Zone",
+        description: "Lane reduction due to resurfacing",
+        iconPosition: { lat: 42.6768, lng: -83.1894 },
+        path: [
+          { lat: 42.6768, lng: -83.1894 },
+          { lat: 42.6775, lng: -83.1882 },
+          { lat: 42.6781, lng: -83.1870 }
+        ]
+      }
+    ];
+
+    res.json(roadStatuses);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to load road statuses" });
+  }
+});
+
 // POST Endpoints
 // POST forums
 app.post("/forums", (req, res) => {
