@@ -14,7 +14,7 @@ function LandingPage() {
     const [forumList, setForumList] = useState([]);
     const { user, loggedIn } = useContext(UserContext);
 
-    let landingPageText = (loggedIn()) ? "Your Communities" : "Communities";
+    let landingPageText = (loggedIn()) ? "My Communities" : "Communities";
 
     useEffect(() => {
         let fetchUrl = `public-forums`;

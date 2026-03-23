@@ -19,16 +19,15 @@ const Login = () => {
 
     return (
         <>
-            <div className="login" onClick={ handleButtonPress }>
+            <Link to="/login">
                 <button className="login-button">Log In</button>
-            </div>
+            </Link>
 
-            { showLogInForm && 
-                <LoginForm/>
-            }
+
         </>
     )
 
 }
 
 export default Login;
+

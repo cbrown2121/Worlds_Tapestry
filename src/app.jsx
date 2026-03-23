@@ -14,6 +14,7 @@ import SearchPage from "./components/search_page/SearchPage.jsx";
 
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { UserProvider } from "./contexts/Context.jsx";
+import LoginPage from "./components/login_page/LoginPage.jsx";
 
 const App = () => {
 
@@ -75,6 +76,10 @@ const App = () => {
 
               <Route path="/Search/:query" element={<Layout />}>
                 <Route index element={<SearchPage />}/>
+              </Route>
+
+              <Route path="/Login" element={<Layout />}>
+                <Route index element={<LoginPage />}/>
               </Route>
           </Routes>
         </BrowserRouter>
