@@ -99,6 +99,14 @@ const ForumMapPage = () => {
       };
     }
 
+    if (type === "incident") {
+      return {
+        strokeColor: "#1976d2",
+        strokeOpacity: 1,
+        strokeWeight: 5,
+      };
+    }
+
     return {
       strokeColor: "#f57c00",
       strokeOpacity: 1,
@@ -109,10 +117,18 @@ const ForumMapPage = () => {
   const getRoadIcon = (type) => {
     if (!window.google) return undefined;
 
+    let fillColor = "#f57c00"; // default = construction
+
+    if (type === "closed") {
+      fillColor = "#d32f2f";
+    } else if (type === "incident") {
+      fillColor = "#1976d2";
+    }
+
     return {
       path: window.google.maps.SymbolPath.CIRCLE,
       scale: 8,
-      fillColor: type === "closed" ? "#d32f2f" : "#f57c00",
+      fillColor,
       fillOpacity: 1,
       strokeColor: "#ffffff",
       strokeWeight: 2,
@@ -324,6 +340,18 @@ const ForumMapPage = () => {
             />
             <span>Closed</span>
           </div>
+          
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{
+                width: "20px",
+                height: "4px",
+                background: "#1976d2",
+                marginRight: "6px",
+              }}
+            />
+            <span>Incident</span>
+          </div>      
 
           {/* Construction */}
           <div style={{ display: "flex", alignItems: "center" }}>

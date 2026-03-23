@@ -525,38 +525,87 @@ app.get("/current-user", (req, res) => {
 
 app.get("/road-status/:forumID", async (req, res) => {
   try {
-    // Later: replace this with a real DOT / 511 / ArcGIS fetch
-    const roadStatuses = [
-      {
-        id: "closure-101",
-        type: "closed",
-        title: "Road Closed",
-        description: "Main St closed for utility repair",
-        iconPosition: { lat: 42.6842, lng: -83.2041 },
-        path: [
-          { lat: 42.6842, lng: -83.2041 },
-          { lat: 42.6848, lng: -83.2025 },
-          { lat: 42.6855, lng: -83.2008 }
-        ]
+    const apiKey = process.env.MDOT_API_KEY;
+
+    if (!apiKey) {
+      console.error("MDOT_API_KEY is missing from .env");
+      return res.status(500).json({ error: "MDOT_API_KEY is missing" });
+    }
+
+    const url =
+      "https://mdotridedata.state.mi.us/api/v1/organization/michigan_department_of_transportation/dataset/incidents/query?limit=200&_format=json";
+
+    const response = await fetch(url, {
+      headers: {
+        api_key: apiKey,
+        Accept: "application/json",
       },
-      {
-        id: "construction-202",
-        type: "construction",
-        title: "Construction Zone",
-        description: "Lane reduction due to resurfacing",
-        iconPosition: { lat: 42.6768, lng: -83.1894 },
-        path: [
-          { lat: 42.6768, lng: -83.1894 },
-          { lat: 42.6775, lng: -83.1882 },
-          { lat: 42.6781, lng: -83.1870 }
-        ]
-      }
-    ];
+    });
+
+    const rawText = await response.text();
+
+    console.log("MDOT status:", response.status, response.statusText);
+    console.log("MDOT raw response preview:", rawText.slice(0, 1000));
+
+    if (!response.ok) {
+      return res.status(500).json({
+        error: "MDOT request failed",
+        status: response.status,
+        statusText: response.statusText,
+        bodyPreview: rawText.slice(0, 500),
+      });
+    }
+
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch (parseError) {
+      console.error("Failed to parse MDOT JSON:", parseError);
+      return res.status(500).json({
+        error: "MDOT returned non-JSON data",
+        bodyPreview: rawText.slice(0, 500),
+      });
+    }
+
+    const roadStatuses = data
+      .map((item, index) => {
+        const lat = parseFloat(item.latitude);
+        const lng = parseFloat(item.longitude);
+
+        if (Number.isNaN(lat) || Number.isNaN(lng)) return null;
+
+        const description = item.description || item["location-desc"] || "No details";
+        const lowered = description.toLowerCase();
+
+        let type = "construction";
+
+        if (lowered.includes("closed") || lowered.includes("closure")) {
+          type = "closed";
+        } else if (
+          lowered.includes("crash") ||
+          lowered.includes("accident") ||
+          lowered.includes("incident")
+        ) {
+          type = "incident";
+        }
+
+        return {
+          id: item["closure-id"] || item["job-id"] || index,
+          type,
+          title: item.roadway || "Road Event",
+          description,
+          iconPosition: { lat, lng },
+          path: [
+            { lat, lng },
+          ]
+        };
+      })
+      .filter(Boolean);
 
     res.json(roadStatuses);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to load road statuses" });
+    console.error("Failed to load MDOT data:", error);
+    res.status(500).json({ error: "Failed to load MDOT data" });
   }
 });
 
