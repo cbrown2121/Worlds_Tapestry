@@ -6,7 +6,8 @@ import FormElement from "../../../form_component/FormElement.jsx";
 
 function ThreadContent(props) {
     const state = useLocation().state;
-    const sampleUserID = 1;
+
+    const { user } = useContext(UserContext);
     // const [forumID, setForumID] = useState(props.forumID);
     const [threadID, setThreadID] = useState(state.threadID);
     const [posts, setPosts] = useState([]);
@@ -26,7 +27,7 @@ function ThreadContent(props) {
         const formData = new FormData(event.currentTarget);
         const userId = props.userID; // demo user
 
-        let userData = { creator : sampleUserID, thread_id : threadID, content : formData.get("postbody") }
+        let userData = { creator : user.UserID, thread_id : threadID, content : formData.get("postbody") }
         
         try {
             const response = await fetch(`http://localhost:5000/posts`, {
@@ -75,7 +76,7 @@ function ThreadContent(props) {
                 }
             })}
 
-            <FormElement  formTitle="Add to the discussion" method="POST" endPoint="posts" passToEndPoint={ [{key: "creator", value: sampleUserID}, {key: "thread_id", value: threadID}] } submitButtonText="Create Post" sections={ [forumTextSection] } />
+            <FormElement  formTitle="Add to the discussion" method="POST" endPoint="posts" passToEndPoint={ [{key: "creator", value: user.UserID}, {key: "thread_id", value: threadID}] } submitButtonText="Create Post" sections={ [forumTextSection] } />
         </div>
     </>
   )

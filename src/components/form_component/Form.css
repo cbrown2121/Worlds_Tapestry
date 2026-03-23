@@ -78,3 +78,16 @@
 
     gap: 1rem;
 }
+
+/* STYLING FOR LOGIN FORM THAT IS MEANT TO BE IN THE MIDDLE OF THE PAGE */
+.login-form {
+    position: absolute;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+
+    background: var(--background);
+    border: 1px solid var(--text);
+
+    padding: 2rem;
+}

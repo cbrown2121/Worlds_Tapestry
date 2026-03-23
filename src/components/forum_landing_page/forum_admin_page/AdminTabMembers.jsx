@@ -1,14 +1,16 @@
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, memo, useContext } from "react";
 import { useLocation } from 'react-router-dom';
 import FormElement from "../../form_component/FormElement.jsx";
 import FormRow from "../../form_component/FormRow.jsx";
 import MemberListForm from "../../form_component/MemberListForm.jsx";
 import "./ForumAdminPage.css";
+import { UserContext } from "../../../contexts/Context.jsx";
 
 function AdminTabMembers( props ) {
     const [forumID, setForumID] = useState(props.forumID);
     const [userRole] = useState(props.userRole);
-    const [sampleUserID] = useState(1);
+
+    const { user } = useContext(UserContext);
 
     let categoryNameSection = { type: "text", sectionTitle: "Category Name", sectionID:"CategoryName" };
 
@@ -25,7 +27,7 @@ function AdminTabMembers( props ) {
     return (
         <>
             <div className="admin-tab admin-members-page">
-                <MemberListForm userID={sampleUserID} forumID={forumID} userRole={userRole}/>
+                <MemberListForm userID={user.UserID} forumID={forumID} userRole={userRole}/>
             </div>
         </>
     )

@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import MessagesPage from "../messages_page/MessagesPage.jsx";
 import UserProfileData from "./UserProfileData.jsx";
 import Icon from "../../../assets/profile.svg"
+import { UserContext } from "../../../contexts/Context.jsx";
 import "./ProfilePage.css";
 
 export default function UserProfilePage(props) {
   // props: currentUserID (user viewing page) userPageID (users page)
 
   const [pageOwnerID] = useState(props.userPageID);
-  const [pageViewerID] = useState(props.currentUserID);
+  const { user } = useContext(UserContext); // page viewer
 
   const [relationship, setRelationship] = useState(false);
   const [followButtonText, setFollowButtonText] = useState(false);
@@ -17,12 +18,12 @@ export default function UserProfilePage(props) {
       const followerID = relationshipData.FollowingUser;
       const followingID = relationshipData.FollowedUser;
 
-      if (followerID == pageViewerID && followingID == pageOwnerID) { // viewer follows owner
+      if (followerID == user.UserID && followingID == pageOwnerID) { // viewer follows owner
         setFollowButtonText("Unfollow");
         return "You follow this user";
       }
 
-      if (followerID == pageOwnerID && followingID == pageViewerID) { // owner follows user
+      if (followerID == pageOwnerID && followingID == user.UserID) { // owner follows user
         setFollowButtonText("Follow");
         return "This user follows you";
       }
@@ -47,7 +48,7 @@ export default function UserProfilePage(props) {
   }
 
   useEffect(() => {
-    fetch(`http://localhost:5000/relationship/${pageViewerID}/${pageOwnerID}`)
+    fetch(`http://localhost:5000/relationship/${user.UserID}/${pageOwnerID}`)
     .then((res) => res.json())
     .then((data) => {
       processUserRelationship(data);
@@ -56,7 +57,7 @@ export default function UserProfilePage(props) {
   }, []);
 
   const handleRelationshipChange = async (endpoint, newButtonText, newRelationshipText) => {
-    let data = {FollowerID: pageViewerID, FolloweeID: pageOwnerID};
+    let data = {FollowerID: user.UserID, FolloweeID: pageOwnerID};
 
     try {
         const response = await fetch(`http://localhost:5000/${endpoint}`, {
@@ -119,7 +120,7 @@ export default function UserProfilePage(props) {
 
       </div>
       <div className="profile-right-side">
-        <MessagesPage currentUserID={pageViewerID} userPageID={pageOwnerID} />
+        <MessagesPage currentUserID={user.UserID} userPageID={pageOwnerID} />
       </div>
     </div>
   );

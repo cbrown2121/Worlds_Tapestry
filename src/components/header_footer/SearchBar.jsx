@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
-import searchIcon from "../assets/search.svg"
-import { universalDatabaseFetch } from "../utility.js";
+import searchIcon from "../../assets/search.svg"
+import { universalDatabaseFetch } from "../../utility.js";
 
 function SearchBar() {
   const [count, setCount] = useState(0);

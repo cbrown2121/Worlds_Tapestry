@@ -115,6 +115,16 @@ app.get("/forums", (req, res) => {
   });
 });
 
+// GET public forums
+app.get("/public-forums", (req, res) => {
+  const SQL = `SELECT * FROM Forums WHERE SearchVisibility != "Hidden" ORDER BY MostRecentActivity DESC;`
+
+  db.query(SQL, (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
 app.get("/forums/:forumID", (req, res) => {
   const sql = `SELECT * FROM Forums WHERE ForumID = ?`;
 
@@ -134,9 +144,9 @@ app.get("/maps/:forumID", (req, res) => {
 });
 
 // GET forums that the user is in
-app.get("/usersforums/:userID", (req, res) => {
+app.get("/user-forums/:userID", (req, res) => {
   // a forum will only be returned if there is a row in the UsersInForum table where the primary key is the given UserID
-  const sql = `SELECT * FROM Forums forums WHERE EXISTS (SELECT 1 FROM MemberList WHERE ForumID = forums.ForumID AND UserID = ?)`; 
+  const sql = `SELECT * FROM Forums forums WHERE EXISTS (SELECT 1 FROM MemberList WHERE ForumID = forums.ForumID AND UserID = ?) ORDER BY MostRecentActivity DESC`; 
 
   db.query(sql, [req.params.userID], (err, result) => {
     if (err) return res.status(500).json(err);
@@ -149,6 +159,16 @@ app.get("/forum-membership/:forumID/:userID", (req, res) => {
   const sql = `SELECT * FROM MemberList WHERE ForumID = ? AND UserID = ?;`; 
 
   db.query(sql, [req.params.forumID, req.params.userID], (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
+});
+
+//get a user from a username and passworkd
+app.get("/user/:UserName-:Password", (req, res) => {
+  const sql = `SELECT * FROM Users WHERE UserName = ? AND Password = ?;`; 
+
+  db.query(sql, [req.params.UserName, req.params.Password], (err, result) => {
     if (err) return res.status(500).json(err);
     res.json(result);
   });

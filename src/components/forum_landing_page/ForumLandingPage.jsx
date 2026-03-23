@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useLocation } from 'react-router-dom';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import "./ForumLandingPage.css";
@@ -6,6 +6,7 @@ import CategoryTab from "./CategoryTab";
 import ForumSection from "./ForumSection";
 import ForumTrendingTab from "./ForumTrendingTab";
 import defaultIcon from "../../assets/commmunity-default-icon.svg";
+import { UserContext } from "../../contexts/Context";
 
 function ForumLandingPage( props ) {
     const [forumID] = useState(props.forumID)
@@ -15,7 +16,7 @@ function ForumLandingPage( props ) {
     const [userRole, setUserRole] = useState(null);
     const [joinButtonText, setJoinButtonText] = useState("Join Community");
 
-    const sampleUserID = 1;
+    const { user, loggedIn } = useContext(UserContext);
     
     const getForumCategories = () => {
         fetch(`http://localhost:5000/categories/${forumID}`)
@@ -26,7 +27,7 @@ function ForumLandingPage( props ) {
     }
 
     const getUserRoleInForum = () => {
-        fetch(`http://localhost:5000/forum-membership/${forumID}/${sampleUserID}`)
+        fetch(`http://localhost:5000/forum-membership/${forumID}/${user}`)
         .then(response => response.json())
         .then(userRole => {
 
@@ -40,7 +41,10 @@ function ForumLandingPage( props ) {
 
     useEffect(() => {
         getForumCategories();
-        getUserRoleInForum();
+
+        if (loggedIn()) {
+            getUserRoleInForum();
+        }
     }, []);
 
     const createCategories = (categoriesList) => {
@@ -62,7 +66,7 @@ function ForumLandingPage( props ) {
                 headers: {
                 "Content-Type": "application/json"
                 },
-                body: JSON.stringify({UserID: sampleUserID, ForumID: forumID, UserRole: "Member"})
+                body: JSON.stringify({UserID: user, ForumID: forumID, UserRole: "Member"})
             }).then(response => response.json()).catch(error => console.error(error));
 
             setUserRole("member");
@@ -75,7 +79,7 @@ function ForumLandingPage( props ) {
                 headers: {
                 "Content-Type": "application/json"
                 },
-                body: JSON.stringify({UserID: sampleUserID, ForumID: forumID})
+                body: JSON.stringify({UserID: user, ForumID: forumID})
             }).then(response => response.json()).catch(error => console.error(error));
 
             setUserRole(null);
@@ -100,7 +104,9 @@ function ForumLandingPage( props ) {
                         <h2 className="forum-name">{ forumName }</h2>
                     </div>
 
-                    <button id="forum-join-button" onClick={ joinButtonAction }> {joinButtonText} </button>
+                    { loggedIn() &&
+                        <button id="forum-join-button" onClick={ joinButtonAction }> {joinButtonText} </button>
+                    }
 
                     { (props.forumMap == 1) &&
                         <Link key={ `${forumID}-${forumName}-map` } className="router-link" 
