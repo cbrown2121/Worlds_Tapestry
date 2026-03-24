@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useLocation } from 'react-router-dom';
 import "./ThreadContent.css";
 import ThreadPost from "./TheadPost.jsx";
 import FormElement from "../../../form_component/FormElement.jsx";
+import { UserContext } from "../../../../contexts/Context.jsx";
 
 function ThreadContent(props) {
     const state = useLocation().state;

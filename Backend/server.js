@@ -726,15 +726,20 @@ app.post("/follow", (req, res) => {
 });
 
 // POST threads
-app.post("/threads", (req, res) => {
-  const { threads_id, post_id, who_can_post } = req.body;
+app.post("/create-thread", (req, res) => {
+  const { ThreadName, Content, UserID, CategoryID } = req.body;
 
   const sql = `
-    INSERT INTO Threads (ThreadID, PostID, WhoCanPost)
-    VALUES (?, ?, ?)
+    INSERT INTO Threads (ThreadName, CategoryID, CreatorID)
+    VALUES (?, ?, ?);
+
+    SELECT LAST_INSERT_ID() INTO @created_thread;
+
+    INSERT INTO Posts (ThreadID, UserID, Content, OriginalThreadPost)
+    VALUES (@created_thread, ?, ?, 1);
   `;
 
-  db.query(sql, [threads_id, post_id, who_can_post], (err, result) => {
+  db.query(sql, [ThreadName, CategoryID, UserID, UserID, Content], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create thread" });
