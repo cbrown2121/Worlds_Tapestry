@@ -26,4 +26,4 @@ dist-ssr
 
 # API key
 *.env
-./Backend/*.env
+./Backend/*.env 
