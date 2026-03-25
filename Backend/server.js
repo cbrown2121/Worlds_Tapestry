@@ -225,7 +225,7 @@ app.get("/userpins/map/:mapID", (req, res) => {
       p.Title,
       p.Description,
       u.UserName
-    FROM Userpins p
+    FROM UserPins p
     INNER JOIN Users u ON p.UserID = u.UserID
     WHERE p.MapID = ?
   `;
@@ -360,7 +360,7 @@ app.get("/userpins/map/:mapID", (req, res) => {
       p.Title,
       p.Description,
       u.UserName
-    FROM Userpins p
+    FROM UserPins p
     INNER JOIN Users u ON p.UserID = u.UserID
     WHERE p.MapID = ?
   `;
@@ -620,8 +620,6 @@ app.post("/forums", (req, res) => {
     VALUES (?, ?, ?, ?, ?)
   `;
 
-  // datetime- forum id- member count are all generated automatically on mysqls end
-
   db.query(sql, [ForumName, SearchVisibility, JoinPermissions, AllowMaps, UserID], (err, result) => {
     if (err) {
       console.error(err);
@@ -773,7 +771,7 @@ app.post("/userpins", (req, res) => {
   const { user_id, map_id, visibility, longitude, latitude, title, description} = req.body;
 
   const sql = `
-    INSERT INTO Userpins ( UserID, MapID, Visibility, Longitude, Latitude, Title, Description)
+    INSERT INTO UserPins ( UserID, MapID, Visibility, Longitude, Latitude, Title, Description)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
@@ -1049,7 +1047,7 @@ app.delete("/userpins/:id", (req, res) => {
     return res.status(400).json({ message: "userID is required" });
   }
 
-  const sql = `DELETE FROM Userpins WHERE PinID = ? AND UserID = ?`;
+  const sql = `DELETE FROM UserPins WHERE PinID = ? AND UserID = ?`;
 
   db.query(sql, [pinID, userID], (err, result) => {
     if (err) {
