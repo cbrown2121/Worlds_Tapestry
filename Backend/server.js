@@ -620,8 +620,6 @@ app.post("/forums", (req, res) => {
     VALUES (?, ?, ?, ?, ?)
   `;
 
-  // datetime- forum id- member count are all generated automatically on mysqls end
-
   db.query(sql, [ForumName, SearchVisibility, JoinPermissions, AllowMaps, UserID], (err, result) => {
     if (err) {
       console.error(err);
