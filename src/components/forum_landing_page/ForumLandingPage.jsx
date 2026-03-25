@@ -27,7 +27,7 @@ function ForumLandingPage( props ) {
     }
 
     const getUserRoleInForum = () => {
-        fetch(`http://localhost:5000/forum-membership/${forumID}/${user}`)
+        fetch(`http://localhost:5000/forum-membership/${forumID}/${user.UserID}`)
         .then(response => response.json())
         .then(userRole => {
 

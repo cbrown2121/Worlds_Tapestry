@@ -11,8 +11,8 @@ const ThreadPost = (props) => {
     const { user } = useContext(UserContext);
     const modalID = useId();
     const [text, setText] = useState("");
-    const [likeCount, Upvote] = useState(props.likes);
-    const [dislikeCount, Downvote] = useState(props.dislikes);
+    const [likeCount, Upvote] = useState(props.Likes);
+    const [dislikeCount, Downvote] = useState(props.Dislikes);
 
     const [likeButtonStatus, setLikeButtonStatus] = useState(document.getElementById("not-active")); // keeps track of if a user has liked a post
     const [dislikeButtonStatus, setDislikeButtonStatus] = useState(document.getElementById("not-active")); // keeps track of if a user has disliked a post
