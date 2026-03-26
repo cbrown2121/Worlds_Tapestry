@@ -609,6 +609,34 @@ app.get("/road-status/:forumID", async (req, res) => {
   }
 });
 
+app.get("/maps/:mapID/include-status", (req, res) => {
+  const mapID = req.params.mapID;
+
+  const sql = `
+    SELECT IncludeStatus
+    FROM Maps
+    WHERE MapID = ?
+  `;
+
+  db.query(sql, [mapID], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to fetch include status" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Map not found" });
+    }
+
+    const includeStatus = results[0].IncludeStatus;
+
+    res.json({
+      mapID,
+      includeStatus: Number(includeStatus) === 1
+    });
+  });
+});
+
 // POST Endpoints
 // POST forums
 app.post("/forums", (req, res) => {
@@ -1570,4 +1598,39 @@ app.patch("/users/:id", (req, res) => {
 
     res.json({ message: "User updated successfully" });
   });
+});
+
+// PATCH UserPins
+app.patch("/userpins/:id", (req, res) => {
+  const pinID = req.params.id.trim();
+  const { userID, title, description, visibility } = req.body;
+
+  if (!userID) {
+    return res.status(400).json({ message: "userID is required" });
+  }
+
+  const sql = `
+    UPDATE UserPins
+    SET Title = ?, Description = ?, Visibility = ?
+    WHERE PinID = ? AND UserID = ?
+  `;
+
+  db.query(
+    sql,
+    [title, description, visibility, pinID, userID],
+    (err, result) => {
+      if (err) {
+        console.error("Error updating pin:", err);
+        return res.status(500).json({ error: "Failed to update pin" });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          message: "Pin not found or user not authorized",
+        });
+      }
+
+      res.json({ message: "Pin updated successfully" });
+    }
+  );
 });

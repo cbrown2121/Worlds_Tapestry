@@ -26,7 +26,12 @@ const ForumMapPage = () => {
   const [selectedPin, setSelectedPin] = useState(null);
   const [selectedRoadStatus, setSelectedRoadStatus] = useState(null);
 
-  const currentUserID = 1;
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editVisibility, setEditVisibility] = useState("Public");
+
+  const currentUserID = 8;
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -78,6 +83,13 @@ const ForumMapPage = () => {
         setUserPins(pinList);
       })
       .catch((error) => console.error(error));
+  };
+
+  const handleEditClick = (pin) => {
+    setIsEditing(true);
+    setEditTitle(pin.Title || "");
+    setEditDescription(pin.Description || "");
+    setEditVisibility(pin.Visibility || "Public");
   };
 
   useEffect(() => {
@@ -215,6 +227,36 @@ const ForumMapPage = () => {
       })
       .catch((error) => console.error(error));
   };
+
+  const handleUpdatePin = () => {
+  if (!selectedPin) return;
+
+  fetch(`http://localhost:5000/userpins/${selectedPin.PinID}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      userID: currentUserID,
+      title: editTitle,
+      description: editDescription,
+      visibility: editVisibility,
+    }),
+  })
+    .then(async (response) => {
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message || "Failed to update pin");
+        return;
+      }
+
+      loadPins(currentMapID);
+      setIsEditing(false);
+      setSelectedPin(null);
+    })
+    .catch((error) => console.error(error));
+};
 
   const handleMapClick = () => {
     setMenuPosition(null);
@@ -417,29 +459,88 @@ const ForumMapPage = () => {
             />
           ))}
 
-          {selectedPin && (
-            <InfoWindow
-              position={{
-                lat: parseFloat(selectedPin.Latitude),
-                lng: parseFloat(selectedPin.Longitude),
-              }}
-              onCloseClick={() => setSelectedPin(null)}
-            >
-              <div style={{ maxWidth: "220px" }}>
-                <h3 style={{ margin: "0 0 8px 0" }}>{selectedPin.Title}</h3>
-                <p style={{ margin: "0 0 6px 0" }}>{selectedPin.Description}</p>
-                <p style={{ margin: "0 0 10px 0" }}>
-                  Created by: {selectedPin.UserName}
-                </p>
+  {selectedPin && (
+    <InfoWindow
+      position={{
+        lat: parseFloat(selectedPin.Latitude),
+        lng: parseFloat(selectedPin.Longitude),
+      }}
+      onCloseClick={() => {
+        setSelectedPin(null);
+        setIsEditing(false);
+      }}
+    >
+      <div style={{ maxWidth: "220px" }}>
+        {!isEditing ? (
+          <>
+            <h3 style={{ margin: "0 0 8px 0" }}>{selectedPin.Title}</h3>
+            <p style={{ margin: "0 0 6px 0" }}>{selectedPin.Description}</p>
+            <p style={{ margin: "0 0 10px 0" }}>
+              Created by: {selectedPin.UserName}
+            </p>
 
-                {Number(selectedPin.UserID) === Number(currentUserID) && (
-                  <button onClick={() => handleDeletePin(selectedPin.PinID)}>
-                    Delete Pin
-                  </button>
-                )}
-              </div>
-            </InfoWindow>
-          )}
+            {Number(selectedPin.UserID) === Number(currentUserID) && (
+              <>
+                <button
+                  onClick={() => handleEditClick(selectedPin)}
+                  style={{ display: "block", marginBottom: "6px", width: "100%" }}
+                >
+                  Edit Pin
+                </button>
+
+                <button
+                  onClick={() => handleDeletePin(selectedPin.PinID)}
+                  style={{ width: "100%" }}
+                >
+                  Delete Pin
+                </button>
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            <input
+              type="text"
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              placeholder="Title"
+              style={{ width: "100%", marginBottom: "6px" }}
+            />
+
+            <textarea
+              value={editDescription}
+              onChange={(e) => setEditDescription(e.target.value)}
+              placeholder="Description"
+              style={{ width: "100%", marginBottom: "6px" }}
+            />
+
+            <select
+              value={editVisibility}
+              onChange={(e) => setEditVisibility(e.target.value)}
+              style={{ width: "100%", marginBottom: "6px" }}
+            >
+              <option value="Public">Public</option>
+              <option value="Private">Private</option>
+            </select>
+
+            <button
+              onClick={handleUpdatePin}
+              style={{ width: "100%", marginBottom: "6px" }}
+            >
+              Save Changes
+            </button>
+
+            <button
+              onClick={() => setIsEditing(false)}
+              style={{ width: "100%" }}
+            >
+              Cancel
+            </button>
+          </>
+        )}
+      </div>
+    </InfoWindow>
+  )}
 
           {selectedRoadStatus && (
             <InfoWindow
