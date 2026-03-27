@@ -1563,7 +1563,21 @@ app.patch("/users/:id", (req, res) => {
   const allowedFields = [
     "UserName",
     "Email",
-    "Role"
+    "Role",
+    "ProfilePicture"
+  ];
+
+  const allowedAvatars = [
+    "avatar1.png",
+    "avatar2.png",
+    "avatar3.png",
+    "avatar4.png",
+    "avatar5.png",
+    "avatar6.png",
+    "avatar7.png",
+    "avatar8.png",
+    "avatar9.png",
+    "avatar10.png"
   ];
 
   const updates = [];
@@ -1571,13 +1585,20 @@ app.patch("/users/:id", (req, res) => {
 
   for (const key in req.body) {
     if (allowedFields.includes(key)) {
+      if (key === "ProfilePicture") {
+        if (!allowedAvatars.includes(req.body[key])) {
+          return res.status(400).json({ message: "Invalid avatar selection" });
+        }
+      }
+
       updates.push(`${key} = ?`);
       values.push(req.body[key]);
     }
   }
 
-  if (updates.length === 0)
+  if (updates.length === 0) {
     return res.status(400).json({ message: "No valid fields provided" });
+  }
 
   values.push(id);
 
@@ -1590,11 +1611,13 @@ app.patch("/users/:id", (req, res) => {
   db.query(sql, values, (err, result) => {
     if (err) return res.status(500).json(err);
 
-    if (result.affectedRows === 0)
+    if (result.affectedRows === 0) {
       return res.status(404).json({ message: "User not found" });
+    }
 
-    if (result.changedRows === 0)
+    if (result.changedRows === 0) {
       return res.json({ message: "No changes made" });
+    }
 
     res.json({ message: "User updated successfully" });
   });

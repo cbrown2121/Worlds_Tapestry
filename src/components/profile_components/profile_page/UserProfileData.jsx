@@ -9,25 +9,37 @@ export default function UserProfileData(props) {
     const [userEmail, setUserEmail] = useState(null);
     const [userFollowerCount, setUserFollowerCount] = useState(null);
     const [userFollowingCount, setUserFollowingCount] = useState(null);
+    const [profilePicture, setProfilePicture] = useState(null);
+
+    const bucketBaseURL = "https://world-tapestry-s3.s3.amazonaws.com/";
 
     useEffect(() => {
-        fetch(`http://localhost:5000/user/${userID}`)
+        fetch(`http://localhost:5000/users/${userID}`)
         .then((res) => res.json())
-        .then((data) => {
-            if (data.length == 1) {
-                const userData = data[0];
-
-                setUserName(userData.UserName);
-                setUserEmail(userData.Email);
-                setUserFollowerCount(userData.FollowerCount);
-                setUserFollowingCount(userData.FollowingCount);
-            }
+        .then((userData) => {
+            setUserName(userData.UserName);
+            setUserEmail(userData.Email);
+            setUserFollowerCount(userData.FollowerCount);
+            setUserFollowingCount(userData.FollowingCount);
+            setProfilePicture(userData.ProfilePicture);
         })
         .catch((err) => console.error("profile fetch error:", err));
-    }, []);
+    }, [userID]);
 
     let content = (!userName || !userEmail) ? <div> Loading profile... </div> : 
             <>
+                <div className="profile-row">
+                    {profilePicture ? (
+                        <img
+                            src={`${bucketBaseURL}${profilePicture}`}
+                            alt="Profile avatar"
+                            className="user-profile-image"
+                        />
+                    ) : (
+                        <div>No avatar selected</div>    
+                    )}
+                </div>
+                
                 <div className="profile-row">
                     <p className="profile-content">{userName}</p>
                 </div>
