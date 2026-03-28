@@ -12,7 +12,8 @@ const OAKLAND_CENTER = {
 const ForumMapPage = () => {
   const location = useLocation();
   const forumData = location.state || {};
-  const { user } = useContext(UserContext);
+  const { user, loggedIn } = useContext(UserContext);
+  const currentUserID = loggedIn() ? user.UserID : null;
 
   const [userPins, setUserPins] = useState([]);
   const [roadStatuses, setRoadStatuses] = useState([]);
@@ -183,7 +184,7 @@ const ForumMapPage = () => {
   };
 
   const handlePlacePin = () => {
-    if (!user) {
+    if (!loggedIn()) {
       alert("No logged in user found");
       return;
     }
@@ -201,7 +202,7 @@ const ForumMapPage = () => {
     }
 
     const newPin = {
-      user_id: user.UserID,
+      user_id: currentUserID,
       map_id: currentMapID,
       visibility: pinVisibility,
       longitude: clickedLatLng.lng,
@@ -240,7 +241,7 @@ const ForumMapPage = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userID: user.UserID }),
+      body: JSON.stringify({ userID: currentUserID }),
     })
       .then(async (response) => {
         const data = await response.json();
@@ -270,7 +271,7 @@ const ForumMapPage = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userID: user.UserID,
+        userID: currentUserID,
         title: editTitle,
         description: editDescription,
         visibility: editVisibility,
@@ -569,7 +570,7 @@ const ForumMapPage = () => {
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
                               LocationID: selectedPin.LocationID,
-                              UserID: user.UserID,
+                              UserID: currentUserID,
                               Rating: Number(rating),
                               ReviewText: reviewText,
                             }),
@@ -587,7 +588,7 @@ const ForumMapPage = () => {
                       </button>
                     </div>
 
-                    {Number(selectedPin.UserID) === Number(user.UserID) && (
+                    {Number(selectedPin.UserID) === Number(currentUserID) && (
                       <>
                         <button
                           onClick={() => handleEditClick(selectedPin)}
