@@ -1,6 +1,7 @@
 import { GoogleMap, Marker, InfoWindow, Polyline, useJsApiLoader } from "@react-google-maps/api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
+import { UserContext } from "../../../contexts/Context.jsx";
 import userPinIcon from "../../../assets/user_pin.png";
 
 const OAKLAND_CENTER = {
@@ -11,6 +12,7 @@ const OAKLAND_CENTER = {
 const ForumMapPage = () => {
   const location = useLocation();
   const forumData = location.state || {};
+  const { user } = useContext(UserContext);
 
   const [userPins, setUserPins] = useState([]);
   const [roadStatuses, setRoadStatuses] = useState([]);
@@ -31,7 +33,11 @@ const ForumMapPage = () => {
   const [editDescription, setEditDescription] = useState("");
   const [editVisibility, setEditVisibility] = useState("Public");
 
-  const currentUserID = 8;
+  const [reviews, setReviews] = useState([]);
+  const [summary, setSummary] = useState(null);
+
+  const [rating, setRating] = useState("");
+  const [reviewText, setReviewText] = useState("");
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -80,8 +86,20 @@ const ForumMapPage = () => {
       .then((response) => response.json())
       .then((pinList) => {
         console.log("pins from backend:", pinList);
-        setUserPins(pinList);
+        setUserPins(Array.isArray(pinList) ? pinList : []);
       })
+      .catch((error) => console.error(error));
+  };
+
+  const loadReviews = (locationID) => {
+    fetch(`http://localhost:5000/place-reviews/${locationID}`)
+      .then((res) => res.json())
+      .then((data) => setReviews(data))
+      .catch((error) => console.error(error));
+
+    fetch(`http://localhost:5000/place-reviews/${locationID}/summary`)
+      .then((res) => res.json())
+      .then((data) => setSummary(data))
       .catch((error) => console.error(error));
   };
 
@@ -129,7 +147,7 @@ const ForumMapPage = () => {
   const getRoadIcon = (type) => {
     if (!window.google) return undefined;
 
-    let fillColor = "#f57c00"; // default = construction
+    let fillColor = "#f57c00";
 
     if (type === "closed") {
       fillColor = "#d32f2f";
@@ -165,6 +183,11 @@ const ForumMapPage = () => {
   };
 
   const handlePlacePin = () => {
+    if (!user) {
+      alert("No logged in user found");
+      return;
+    }
+
     if (!clickedLatLng) return;
 
     if (!currentMapID) {
@@ -178,7 +201,7 @@ const ForumMapPage = () => {
     }
 
     const newPin = {
-      user_id: currentUserID,
+      user_id: user.UserID,
       map_id: currentMapID,
       visibility: pinVisibility,
       longitude: clickedLatLng.lng,
@@ -207,12 +230,17 @@ const ForumMapPage = () => {
   };
 
   const handleDeletePin = (pinID) => {
+    if (!user) {
+      alert("No logged in user found");
+      return;
+    }
+
     fetch(`http://localhost:5000/userpins/${pinID}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userID: currentUserID }),
+      body: JSON.stringify({ userID: user.UserID }),
     })
       .then(async (response) => {
         const data = await response.json();
@@ -229,34 +257,39 @@ const ForumMapPage = () => {
   };
 
   const handleUpdatePin = () => {
-  if (!selectedPin) return;
+    if (!user) {
+      alert("No logged in user found");
+      return;
+    }
 
-  fetch(`http://localhost:5000/userpins/${selectedPin.PinID}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      userID: currentUserID,
-      title: editTitle,
-      description: editDescription,
-      visibility: editVisibility,
-    }),
-  })
-    .then(async (response) => {
-      const data = await response.json();
+    if (!selectedPin) return;
 
-      if (!response.ok) {
-        alert(data.message || "Failed to update pin");
-        return;
-      }
-
-      loadPins(currentMapID);
-      setIsEditing(false);
-      setSelectedPin(null);
+    fetch(`http://localhost:5000/userpins/${selectedPin.PinID}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userID: user.UserID,
+        title: editTitle,
+        description: editDescription,
+        visibility: editVisibility,
+      }),
     })
-    .catch((error) => console.error(error));
-};
+      .then(async (response) => {
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.message || "Failed to update pin");
+          return;
+        }
+
+        loadPins(currentMapID);
+        setIsEditing(false);
+        setSelectedPin(null);
+      })
+      .catch((error) => console.error(error));
+  };
 
   const handleMapClick = () => {
     setMenuPosition(null);
@@ -334,81 +367,78 @@ const ForumMapPage = () => {
           </div>
         )}
 
-      <div
-        style={{
-          position: "absolute",
-          top: 10,
-          right: 70,
-          zIndex: 1000,
-          background: "white",
-          padding: "10px 14px",
-          borderRadius: "6px",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
-        }}
-      >
-        <div style={{ fontWeight: "bold", marginBottom: "6px" }}>Map Legend</div>
-
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "16px", // spacing between items
-            flexWrap: "wrap", // prevents overflow on smaller screens
+            position: "absolute",
+            top: 10,
+            right: 70,
+            zIndex: 1000,
+            background: "white",
+            padding: "10px 14px",
+            borderRadius: "6px",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
           }}
         >
-          {/* User Pin */}
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <img
-              src={userPinIcon}
-              alt="User Pin"
-              style={{
-                width: "16px",
-                height: "20px",
-                marginRight: "6px",
-              }}
-            />
-            <span>User Pin</span>
-          </div>
+          <div style={{ fontWeight: "bold", marginBottom: "6px" }}>Map Legend</div>
 
-          {/* Road Closed */}
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <div
-              style={{
-                width: "20px",
-                height: "4px",
-                background: "#d32f2f",
-                marginRight: "6px",
-              }}
-            />
-            <span>Closed</span>
-          </div>
-          
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <div
-              style={{
-                width: "20px",
-                height: "4px",
-                background: "#1976d2",
-                marginRight: "6px",
-              }}
-            />
-            <span>Incident</span>
-          </div>      
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "16px",
+              flexWrap: "wrap",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src={userPinIcon}
+                alt="User Pin"
+                style={{
+                  width: "16px",
+                  height: "20px",
+                  marginRight: "6px",
+                }}
+              />
+              <span>User Pin</span>
+            </div>
 
-          {/* Construction */}
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <div
-              style={{
-                width: "20px",
-                height: "4px",
-                background: "#f57c00",
-                marginRight: "6px",
-              }}
-            />
-            <span>Construction</span>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <div
+                style={{
+                  width: "20px",
+                  height: "4px",
+                  background: "#d32f2f",
+                  marginRight: "6px",
+                }}
+              />
+              <span>Closed</span>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <div
+                style={{
+                  width: "20px",
+                  height: "4px",
+                  background: "#1976d2",
+                  marginRight: "6px",
+                }}
+              />
+              <span>Incident</span>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <div
+                style={{
+                  width: "20px",
+                  height: "4px",
+                  background: "#f57c00",
+                  marginRight: "6px",
+                }}
+              />
+              <span>Construction</span>
+            </div>
           </div>
         </div>
-      </div>
 
         <GoogleMap
           mapContainerStyle={{ width: "100%", height: "100%" }}
@@ -448,99 +478,177 @@ const ForumMapPage = () => {
                 lat: parseFloat(pin.Latitude),
                 lng: parseFloat(pin.Longitude),
               }}
-                icon={{
+              icon={{
                 url: userPinIcon,
                 scaledSize: new window.google.maps.Size(30, 40),
               }}
               onClick={() => {
                 setSelectedPin(pin);
                 setSelectedRoadStatus(null);
+                setReviews([]);
+                setSummary(null);
+                loadReviews(pin.LocationID);
               }}
             />
           ))}
 
-  {selectedPin && (
-    <InfoWindow
-      position={{
-        lat: parseFloat(selectedPin.Latitude),
-        lng: parseFloat(selectedPin.Longitude),
-      }}
-      onCloseClick={() => {
-        setSelectedPin(null);
-        setIsEditing(false);
-      }}
-    >
-      <div style={{ maxWidth: "220px" }}>
-        {!isEditing ? (
-          <>
-            <h3 style={{ margin: "0 0 8px 0" }}>{selectedPin.Title}</h3>
-            <p style={{ margin: "0 0 6px 0" }}>{selectedPin.Description}</p>
-            <p style={{ margin: "0 0 10px 0" }}>
-              Created by: {selectedPin.UserName}
-            </p>
-
-            {Number(selectedPin.UserID) === Number(currentUserID) && (
-              <>
-                <button
-                  onClick={() => handleEditClick(selectedPin)}
-                  style={{ display: "block", marginBottom: "6px", width: "100%" }}
-                >
-                  Edit Pin
-                </button>
-
-                <button
-                  onClick={() => handleDeletePin(selectedPin.PinID)}
-                  style={{ width: "100%" }}
-                >
-                  Delete Pin
-                </button>
-              </>
-            )}
-          </>
-        ) : (
-          <>
-            <input
-              type="text"
-              value={editTitle}
-              onChange={(e) => setEditTitle(e.target.value)}
-              placeholder="Title"
-              style={{ width: "100%", marginBottom: "6px" }}
-            />
-
-            <textarea
-              value={editDescription}
-              onChange={(e) => setEditDescription(e.target.value)}
-              placeholder="Description"
-              style={{ width: "100%", marginBottom: "6px" }}
-            />
-
-            <select
-              value={editVisibility}
-              onChange={(e) => setEditVisibility(e.target.value)}
-              style={{ width: "100%", marginBottom: "6px" }}
+          {selectedPin && (
+            <InfoWindow
+              position={{
+                lat: parseFloat(selectedPin.Latitude),
+                lng: parseFloat(selectedPin.Longitude),
+              }}
+              onCloseClick={() => {
+                setSelectedPin(null);
+                setIsEditing(false);
+              }}
             >
-              <option value="Public">Public</option>
-              <option value="Private">Private</option>
-            </select>
+              <div style={{ maxWidth: "220px" }}>
+                {!isEditing ? (
+                  <>
+                    <h3 style={{ margin: "0 0 8px 0" }}>{selectedPin.Title}</h3>
+                    <p style={{ margin: "0 0 6px 0" }}>{selectedPin.Description}</p>
+                    <p style={{ margin: "0 0 10px 0" }}>
+                      Created by: {selectedPin.UserName}
+                    </p>
 
-            <button
-              onClick={handleUpdatePin}
-              style={{ width: "100%", marginBottom: "6px" }}
-            >
-              Save Changes
-            </button>
+                    {summary && (
+                      <p style={{ margin: "0 0 6px 0" }}>
+                        ⭐ {summary.avg || 0} ({summary.count} reviews)
+                      </p>
+                    )}
 
-            <button
-              onClick={() => setIsEditing(false)}
-              style={{ width: "100%" }}
-            >
-              Cancel
-            </button>
-          </>
-        )}
-      </div>
-    </InfoWindow>
-  )}
+                    <div style={{ marginTop: "6px" }}>
+                      <strong>Reviews:</strong>
+
+                      {reviews.length > 0 ? (
+                        <ul style={{ paddingLeft: "16px" }}>
+                          {reviews.slice(0, 3).map((r) => (
+                            <li key={r.ReviewID}>
+                              <strong>{r.UserName}</strong> {"⭐".repeat(r.Rating)}
+                              <br />
+                              {r.ReviewText}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>No reviews yet</p>
+                      )}
+                    </div>
+
+                    <div style={{ marginTop: "8px" }}>
+                      <select
+                        value={rating}
+                        onChange={(e) => setRating(e.target.value)}
+                        style={{ width: "100%", marginBottom: "4px" }}
+                      >
+                        <option value="">Rating</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                      </select>
+
+                      <textarea
+                        value={reviewText}
+                        onChange={(e) => setReviewText(e.target.value)}
+                        placeholder="Write review"
+                        style={{ width: "100%", marginBottom: "4px" }}
+                      />
+
+                      <button
+                        onClick={() => {
+                          if (!rating) {
+                            alert("Please select a rating");
+                            return;
+                          }
+
+                          fetch("http://localhost:5000/place-reviews", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              LocationID: selectedPin.LocationID,
+                              UserID: user.UserID,
+                              Rating: Number(rating),
+                              ReviewText: reviewText,
+                            }),
+                          })
+                            .then(() => {
+                              loadReviews(selectedPin.LocationID);
+                              setRating("");
+                              setReviewText("");
+                            })
+                            .catch((error) => console.error(error));
+                        }}
+                        style={{ width: "100%" }}
+                      >
+                        Submit Review
+                      </button>
+                    </div>
+
+                    {Number(selectedPin.UserID) === Number(user.UserID) && (
+                      <>
+                        <button
+                          onClick={() => handleEditClick(selectedPin)}
+                          style={{ display: "block", marginBottom: "6px", width: "100%" }}
+                        >
+                          Edit Pin
+                        </button>
+
+                        <button
+                          onClick={() => handleDeletePin(selectedPin.PinID)}
+                          style={{ width: "100%" }}
+                        >
+                          Delete Pin
+                        </button>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <input
+                      type="text"
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      placeholder="Title"
+                      style={{ width: "100%", marginBottom: "6px" }}
+                    />
+
+                    <textarea
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      placeholder="Description"
+                      style={{ width: "100%", marginBottom: "6px" }}
+                    />
+
+                    <select
+                      value={editVisibility}
+                      onChange={(e) => setEditVisibility(e.target.value)}
+                      style={{ width: "100%", marginBottom: "6px" }}
+                    >
+                      <option value="Public">Public</option>
+                      <option value="Private">Private</option>
+                    </select>
+
+                    <button
+                      onClick={handleUpdatePin}
+                      style={{ width: "100%", marginBottom: "6px" }}
+                    >
+                      Save Changes
+                    </button>
+
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      style={{ width: "100%" }}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                )}
+              </div>
+            </InfoWindow>
+          )}
 
           {selectedRoadStatus && (
             <InfoWindow
@@ -550,9 +658,7 @@ const ForumMapPage = () => {
               <div style={{ maxWidth: "220px" }}>
                 <h3 style={{ margin: "0 0 8px 0" }}>{selectedRoadStatus.title}</h3>
                 <p style={{ margin: "0 0 8px 0" }}>{selectedRoadStatus.description}</p>
-                <p style={{ margin: 0 }}>
-                  Status: {selectedRoadStatus.type}
-                </p>
+                <p style={{ margin: 0 }}>Status: {selectedRoadStatus.type}</p>
               </div>
             </InfoWindow>
           )}

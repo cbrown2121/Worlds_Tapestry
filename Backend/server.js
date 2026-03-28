@@ -7,7 +7,11 @@ const mysql = require("mysql2");
 require("dotenv").config({ path: __dirname + "/.env" });
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173", 
+  credentials: true
+}));
+
 app.use(express.json());
 
 const db = mysql.createPool({
@@ -224,6 +228,7 @@ app.get("/userpins/map/:mapID", (req, res) => {
       p.Latitude,
       p.Title,
       p.Description,
+      p.LocationID,
       u.UserName
     FROM UserPins p
     INNER JOIN Users u ON p.UserID = u.UserID
@@ -327,6 +332,7 @@ app.get("/maps/:forumID", (req, res) => {
   });
 });
 
+// Get map for each forum
 app.get("/maps/forum/:forumID", (req, res) => {
   const { forumID } = req.params;
 
@@ -346,6 +352,7 @@ app.get("/maps/forum/:forumID", (req, res) => {
   });
 });
 
+// GET user pins for each map
 app.get("/userpins/map/:mapID", (req, res) => {
   const { mapID } = req.params;
 
@@ -499,30 +506,7 @@ app.get("/search-users/:query", (req, res) => {
   });
 });
 
-app.get("/current-user", (req, res) => {
-  // replace this with however your app tracks the logged-in user
-  const currentUserID = req.session?.userID;
-
-  if (!currentUserID) {
-    return res.status(401).json({ message: "No user logged in" });
-  }
-
-  const sql = `SELECT UserID, UserName FROM Users WHERE UserID = ?`;
-
-  db.query(sql, [currentUserID], (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Failed to fetch current user" });
-    }
-
-    if (results.length === 0) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    res.json(results[0]);
-  });
-});
-
+// GET road status updates from MDOT
 app.get("/road-status/:forumID", async (req, res) => {
   try {
     const apiKey = process.env.MDOT_API_KEY;
@@ -608,7 +592,7 @@ app.get("/road-status/:forumID", async (req, res) => {
     res.status(500).json({ error: "Failed to load MDOT data" });
   }
 });
-
+// GET if road statuses are included in the map
 app.get("/maps/:mapID/include-status", (req, res) => {
   const mapID = req.params.mapID;
 
@@ -634,6 +618,40 @@ app.get("/maps/:mapID/include-status", (req, res) => {
       mapID,
       includeStatus: Number(includeStatus) === 1
     });
+  });
+});
+
+// GET reviews for each location
+app.get("/place-reviews/:locationID", (req, res) => {
+  const { locationID } = req.params;
+
+  const sql = `
+    SELECT r.*, u.UserName
+    FROM PlaceReviews r
+    JOIN Users u ON r.UserID = u.UserID
+    WHERE r.LocationID = ?
+    ORDER BY r.UpdatedAt DESC
+  `;
+
+  db.query(sql, [locationID], (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
+// GET review summary for each location
+app.get("/place-reviews/:locationID/summary", (req, res) => {
+  const { locationID } = req.params;
+
+  const sql = `
+    SELECT COUNT(*) AS count, ROUND(AVG(Rating), 1) AS avg
+    FROM PlaceReviews
+    WHERE LocationID = ?
+  `;
+
+  db.query(sql, [locationID], (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results[0]);
   });
 });
 
@@ -796,20 +814,52 @@ app.post("/category", (req, res) => {
 
 // POST userpins
 app.post("/userpins", (req, res) => {
-  const { user_id, map_id, visibility, longitude, latitude, title, description} = req.body;
+  const {
+    user_id,
+    map_id,
+    visibility,
+    longitude,
+    latitude,
+    title,
+    description
+  } = req.body;
 
-  const sql = `
-    INSERT INTO UserPins ( UserID, MapID, Visibility, Longitude, Latitude, Title, Description)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+  // Create Location
+  const locationSql = `
+    INSERT INTO Locations (LocationName, Latitude, Longitude)
+    VALUES (?, ?, ?)
   `;
 
-  db.query(sql, [ user_id, map_id, visibility, longitude, latitude, title, description], (err, result) => {
+  db.query(locationSql, [title, latitude, longitude], (err, locationResult) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: "Failed to create pin" });
+      return res.status(500).json({ error: "Failed to create location" });
     }
 
-    res.json({ message: "Pin created", id: result.insertId });
+    const locationID = locationResult.insertId;
+
+    // Create Pin with LocationID
+    const pinSql = `
+      INSERT INTO UserPins (UserID, MapID, Visibility, Longitude, Latitude, Title, Description, LocationID)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    db.query(
+      pinSql,
+      [user_id, map_id, visibility, longitude, latitude, title, description, locationID],
+      (err, pinResult) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: "Failed to create pin" });
+        }
+
+        res.json({
+          message: "Pin and location created",
+          pinID: pinResult.insertId,
+          locationID: locationID
+        });
+      }
+    );
   });
 });
 
@@ -955,6 +1005,28 @@ app.post("/messages", (req, res) => {
       res.json({ ok: true, MessageID: result.insertId });
     }
   );
+});
+
+// POST reviews made by users
+app.post("/place-reviews", (req, res) => {
+  const { LocationID, UserID, Rating, ReviewText } = req.body;
+
+  if (!LocationID || !UserID || !Rating) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  const sql = `
+    INSERT INTO PlaceReviews (LocationID, UserID, Rating, ReviewText)
+    VALUES (?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+      Rating = VALUES(Rating),
+      ReviewText = VALUES(ReviewText)
+  `;
+
+  db.query(sql, [LocationID, UserID, Rating, ReviewText], (err) => {
+    if (err) return res.status(500).json(err);
+    res.json({ message: "Review saved" });
+  });
 });
 
 // DELETE Endpoints
