@@ -621,6 +621,33 @@ app.get("/maps/:mapID/include-status", (req, res) => {
   });
 });
 
+// GET if the legend is included in the map
+app.get("/map-legend/:forumID", (req, res) => {
+  const forumID = req.params.forumID.trim();
+
+  const sql = `
+    SELECT IncludeLegend
+    FROM Maps
+    WHERE ForumID = ?
+    LIMIT 1
+  `;
+
+  db.query(sql, [forumID], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to fetch legend setting" });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Map not found for forum" });
+    }
+
+    res.json({
+      includeLegend: result[0].IncludeLegend === 1
+    });
+  });
+});
+
 // GET reviews for each location
 app.get("/place-reviews/:locationID", (req, res) => {
   const { locationID } = req.params;

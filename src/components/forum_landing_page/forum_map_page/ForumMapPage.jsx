@@ -19,6 +19,7 @@ const ForumMapPage = () => {
   const [roadStatuses, setRoadStatuses] = useState([]);
   const [menuPosition, setMenuPosition] = useState(null);
   const [clickedLatLng, setClickedLatLng] = useState(null);
+  const [showLegend, setShowLegend] = useState([]);
 
   const [pinTitle, setPinTitle] = useState("");
   const [pinDescription, setPinDescription] = useState("");
@@ -64,6 +65,17 @@ const ForumMapPage = () => {
       })
       .catch((error) => console.error(error));
   }, [forumData]);
+
+  useEffect(() => {
+  if (!forumData?.forumID) return;
+
+  fetch(`http://localhost:5000/map-legend/${forumData.forumID}`)
+    .then((res) => res.json())
+    .then((data) => {
+      setShowLegend(data.includeLegend);
+    })
+    .catch((err) => console.error(err));
+}, [forumData]);
 
   const getMapForForum = () => {
     if (!forumData?.forumID) return;
