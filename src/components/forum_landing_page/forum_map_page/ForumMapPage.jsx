@@ -460,7 +460,7 @@ const ForumMapPage = () => {
           onRightClick={handleRightClick}
           onClick={handleMapClick}
         >
-          {roadStatuses.map((status) => (
+          {/* {roadStatuses.map((status) => (
             <Polyline
               key={`line-${status.id}`}
               path={status.path}
@@ -470,9 +470,9 @@ const ForumMapPage = () => {
                 setSelectedPin(null);
               }}
             />
-          ))}
+          ))} */}
 
-          {roadStatuses.map((status) => (
+          {/* {roadStatuses.map((status) => (
             <Marker
               key={`marker-${status.id}`}
               position={status.iconPosition}
@@ -482,7 +482,7 @@ const ForumMapPage = () => {
                 setSelectedPin(null);
               }}
             />
-          ))}
+          ))} */}
 
           {userPins.map((pin) => (
             <Marker

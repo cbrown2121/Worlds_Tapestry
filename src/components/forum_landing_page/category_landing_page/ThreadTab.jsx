@@ -20,7 +20,8 @@ function ThreadTab( props ) {
             <Link className="router-link" 
                     to={ `/Forum/${ forumName.replace(/[ ]/g, "_") }/Category/${ categoryName.replace(/[ ]/g, "_") }/thread/${props.ThreadName.replace(/[ ]/g, "_")}` }  // change later so this includes the forum name from the previous link
                     state={{ 
-                        threadID: props.ThreadID
+                        threadID: props.ThreadID,
+                        threadName: props.ThreadName
                     }}
             >
 

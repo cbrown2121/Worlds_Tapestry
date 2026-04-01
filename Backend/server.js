@@ -966,16 +966,36 @@ app.post("/events", (req, res) => {
 
 // POST bug report
 app.post("/bug-reports", (req, res) => {
-  const { IssueType, Subject } = req.body;
+  const { Subject, SubmitterID } = req.body;
 
   // query for posting reports
   // **Currently does not allow for a duplicate forumID**
   const sql = ` 
-    INSERT INTO Reports (IssueType, Subject)
+    INSERT INTO BugReports (Subject, SubmitterID)
     VALUES (?, ?)
   `;
 
-  db.query(sql, [IssueType, Subject], (err, result) => {
+  db.query(sql, [Subject, SubmitterID], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to create report" });
+    }
+
+    res.json({ message: "report created", id: result.insertId });
+  });
+});
+
+// POST content report
+app.post("/content-reports", (req, res) => {
+  const { ReportType, Subject, SubmitterID, ReportedID } = req.body;
+
+  // query for posting reports
+  const sql = ` 
+    INSERT INTO Reports (ReportType, Subject, SubmitterID, ReportedID)
+    VALUES (?, ?, ?, ?)
+  `;
+
+  db.query(sql, [ReportType, Subject, SubmitterID, ReportedID], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create report" });
@@ -989,8 +1009,6 @@ app.post("/bug-reports", (req, res) => {
 app.post("/reports", (req, res) => {
   const { forum_id, page_link, issue_type, subject, form_submit} = req.body;
 
-  // query for posting reports
-  // **Currently does not allow for a duplicate forumID**
   const sql = ` 
     INSERT INTO Reports (ForumID, PageLink, IssueType, Subject, FormSubmit)
     VALUES (?, ?, ?, ?, ?)

@@ -8,7 +8,7 @@ import ForumMapPage from "./components/forum_landing_page/forum_map_page/ForumMa
 import FAQPage from "./components/footer_links/FAQPage.jsx";
 import AboutUsPage from "./components/footer_links/AboutPage.jsx";
 import GuidelinesPage from "./components/footer_links/GuidelinesPage.jsx";
-import ReportPage from "./components/footer_links/ReportPage.jsx";
+import BugReportPage from "./components/footer_links/BugReportPage.jsx";
 import SearchPage from "./components/search_page/SearchPage.jsx";
 
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
@@ -16,6 +16,8 @@ import { UserProvider, ForumProvider } from "./contexts/Context.jsx";
 import LoginPage from "./components/login_page/LoginPage.jsx";
 import ForumLandingPage from "./components/forum_landing_page/ForumLandingPage.jsx";
 import ForumPage from "./components/forum_landing_page/ForumPage.jsx";
+import { ReportForm } from "./components/form_component/ReportForm.jsx";
+import ReportPage from "./components/report_page/ReportPage.jsx";
 
 const App = () => {
 
@@ -73,7 +75,7 @@ const App = () => {
                 </Route>
 
                 <Route path="/Report" element={<Layout />}>
-                  <Route index element={<ReportPage />}/>
+                  <Route index element={<BugReportPage />}/>
                 </Route>
 
                 <Route path="/Search/:query" element={<Layout />}>
@@ -82,6 +84,10 @@ const App = () => {
 
                 <Route path="/Login" element={<Layout />}>
                   <Route index element={<LoginPage />}/>
+                </Route>
+
+                <Route path="/Report-Content" element={<Layout />}>
+                  <Route index element={<ReportPage/>}/>
                 </Route>
             </Routes>
           </BrowserRouter>

@@ -6,6 +6,7 @@ import thumbsDownIcon from "../../../../assets/thumbs-down.svg"
 import profile from "../../../../assets/profile.svg"
 import { UserContext } from "../../../../contexts/Context.jsx"
 import { calculateRecency, getDate } from "../../../../utility.js";
+import { Link } from "react-router-dom"
 
 const ThreadPost = (props) => {
     const { user } = useContext(UserContext);
@@ -163,7 +164,7 @@ const ThreadPost = (props) => {
                     {/* <button className="reply-to-post" >Reply to Post</button> */}
                     { user.UserID == props.UserID &&
                         <>
-                            <div className="delete-edit">
+                            <div className="delete-edit-report">
                                 <button className="delete-button" onClick={deletepost}>Delete</button>
                                 <button className="edit-button" command="show-modal" commandfor={modalID}>Edit</button>
                             </div>
@@ -183,6 +184,20 @@ const ThreadPost = (props) => {
                                     </button></div>
                             </dialog>
                         </>
+                    }
+
+                    { user.UserID != props.UserID &&
+                        
+                        <Link key={ `${props.postID}-report` } className="router-link" 
+                            to={ `/Report-Content` } 
+                            state={{ 
+                                reportedID: props.PostID,
+                                reportedName: `by user ${props.UserName}`,
+                                type: "Post"
+                            }}
+                        >
+                            <button className="report-button" > Report Post </button>
+                        </Link>
                     }
                     
                 </div>

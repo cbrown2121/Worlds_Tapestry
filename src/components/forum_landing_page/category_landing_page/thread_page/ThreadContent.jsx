@@ -4,13 +4,14 @@ import "./ThreadContent.css";
 import ThreadPost from "./TheadPost.jsx";
 import FormElement from "../../../form_component/FormElement.jsx";
 import { UserContext } from "../../../../contexts/Context.jsx";
+import { Link } from "react-router-dom";
 
 function ThreadContent(props) {
     const state = useLocation().state;
 
     const { user } = useContext(UserContext);
-    // const [forumID, setForumID] = useState(props.forumID);
     const [threadID, setThreadID] = useState(state.threadID);
+    const [threadName, setThreadName] = useState(state.threadName);
     const [posts, setPosts] = useState([]);
     const [ThreadList, setThread] = useState([]);
 
@@ -60,11 +61,22 @@ function ThreadContent(props) {
         <div className="thread-page main-content">
             <div className="thread-header">
                 <div className="thread-name-count">
-                    <h1 className="thread-name">Topic Name</h1>
+                    <h1 className="thread-name">{threadName}</h1>
                     <h2 className="thread-post-count">{posts.length} Posts</h2>
+
+                    <Link key={ `${threadID}-${threadName}-report` } className="router-link" 
+                        to={ `/Report-Content` } 
+                        state={{ 
+                            reportedID: threadID,
+                            reportedName: threadName,
+                            type: "Thread"
+                        }}
+                    >
+                        <button className="report-thread-button" > Report Thread </button>
+                    </Link>
                 </div>
+
                 <div id="profile-update">
-                
             </div>
             </div>
             {posts.map((post) => {

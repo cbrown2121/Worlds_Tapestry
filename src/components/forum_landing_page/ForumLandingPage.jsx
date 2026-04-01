@@ -114,7 +114,6 @@ function ForumLandingPage( props ) {
                         state={{ 
                             forumID: forumID,
                             forumName: forumName,
-                            currentUserID: props.currentUserID
                         }}
                         >
                             <button className="forum-map" > Community Map </button>
@@ -126,6 +125,20 @@ function ForumLandingPage( props ) {
                             <h1>Top Tags</h1>
                         </div>
                         <div className="side-bar-section-container"></div>
+                    </div>
+
+                    <div className="side-bar-section">
+                        <Link key={ `${forumID}-${forumName}-report` } className="router-link" 
+                        to={ `/Report-Content` } 
+                        state={{ 
+                            reportedID: forumID,
+                            reportedName: forumName,
+                            type: "Forum"
+                        }}
+                        >
+                            <button className="forum-settings" > Report Forum </button>
+                        </Link>
+
                     </div>
 
                     { (userRole == "Admin" || userRole == "Owner") && 
@@ -147,6 +160,7 @@ function ForumLandingPage( props ) {
 
                         </div>
                     } 
+
                 </div>
             </div>
         </>
