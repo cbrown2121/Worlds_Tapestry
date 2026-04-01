@@ -69,6 +69,20 @@ app.get("/:forumID/users", (req, res) => {
   });
 });
 
+// GET forum by name
+app.get("/:forumID/forumName", (req, res) => {
+  const { forumName } = req.params;
+
+  const SQL = 
+              ` SELECT Forum
+                WHERE ForumName = ?;`;
+
+  db.query(SQL, [forumName], (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
+
 // GET a single user profile
 app.get("/users/:id", (req, res) => {
   const { id } = req.params;
@@ -1292,6 +1306,29 @@ app.put("/posts/:id", (req, res) => {
     }
 
     res.json({ message: "Post updated" });
+  });
+});
+
+// update forum settings
+app.put("/update-forums", (req, res) => {
+  const postID = req.params.id;
+  const { ForumID, SearchVisibility, JoinPermissions, AllowMaps } = req.body;
+
+  const sql = `
+    UPDATE Forums
+    SET SearchVisibility = ?, JoinPermissions = ?, AllowMaps = ?
+    WHERE ForumID = ?
+  `;
+
+  console.log(sql, [SearchVisibility, JoinPermissions, AllowMaps, ForumID]);
+
+  db.query(sql, [SearchVisibility, JoinPermissions, AllowMaps, ForumID], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to update forums" });
+    }
+
+    res.json({ message: "Forum updated" });
   });
 });
 

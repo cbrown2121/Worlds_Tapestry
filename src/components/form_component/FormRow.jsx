@@ -8,8 +8,6 @@ const FormRow = (props) => {
     const [adminPrivilege] = useState(props.adminUserRole);
     const [forumID] = useState(props.forumID);
 
-    console.log(props);
-
     const [privilegeOverUser] = useState((userRole == "Member" || adminPrivilege == "Owner"));
 
     return (

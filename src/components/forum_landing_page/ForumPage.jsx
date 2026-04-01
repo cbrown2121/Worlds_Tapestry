@@ -1,9 +1,12 @@
+import { useContext } from "react";
 import ForumLandingPage from "../forum_landing_page/ForumLandingPage.jsx"
 import { useLocation } from 'react-router-dom';
+import { ForumContext } from "../../contexts/Context.jsx";
 
 
 function ForumPage() {
     const location = useLocation();
+    const { forum, setForum } = useContext(ForumContext);
 
     return (
         <>

@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useLocation } from 'react-router-dom';
 import FormElement from "../../form_component/FormElement.jsx";
 import FormRow from "../../form_component/FormRow.jsx";
 import "./ForumAdminPage.css";
+import { ForumContext } from "../../../contexts/Context.jsx";
 
-function AdminTabCategorySettings( props ) {
-    const [forumID, setForumID] = useState(props.forumID);
+const AdminTabCategorySettings = () => {
+    const [forum] = useState(ForumContext);
 
     let categoryNameSection = { type: "text", sectionTitle: "Category Name", sectionID:"CategoryName" };
-
     let categoryDescription = { type: "text", sectionTitle: "Category Description", sectionID:"CategoryDescription" };
 
     let categoryPinStatus = {
@@ -21,7 +21,7 @@ function AdminTabCategorySettings( props ) {
     
     return (
         <>
-            <FormElement formID="add-forum-categories" formTitle="Add A New Category" endPoint="category" method="POST" passToEndPoint={ [{key: "ForumID", value: forumID}] } submitButtonText="Create Category" sections={ [categoryNameSection, categoryDescription, categoryPinStatus] } />
+            <FormElement formID="add-forum-categories" formTitle="Add A New Category" endPoint="category" method="POST" passToEndPoint={ [{key: "ForumID", value: forum.ForumID}] } submitButtonText="Create Category" sections={ [categoryNameSection, categoryDescription, categoryPinStatus] } />
         </>
     )
 }

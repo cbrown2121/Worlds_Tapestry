@@ -47,3 +47,19 @@ export const UserProvider = ({ children }) => {
     </UserContext.Provider>
   );
 }
+
+export const ForumContext = createContext();
+
+export const ForumProvider = ({ children }) => {
+  const [forum, setForumState] = useState(null);
+
+  const setForum = (forumData) => {
+    setForumState(forumData);
+  }
+
+  return (
+    <ForumContext.Provider value={{ forum, setForum }}>
+      {children}
+    </ForumContext.Provider>
+  );
+}
