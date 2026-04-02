@@ -924,6 +924,24 @@ app.post("/posts", (req, res) => {
   });
 });
 
+app.post("/reply", (req, res) => {
+  const { creator, thread_id, content, subject } = req.body;
+
+  // query for posting likes
+  const sql = ` 
+    INSERT INTO Posts (UserID, ThreadID, Content, Subject)
+    VALUES (?, ?, ?, ?)
+  `;
+
+  db.query(sql, [creator, thread_id, content, subject], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to create post" });
+    }
+
+    res.json({ message: "post created", id: result.insertId });
+  });
+});
 // POST location
 app.post("/location", (req, res) => {
   const { location_id, location_name, reviews, status, latitude, longitude } = req.body;

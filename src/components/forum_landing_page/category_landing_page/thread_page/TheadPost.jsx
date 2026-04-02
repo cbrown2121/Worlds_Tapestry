@@ -6,6 +6,7 @@ import thumbsDownIcon from "../../../../assets/thumbs-down.svg"
 import profile from "../../../../assets/profile.svg"
 import { UserContext } from "../../../../contexts/Context.jsx"
 import { calculateRecency, getDate } from "../../../../utility.js";
+import FormElement from "../../../form_component/FormElement.jsx";
 import { Link } from "react-router-dom"
 
 const ThreadPost = (props) => {
@@ -17,7 +18,7 @@ const ThreadPost = (props) => {
 
     const [likeButtonStatus, setLikeButtonStatus] = useState(document.getElementById("not-active")); // keeps track of if a user has liked a post
     const [dislikeButtonStatus, setDislikeButtonStatus] = useState(document.getElementById("not-active")); // keeps track of if a user has disliked a post
-
+    let forumTextSection = { type: "text", sectionTitle: "Post Content", sectionID:"content"};
     // check if the user is in the post ratings list to see if they have already interacted with a post
     useEffect(() => {
         fetch(`http://localhost:5000/post-ratings/${props.PostID}/${user.UserID}`)
@@ -105,7 +106,7 @@ const ThreadPost = (props) => {
         } catch (error) {
             console.log(`Data was submitted unsuccessfully: ${error}`);
         }
-        window.location.reload(); // reload window to show that profile has been updated.
+        window.location.reload(); // reload window to show that post has been deleted.
     }
 
     const editpost = async () => {
@@ -115,7 +116,7 @@ const ThreadPost = (props) => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({Content: text + "     This post has been edited."}),
+                body: JSON.stringify({ Content: text + "     This post has been edited." }),
             });
 
             if (!response.ok) {
@@ -125,14 +126,14 @@ const ThreadPost = (props) => {
         } catch (error) {
             console.log(`Data was submitted unsuccessfully: ${error}`);
         }
-        window.location.reload(); // reload window to show that profile has been updated.
+        window.location.reload(); // reload window to show that post has been updated.
     }
 
     return (
         <>
             <div className="thread-post">
                 <div className="post-left">
-                    {/* <h1 className="post-subject">{subject}</h1> */}
+                     <h1 className="post-subject">{props.Subject}</h1> 
                     <p className="post-content">{props.Content}</p>
                     <div className="post-like-dislike-date">
                         <div className="ratings">
@@ -161,8 +162,7 @@ const ThreadPost = (props) => {
 
                         </div>
                     </div>
-                    {/* <button className="reply-to-post" >Reply to Post</button> */}
-                    { user.UserID == props.UserID &&
+                    {user.UserID == props.UserID &&
                         <>
                             <div className="delete-edit-report">
                                 <button className="delete-button" onClick={deletepost}>Delete</button>
@@ -174,7 +174,7 @@ const ThreadPost = (props) => {
                                     value={text}
                                     onChange={(e) => setText(e.target.value)}
                                     placeholder={props.Content}
-                                    name= "ContentEdit"
+                                    name="ContentEdit"
                                 />
                                     <button onClick={editpost} className="submit">
                                         Submit
@@ -186,20 +186,27 @@ const ThreadPost = (props) => {
                         </>
                     }
 
-                    { user.UserID != props.UserID &&
-                        
-                        <Link key={ `${props.postID}-report` } className="router-link" 
-                            to={ `/Report-Content` } 
-                            state={{ 
-                                reportedID: props.PostID,
-                                reportedName: `by user ${props.UserName}`,
-                                type: "Post"
-                            }}
-                        >
-                            <button className="report-button" > Report Post </button>
-                        </Link>
+                    {user.UserID != props.UserID &&
+                        <>
+                            <div className="delete-edit-report">
+                                <button className="reply-to-post" command="show-modal" commandfor={modalID}>Reply</button>
+                                <Link key={`${props.postID}-report`} className="router-link"
+                                    to={`/Report-Content`}
+                                    state={{
+                                        reportedID: props.PostID,
+                                        reportedName: `by user ${props.UserName}`,
+                                        type: "Post"
+                                    }}
+                                >
+                                    <button className="report-button" > Report</button>
+                                </Link>
+                            </div>
+                            <dialog id={modalID} className="reply-field">
+                                 <FormElement  formTitle="Reply" method="POST" endPoint="reply" passToEndPoint={ [{key: "creator", value: user.UserID}, {key: "thread_id", value: props.ThreadID},{key: "subject", value: "Reply to: " + props.UserName}] } submitButtonText="Reply" sections={ [forumTextSection] } />
+                            </dialog>
+                        </>
                     }
-                    
+
                 </div>
             </div>
         </>
