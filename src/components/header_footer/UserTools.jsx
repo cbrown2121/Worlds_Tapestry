@@ -10,7 +10,10 @@ const UserTools = () => {
   return (
     <>
       <div className="user-tools">
-            <img src={messageIcon} alt="" id="message-icon" />
+            <Link className="router-link" to="/Messages">
+                <img src={messageIcon} alt="" id="message-icon" />
+            </Link>
+            
             <Link className="router-link" to="/Profile"
                 state={{ 
                     userPageID: user.UserID,

@@ -33,7 +33,7 @@ export const LoginForm = (props) => { // form that is centered in the middle of 
             processedData[key] = value;
         });
 
-        universalDatabaseFetch(`user/${formData.get("UserName")}-${formData.get("Password")}`).then((data) => {
+        universalDatabaseFetch(`user/${processedData["UserName"]}-${processedData["Password"]}`).then((data) => {
                 handleForumSubmit(data);
         });
     }

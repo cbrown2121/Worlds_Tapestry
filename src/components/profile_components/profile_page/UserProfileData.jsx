@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import MessagesPage from "../messages_page/MessagesPage.jsx";
+import MessagesPage from "../../messages_page/ConversationPanel.jsx";
 import "./ProfilePage.css";
 
 export default function UserProfileData(props) {
@@ -11,7 +11,7 @@ export default function UserProfileData(props) {
     const [userFollowingCount, setUserFollowingCount] = useState(null);
     const [profilePicture, setProfilePicture] = useState(null);
 
-    const bucketBaseURL = "https://world-tapestry-s3.s3.amazonaws.com/";
+    const imageBaseURL = `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDNAME}/image/upload/`;
 
     useEffect(() => {
         fetch(`http://localhost:5000/users/${userID}`)
@@ -29,19 +29,8 @@ export default function UserProfileData(props) {
     let content = (!userName || !userEmail) ? <div> Loading profile... </div> : 
             <>
                 <div className="profile-row">
-                    {profilePicture ? (
-                        <img
-                            src={`${bucketBaseURL}${profilePicture}`}
-                            alt="Profile avatar"
-                            className="user-profile-image"
-                        />
-                    ) : (
-                        <div>No avatar selected</div>    
-                    )}
-                </div>
-                
-                <div className="profile-row">
                     <p className="profile-content">{userName}</p>
+                    <img className="user-profile-image" src={ `${imageBaseURL}${profilePicture}` } alt="" />
                 </div>
                 { props.viewer == "owner" &&
                     <div className="profile-row">

@@ -21,8 +21,6 @@ const Login = () => {
             <Link to="/login">
                 <button className="login-button">Sign Up</button>
             </Link>
-
-
         </>
     )
 

@@ -1,0 +1,46 @@
+.messages-container {
+    padding: 2rem;
+}
+
+.messages-container .messages {
+    border: "1px solid #ccc";
+    padding: 2rem;
+    border-radius: 0.25rem;
+    /* max-width: ; */
+}
+
+.messages-container .messages .send-new-massage button {
+    color: red;
+}
+
+.user-converstation-list {
+    display: flex;
+    flex-direction: column;
+    width: 15vw;
+}
+
+.converstation-tab-interact-case {
+    background: none;
+    height: 5rem;
+    width: 100%;
+}
+
+.converstation-tab {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    height: 5rem;
+
+    background: var(--light-grey);
+    border: 1px solid var(--text);
+}
+
+.converstation-tab img {
+    height: 50px;
+    width: 50px;
+}
+
+.all-user-messages {
+    display: flex;
+    gap: 2rem;
+}

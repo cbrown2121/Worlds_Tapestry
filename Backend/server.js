@@ -131,8 +131,8 @@ app.get("/messages/conversation/:user1-:user2", (req, res) => {
     `SELECT 
      MessageID, SenderID, ReceiverID, MessageText, SentAt, UserName
      FROM Messages JOIN Users on SenderID = UserID
-     WHERE (SenderID = 1 AND ReceiverID = 2)
-        OR (SenderID = 2 AND ReceiverID = 1)
+     WHERE (SenderID = ? AND ReceiverID = ?)
+        OR (SenderID = ? AND ReceiverID = ?)
      ORDER BY SentAt ASC, MessageID ASC`,
     [user1, user2, user2, user1],
     (err, results) => {
@@ -490,6 +490,32 @@ app.get("/search-threads/:query", (req, res) => {
   `;
 
   db.query(sql, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to search data" });
+    }
+
+    res.json(result);
+  });
+});
+
+// GET all messages conversations a users has (only gets one per converstation)
+app.get("/messages/:UserID", (req, res) => {
+  const { UserID } = req.params;
+
+  // needs to be fixed since if a = sender b = receiver, b = sender a = receiver is returned as well
+  // i have an idea on how to fix it, the issue is that in the main methods the "lowest" value is dropped, but
+  // we want to drop the row the corresponds to the oldest time
+  const sql = `
+              Select m.*, s.UserName AS Sender, s.ProfilePicture AS SenderProfile, 
+              r.UserName AS Receiver, r.ProfilePicture AS ReceiverProfile
+              From Messages m INNER JOIN Users s ON m.SenderID = s.UserID
+              INNER JOIN Users r ON m.ReceiverID = r.UserID
+              WHERE (SenderID = ?) OR (ReceiverID = ?) 
+              GROUP BY LEAST(SenderID, ReceiverID), GREATEST(SenderID, ReceiverID)
+            `;
+
+  db.query(sql, [UserID, UserID], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to search data" });
@@ -1359,6 +1385,26 @@ app.put("/posts/:id", (req, res) => {
   `;
 
   db.query(sql, [likes, dislikes, postID], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to update post" });
+    }
+
+    res.json({ message: "Post updated" });
+  });
+});
+
+// update the link to the users profile image
+app.put("/user-image", (req, res) => {
+  const { UserID, ProfilePicture } = req.body;
+
+  const sql = `
+    UPDATE Users
+    SET ProfilePicture = ?
+    WHERE UserID = ?
+  `;
+
+  db.query(sql, [ProfilePicture, UserID], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to update post" });

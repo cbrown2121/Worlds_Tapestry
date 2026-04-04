@@ -5,7 +5,7 @@ import CommunityTab from "./CommunityTab";
 import TrendingTab from "./TrendingTab";
 import FormElement from "../form_component/FormElement.jsx";
 import { UserContext } from "../../contexts/Context.jsx";
-import { universalDatabaseFetch } from "../../utility.js";
+import { universalDatabaseFetch, universalDatabaseInteraction } from "../../utility.js";
 
 // for now the "my communities" section is all the forums in our database
 

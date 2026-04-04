@@ -16,9 +16,6 @@ function ForumAdminPage( props ) {
     const [userRole] = useState(state.userRole);
     const [currentPageState, setCurrentPageState] = useState("member");
 
-    // useEffect(() => {
-    // }, []);
-
     const handleTabSwitch = (event) => {
         document.getElementById(`admin-dash-${currentPageState}-settings-button`).classList.remove("active");
 

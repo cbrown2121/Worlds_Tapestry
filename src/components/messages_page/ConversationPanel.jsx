@@ -1,16 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./MessagesPage.css";
+import { UserContext } from "../../contexts/Context";
 
-export default function MessagesPage(props) {
-  // props: currentUserID (user viewing page) userPageID (users page)
-  const [currentUserID] = useState(props.currentUserID);
-  const [userPageID] = useState(props.userPageID);
-
+const ConversationPanel = ({otherUserID}) => {
+  const { user, loggedIn } = useContext(UserContext);
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
 
   const loadConversation = () => {
-    fetch(`http://localhost:5000/messages/conversation/${currentUserID}-${userPageID}`)
+    fetch(`http://localhost:5000/messages/conversation/${user.UserID}-${otherUserID}`)
       .then((res) => res.json())
       .then((data) => {
         setMessages(data);
@@ -29,8 +27,8 @@ export default function MessagesPage(props) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        SenderID: currentUserID,
-        ReceiverID: userPageID,
+        SenderID: user.UserID,
+        ReceiverID: otherUserID,
         MessageText: text,
       }),
     });
@@ -46,7 +44,7 @@ export default function MessagesPage(props) {
       <div className="messages">
         {messages.map((m) => (
           <div key={m.MessageID} style={{ marginBottom: 8 }}>
-            <strong>{m.SenderID === currentUserID ? "You" : `${m.UserName}`}:</strong>{" "}
+            <strong>{m.SenderID === user.UserID ? "You" : `${m.UserName}`}:</strong>{" "}
             {m.MessageText}
           </div>
         ))}
@@ -68,3 +66,4 @@ export default function MessagesPage(props) {
   );
 }
 
+export default ConversationPanel;

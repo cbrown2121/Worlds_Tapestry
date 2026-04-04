@@ -4,26 +4,13 @@ import UserProfileData from "./UserProfileData.jsx";
 import { UserContext } from "../../../contexts/Context.jsx";
 import "./ProfilePage.css";
 import { Link } from "react-router-dom";
+import { universalDatabaseInteraction } from "../../../utility.js";
 
 export default function CurrentUserProfilePage() {
     const { user, logOutUser } = useContext(UserContext);
-    const [selectedAvatar, setSelectedAvatar] = useState("");
     const [message, setMessage] = useState("");
 
-    const bucketBaseURL = "https://world-tapestry-s3.s3.amazonaws.com/";
-
-    const avatars = [
-        "avatar1.png",
-        "avatar2.png",
-        "avatar3.png",
-        "avatar4.png",
-        "avatar5.png",
-        "avatar6.png",
-        "avatar7.png",
-        "avatar8.png",
-        "avatar9.png",
-        "avatar10.png"
-    ];
+    const imageBaseURL = `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDNAME}/image/upload/`;
 
     let forumUserNameSection = { type: "text", sectionTitle: "Username", sectionID:"UserName" };
     let forumEmailSection = { type: "text", sectionTitle: "Email", sectionID:"Email" };
@@ -32,77 +19,48 @@ export default function CurrentUserProfilePage() {
         logOutUser();
     }
 
-    const handleSaveAvatar = async () => {
-        if (!selectedAvatar) {
-            setMessage("Please select an avatar");
-            return;
-        }
+    // https://cloudinary.com/documentation/javascript_image_and_video_upload
+    const uploadPhoto = async (event) => {
+        event.preventDefault();
+        let file = event.target.childNodes[0].files[0];
 
-        try {
-            const response = await fetch(`http://localhost:5000/users/${user.UserID}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    ProfilePicture: selectedAvatar
-                })
-            });
+        let cloudName = import.meta.env.VITE_CLOUDNAME;
 
-            const data = await response.json();
+        const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+        const formData = new FormData();
 
-            if (!response.ok) {
-                setMessage(data.message || "Failed to update avatar");
-                return;
-            }
+        formData.append("file", file);
+        formData.append("upload_preset", "Worlds_Tapestry");
 
-            setMessage("Avatar updated successfully");
-            window.location.reload();
-        } catch (error) {
-            console.error("Avatar update failed:", error);
-            setMessage("Server error while updating avatar");
-        }
-    };
+        const response = await fetch(url, {
+            method: 'POST',
+            body: formData,
+        });
+
+        await response.json().then((data) => {
+            let imageLink = data.secure_url.replace(imageBaseURL, ""); // we only want the end of the link not the base
+            let body = {"UserID" : user.UserID, "ProfilePicture": `${data.public_id}.${data.format}`};
+
+            universalDatabaseInteraction("put", "user-image", body);
+            window.location.reload(); // reload window to show data change
+        });
+    }
 
     return (
         <>
             <UserProfileData userID={user.UserID} />
-            <div className="user-messages">
+            <div className="user-settings">
                 <FormElement  formTitle="Update Profile" endPoint={`users/${user.UserID}`} method="PATCH" passToEndPoint={ [{key: "UserID", value: user.UserID}] } submitButtonText="Update Profile" sections={ [forumUserNameSection, forumEmailSection] } />
             </div>
 
-            <div className="user-messages">
-                <h2>Select Avatar</h2>
-                <div
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(5, 80px)",
-                        gap: "12px",
-                        marginTop: "10px",
-                        marginBottom: "15px"
-                    }}
-                >
-                    {avatars.map((avatar) => (
-                        <img
-                            key={avatar}
-                            src={`${bucketBaseURL}${avatar}`}
-                            alt={avatar}
-                            onClick={() => setSelectedAvatar(avatar)}
-                            style={{
-                                width: "70px",
-                                height: "70px",
-                                borderRadius: "50%",
-                                cursor: "pointer",
-                                border: selectedAvatar === avatar ? "3px solid blue" : "1px solid gray",
-                                padding: "2px"
-                            }}
-                        />
-                    ))}
+            <div className="user-profile">
+                <h2>Upload a profile image</h2>
+                <div>
+                    <form onSubmit={uploadPhoto} action="">
+                        <input type="file" name="userProfile" id="userProfile" accept="image/png, image/jpeg, image/jpg" />
+                        <button type="submit" >Upload</button>
+                    </form>
                 </div>
-
-                <button onClick={handleSaveAvatar}>
-                    Save Avatar
-                </button>
 
                 {message && <p>{message}</p>}
             </div>         

@@ -18,6 +18,7 @@ import ForumLandingPage from "./components/forum_landing_page/ForumLandingPage.j
 import ForumPage from "./components/forum_landing_page/ForumPage.jsx";
 import { ReportForm } from "./components/form_component/ReportForm.jsx";
 import ReportPage from "./components/report_page/ReportPage.jsx";
+import MessagesPage from "./components/messages_page/MessagesPage.jsx";
 
 const App = () => {
 
@@ -89,6 +90,11 @@ const App = () => {
                 <Route path="/Report-Content" element={<Layout />}>
                   <Route index element={<ReportPage/>}/>
                 </Route>
+
+                <Route path="/Messages" element={<Layout/>}>
+                  <Route index element={<MessagesPage/>}/>
+                </Route>
+
             </Routes>
           </BrowserRouter>
         </UserProvider>

@@ -6,7 +6,7 @@
 5) npm install cors
 5) npm install express
 6) npm install @react-google-maps/api
-6) npm install react-router-dom
+7) npm install react-router-dom
 
 To install all at once: 
 npm install --save node mysql2 cors express @react-google-maps/api react-router-dom

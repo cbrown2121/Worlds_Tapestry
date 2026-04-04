@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import MessagesPage from "../messages_page/MessagesPage.jsx";
+import MessagesPage from "../../messages_page/ConversationPanel.jsx";
 import UserProfileData from "./UserProfileData.jsx";
 import { UserContext } from "../../../contexts/Context.jsx";
 import "./ProfilePage.css";
