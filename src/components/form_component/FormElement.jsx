@@ -22,8 +22,6 @@ function FormElement( props ) {
             processedData[keyPair.key] = keyPair.value;
         }
 
-        console.log(processedData);
-
         try {
             const response = await fetch(`http://localhost:5000/${ props.endPoint }`, {
                 method: props.method,

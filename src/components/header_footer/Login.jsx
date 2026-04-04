@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import messageIcon from "../../assets/message-icon.svg"
 import profileIcon from "../../assets/profile.svg"
 import { UserContext } from "../../contexts/Context.jsx";
-import { LoginForm } from "../form_component/LoginForm.jsx";
 
 const Login = () => {
     const { user } = useContext(UserContext);
@@ -20,7 +19,7 @@ const Login = () => {
     return (
         <>
             <Link to="/login">
-                <button className="login-button">Log In</button>
+                <button className="login-button">Sign Up</button>
             </Link>
 
 

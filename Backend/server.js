@@ -99,6 +99,26 @@ app.get("/users/:id", (req, res) => {
   });
 });
 
+// check if a user is is in the database
+app.get("/check-user/:UserName/:Email", (req, res) => {
+  const { UserName, Email } = req.params;
+
+  const sql = `SELECT COUNT(*) AS users_in_database 
+                FROM Users
+                WHERE UserName = ? OR Email = ?;`
+
+  db.query(sql, [UserName, Email], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Query failed" });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json(results[0]);
+  });
+});
+
 // GET conversation between two users
 app.get("/messages/conversation/:user1-:user2", (req, res) => {
   const { user1, user2 } = req.params;
@@ -1042,23 +1062,26 @@ app.post("/reports", (req, res) => {
   });
 });
 
-// POST users
-app.post("/users", (req, res) => {
-  const { user_id, user_name, email, creation_date, role} = req.body;
+// POST user
+app.post("/create-user", (req, res) => {
+  const { UserName, Email, Password } = req.body;
 
   // query for posting users
   const sql = ` 
-    INSERT INTO Users (UserID, UserName, Email, CreationDate, Role)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO Users (UserName, Email, Password)
+    VALUES (?, ?, ?);
+
+    SELECT LAST_INSERT_ID() INTO @new_user_ID;
+    SELECT * FROM Users WHERE UserID = @new_user_ID;
   `;
 
-  db.query(sql, [user_id, user_name, email, creation_date, role], (err, result) => {
+  db.query(sql, [UserName, Email, Password], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Failed to create user" });
     }
 
-    res.json({ message: "user created", id: result.insertId });
+    res.json(result);
   });
 });
 

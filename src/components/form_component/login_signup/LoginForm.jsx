@@ -1,13 +1,15 @@
 import { useState, useEffect, useContext, componentDidMount } from "react"
-import FormTextSection from "./FormTextSection.jsx";
+import FormTextSection from "../FormTextSection.jsx";
 import { useNavigate } from "react-router-dom";
-import FormRadioSection from "./FormRadioSection.jsx";
-import { UserContext } from "../../contexts/Context.jsx";
-import { universalDatabaseFetch, universalDatabaseInteraction } from "../../utility.js";
-import "./Form.css"
+import FormRadioSection from "../FormRadioSection.jsx";
+import { UserContext } from "../../../contexts/Context.jsx";
+import { universalDatabaseFetch, universalDatabaseInteraction } from "../../../utility.js";
+import "../Form.css"
 
-export const LoginForm = () => { // form that is centered in the middle of the page
+export const LoginForm = (props) => { // form that is centered in the middle of the page
     const { user, setUser } = useContext(UserContext);
+
+    const setPageState = props.changePageState;
 
     let userNameField = { type: "text", sectionTitle: "Username", sectionID:"UserName" };
     let passwordField = { type: "text", sectionTitle: "Password", sectionID:"Password" };
@@ -19,17 +21,25 @@ export const LoginForm = () => { // form that is centered in the middle of the p
             setUser(userInformation);
 
             navigate("/");
-            // window.location.reload(); // reload window to show data change
         }
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        let formData = new FormData(event.currentTarget);
-        
-        universalDatabaseFetch(`user/${formData.get("UserName")}-${formData.get("Password")}`).then((data) => {
-            handleForumSubmit(data);
+
+        let processedData = {};
+
+        new FormData(event.currentTarget).forEach((value, key) => {
+            processedData[key] = value;
         });
+
+        universalDatabaseFetch(`user/${formData.get("UserName")}-${formData.get("Password")}`).then((data) => {
+                handleForumSubmit(data);
+        });
+    }
+
+    const changePageState = () => {
+        setPageState("signup");
     }
     
     return (
@@ -41,9 +51,9 @@ export const LoginForm = () => { // form that is centered in the middle of the p
                     <FormTextSection {...userNameField} />
                     <FormTextSection {...passwordField} />
 
-                    <button className="submit-form-button" type="submit"> Log in </button>
+                    <button className="submit-form-button log-in-button" type="submit"> Log in </button>
                 </form>
-                
+                <button className="submit-form-button sign-up-button" onClick={changePageState}> Sign up </button>
             </div>
         </>
     )
