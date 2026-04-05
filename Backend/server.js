@@ -813,6 +813,31 @@ app.post("/follow", (req, res) => {
   });
 });
 
+// block a use (only for if the user blocking does not have an established relationship with who theyre block)
+app.post("/block", (req, res) => {
+  const { ReporterID, ReporteeID } = req.body;
+
+  // set relationship to blocked
+  // if the blocked follows the blockee- remove the relationship from blocked to blockee
+  const SQL =   `
+                    INSERT INTO UserRelationships (FollowingUser, FollowedUser, Relationship)
+                    VALUES (${ReporterID}, ${ReporteeID}, "Blocked");
+                                    
+                    DELETE FROM UserRelationships 
+                    WHERE (FollowingUser = ${ReporteeID} AND FollowedUser = ${ReporterID}) AND
+                    (Relationship = "Friends" OR Relationship = "Following");
+                `
+
+  db.query(SQL, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({successful: false, error: err});
+    }
+
+    return res.json({successful: true});
+  });
+});
+
 app.post("/friend", (req, res) => {
   const { FollowerID, FolloweeID } = req.body;
 
@@ -1151,6 +1176,26 @@ app.delete("/forums/:id", (req, res) => {
   });
 });
 
+// unblock
+app.delete("/unblock", (req, res) => {
+  const { ReporterID, ReporteeID } = req.body;
+
+  // remove blocked relationship
+  const SQL =   `
+                    DELETE FROM UserRelationships 
+                    WHERE (FollowingUser = ${ReporterID} AND FollowedUser = ${ReporteeID});
+                `
+
+  db.query(SQL, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({successful: false, error: err});
+    }
+
+    return res.json({successful: true});
+  });
+});
+
 // remove user forum a forums member list
 app.delete("/remove-user-from-forum", (req, res) => {
   const { UserID, ForumID } = req.body;
@@ -1347,6 +1392,32 @@ app.put("/posts/:id", (req, res) => {
     }
 
     res.json({ message: "Post updated" });
+  });
+});
+
+// update relationship to blocked
+app.put("/block-friend", (req, res) => {
+  const { ReporterID, ReporteeID } = req.body;
+
+  // set relationship to blocked
+  // if the blocked follows the blockee- remove the relationship from blocked to blockee
+  const SQL =   `
+                    UPDATE UserRelationships 
+                    SET Relationship = "Blocked"
+                    WHERE (FollowingUser = ${ReporterID} AND FollowedUser = ${ReporteeID})
+                                    
+                    DELETE FROM UserRelationships 
+                    WHERE (FollowingUser = ${ReporteeID} AND FollowedUser = ${ReporterID}) AND
+                    (Relationship = "Friends" OR Relationship = "Following");
+                `
+
+  db.query(SQL, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({successful: false, error: err});
+    }
+
+    return res.json({successful: true});
   });
 });
 

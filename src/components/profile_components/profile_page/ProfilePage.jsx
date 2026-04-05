@@ -7,7 +7,7 @@ import "./ProfilePage.css";
 import { universalDatabaseFetch } from "../../../utility.js";
 
 export default function ProfilePage() {
-
+    let location = useLocation();
     const { user } = useContext(UserContext);
     const [userData, setUserData] = useState(null);
     const [viewingOwnPage, setViewingOwnPage] = useState(null);
@@ -27,9 +27,7 @@ export default function ProfilePage() {
                 }
             }
         });
-    }, []);
-
-//   let content = (viewingOwnPage) ? <CurrentUserProfilePage userData={userData} /> : <UserProfilePage userData={userData} />;
+    }, [location]);
 
   return (
     <>

@@ -14,7 +14,7 @@ const UserTools = () => {
                 <img src={messageIcon} alt="" id="message-icon" />
             </Link>
             
-            <Link className="router-link" to={`/Profile/${user.UserName}`}>
+            <Link key={user.UserName} className="router-link" to={`/Profile/${user.UserName}`}>
                 <div id="profile">
                 <img src={profileIcon} alt="" id="profile-icon" />
                 </div>
