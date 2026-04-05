@@ -10,6 +10,10 @@
     justify-content: space-between;
     
     width: 80vw;
+
+    h1{
+        font-size: 1.25rem;
+    }
 }
 
 /* left side of post containing post information ========================================================================================================= */
@@ -24,7 +28,7 @@
 }
 
 .thread-post .post-left .post-content {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     line-height: 2.5rem;
 }
 
@@ -218,3 +222,4 @@
     font-size: 1.5rem;
     font-weight: 500;
 } */
+

@@ -12,6 +12,8 @@
 
     position:sticky;  /* trying out a sticky header so the footer doesnt seem imbalanced */
     top: 0px;
+
+
 }
 
 #header-left, #header-right {
@@ -20,6 +22,11 @@
     max-height: 100%;
 
     gap: 1rem;
+}
+
+#website-title
+{
+    font-family: "Montserrat";
 }
 
 /*#region =======LEFT HEADER======= */
