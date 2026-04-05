@@ -6,8 +6,12 @@ import "./ForumAdminPage.css";
 import FormRadioSection from "../../form_component/FormRadioSection.jsx";
 
 function AdminTabForumSettings(props) {
+    let path = window.location.pathname;
+    let remove = "/Admin-Dashboard";
+    let returnPath = path.substring(0, path.indexOf(remove));
+
     const [forumID, setForumID] = useState(props.forumID);
-    const [forumTags] = useState(props.forumTags.replace(",", ", "));
+    const [forumTags, setForumTags] = useState(props.forumTags);
 
     // later change fields so defaults reflect current settings
 
@@ -44,10 +48,12 @@ function AdminTabForumSettings(props) {
                 <button type="submit" className="change-forum-settings">Update</button>
             </FormElement>
 
-            <FormElement formTitle="Update Tags" endPoint="update-tags" method="PUT" passToEndPoint={ [{key: "ForumID", value: forumID}] }>
-                <textarea name="ForumTags" id="ForumTags" defaultValue={forumTags}></textarea>
-                <button type="submit" className="change-forum-settings">Update</button>
-            </FormElement>
+            <div className="form-textarea">
+                <FormElement endPoint="update-tags" method="PUT" passToEndPoint={ [{key: "ForumID", value: forumID}] }>
+                    <textarea name="ForumTags" id="ForumTags" defaultValue={forumTags}></textarea>
+                    <button type="submit" className="change-forum-settings">Update</button>
+                </FormElement>
+            </div>
         </>
     )
 }
