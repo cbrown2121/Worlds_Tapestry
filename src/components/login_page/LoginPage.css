@@ -1,9 +1,8 @@
 #login-page {
     background: var(--darkest-grey);
-    background-image: url(../../assets/logo_close_up.png); 
-        /* radial-gradient(circle, var(--lightest-grey) 0%,
+    background-image: url(../../assets/logo_close_up.png), radial-gradient(circle, var(--lightest-grey) 0%,
             var(--light-grey) 19%,
             var(--dark-grey) 37%,
-            var(--darkest-grey) 69%); */
+            var(--darkest-grey) 69%);
     background-size: 26%;
 } 

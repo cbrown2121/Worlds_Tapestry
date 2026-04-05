@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+/* logo */ @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+/* headers */ @import url('https://fonts.googleapis.com/css2?family=Cambay:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+/* normal text */ @import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
 
 /*#region =======ROOT======= */
 :root {
@@ -11,7 +13,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  font-family: "Montserrat";
+  font-family: "Questrial";
 
   --background: #fff;
   --text: #000000;
@@ -59,4 +61,14 @@ body {
 .router-link {
   color: inherit;
   text-decoration: inherit;
+}
+
+button
+{
+  font-family: "Cambay";
+}
+
+h1, h2
+{
+  font-family: "Cambay";
 }

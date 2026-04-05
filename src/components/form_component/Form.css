@@ -32,6 +32,7 @@
 
 .form-component form .form-section .section-heading h2 {
     font-size: 1rem;
+    
 }
 
 .form-component form .form-section .section-options, .form-component form .form-section .form-radio-buttons {
@@ -54,6 +55,8 @@
 
     background: var(--form-input-accent);
     border: 1px solid var(--text);
+
+    font-family: "Questrial";
 }
 
 .form-component form button {
@@ -63,7 +66,7 @@
     background: var(--secondary);
 
     font-size: 1.5rem;
-    font-weight: 500;
+    font-weight: 700;
 
     height: 3rem;
     width: 100%;
