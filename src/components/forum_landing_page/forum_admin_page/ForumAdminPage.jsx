@@ -43,11 +43,11 @@ function ForumAdminPage( props ) {
                 }
 
                 { currentPageState == "forum" &&
-                    <AdminTabForumSettings forumID={ forumID } />
+                    <AdminTabForumSettings forumID={ forumID } forumTags={state.forumTags} />
                 }
 
                 { currentPageState == "category" &&
-                    <AdminTabCategorySettings forumID={ forumID } />
+                    <AdminTabCategorySettings forumID={ forumID }/>
                 }
 
                 {/* { currentPageState == "map" && 

@@ -1412,6 +1412,27 @@ app.put("/posts/:id", (req, res) => {
   });
 });
 
+app.put("/update-tags", (req, res) => {
+  const { ForumID, ForumTags } = req.body;
+
+  let tags = cleanTags(ForumTags);
+
+  const sql = `
+    UPDATE Forums
+    SET Tags = "${tags}"
+    WHERE ForumID = ${ForumID}
+  `;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to update tags" });
+    }
+
+    res.json({ message: "tags updated" });
+  });
+});
+
 // update relationship to blocked
 app.put("/block-friend", (req, res) => {
   const { ReporterID, ReporteeID } = req.body;
@@ -1468,8 +1489,6 @@ app.put("/update-forums", (req, res) => {
     SET SearchVisibility = ?, JoinPermissions = ?, AllowMaps = ?
     WHERE ForumID = ?
   `;
-
-  console.log(sql, [SearchVisibility, JoinPermissions, AllowMaps, ForumID]);
 
   db.query(sql, [SearchVisibility, JoinPermissions, AllowMaps, ForumID], (err, result) => {
     if (err) {

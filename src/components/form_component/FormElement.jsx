@@ -24,7 +24,6 @@ function FormElement( props ) {
             processedData[keyPair.key] = keyPair.value;
         }
 
-        console.log(props.endPoint);
         console.log(processedData);
 
         universalDatabaseInteraction(props.method, props.endPoint, processedData).then((data) => {
@@ -35,7 +34,7 @@ function FormElement( props ) {
                 
                 navigate(`/Profile/${processedData.UserName}`);
             }
-            window.location.reload(""); // reload window to show data change
+            // window.location.reload(""); // reload window to show data change
         });
     }
 

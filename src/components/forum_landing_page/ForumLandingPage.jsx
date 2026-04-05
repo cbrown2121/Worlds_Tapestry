@@ -159,7 +159,8 @@ function ForumLandingPage( props ) {
                                 forumID: forumID,
                                 forumName: forumName,
                                 forumMaps: props.forumMap,
-                                userRole: userRole
+                                userRole: userRole,
+                                forumTags: props.forumTags
                             }}
                             >
                                 <button className="forum-settings" > Community Settings </button>
