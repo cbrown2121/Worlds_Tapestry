@@ -79,13 +79,13 @@ function ThreadContent(props) {
                 <div id="profile-update">
             </div>
             </div>
-            {posts.map((post) => {
+            {posts.map((post, index) => {
                 if (post.Deleted) {
-                    return  <div className="deleted-post thread-post">
+                    return  <div key={index} className="deleted-post thread-post">
                                 <p>This post was deleted by the user.</p>
                             </div>
                 } else {
-                    return <ThreadPost key={post.PostID} {...post}/>;
+                    return <ThreadPost key={index} {...post}/>;
                 }
             })}
 

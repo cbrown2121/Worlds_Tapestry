@@ -23,8 +23,12 @@ const ConverstationTab = ({MessageText, SenderID, Receiver, ReceiverProfile, Rec
     }
   }, []);
 
+  const viewConverstation = () => {
+    goToConverstation(friendID);
+  }
+
   return (
-    <button className="converstation-tab-interact-case" onClick={() => goToConverstation(friendID)} >
+    <button className="converstation-tab-interact-case" onClick={viewConverstation} >
       <div className="converstation-tab">
         <img src={`${imageBaseURL}${friendProfile}`} alt={ `${friendUserName} profile image` } />
         { friendUserName }

@@ -22,7 +22,7 @@ export const UserProvider = ({ children }) => {
   const [user, setStateUser] = useState({ UserID: getCookie("WP-userID"), UserName: getCookie("WP-username") });
 
   const setUser = (userData) => {
-    setStateUser({ UserID: userData.UserID, UserName: userData.UserName });
+    setStateUser({ UserID: parseInt(userData.UserID), UserName: userData.UserName });
 
     // 1 Day = 24 Hrs = 24*60*60 = 86400.
     let maxAge = (24 * 3) * 60 * 60; // three days

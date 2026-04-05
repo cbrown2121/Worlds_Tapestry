@@ -16,6 +16,8 @@ const ThreadPost = (props) => {
     const [likeCount, Upvote] = useState(props.Likes);
     const [dislikeCount, Downvote] = useState(props.Dislikes);
 
+    const imageBaseURL = `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDNAME}/image/upload/`;
+
     const [likeButtonStatus, setLikeButtonStatus] = useState(document.getElementById("not-active")); // keeps track of if a user has liked a post
     const [dislikeButtonStatus, setDislikeButtonStatus] = useState(document.getElementById("not-active")); // keeps track of if a user has disliked a post
     let forumTextSection = { type: "text", sectionTitle: "Post Content", sectionID:"content"};
@@ -150,18 +152,22 @@ const ThreadPost = (props) => {
                     </div>
                 </div>
                 <div className="post-right">
-                    <div className="user-profile-mini">
-                        <div className="user-major-details">
-                            <img src={profile} alt="" className="user-profile" />
-                            <div className="user-name-and-type">
-                                <h1 className="user-name">{props.UserName}</h1>
-                                <h2 className="user-type">User</h2>
+
+                    <Link className="router-link" to={`/Profile/${props.UserName}`}>
+                        <div className="user-profile-mini">
+                            <div className="user-major-details">
+                                <img src={`${imageBaseURL}${props.ProfilePicture}`} alt="" className="user-profile" />
+                                <div className="user-name-and-type">
+                                    <h1 className="user-name">{props.UserName}</h1>
+                                    <h2 className="user-type">User</h2>
+                                </div>
+                            </div>
+
+                            <div className="user-minor-details">
+
                             </div>
                         </div>
-                        <div className="user-minor-details">
-
-                        </div>
-                    </div>
+                    </Link>
                     {user.UserID == props.UserID &&
                         <>
                             <div className="delete-edit-report">

@@ -2,13 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import "./MessagesPage.css";
 import { UserContext } from "../../contexts/Context";
 
-const ConversationPanel = ({otherUserID}) => {
+const ConversationPanel = ({userPageID}) => {
   const { user, loggedIn } = useContext(UserContext);
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
 
   const loadConversation = () => {
-    fetch(`http://localhost:5000/messages/conversation/${user.UserID}-${otherUserID}`)
+    fetch(`http://localhost:5000/messages/conversation/${user.UserID}-${userPageID}`)
       .then((res) => res.json())
       .then((data) => {
         setMessages(data);
@@ -28,7 +28,7 @@ const ConversationPanel = ({otherUserID}) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         SenderID: user.UserID,
-        ReceiverID: otherUserID,
+        ReceiverID: userPageID,
         MessageText: text,
       }),
     });

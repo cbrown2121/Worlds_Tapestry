@@ -1,30 +1,19 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import MessagesPage from "../../messages_page/ConversationPanel.jsx";
 import "./ProfilePage.css";
+import { UserContext } from "../../../contexts/Context.jsx";
 
-export default function UserProfileData(props) {
-    // props user id and viewer (either user or owner- user sees less than owner)
-    const [userID] = useState(props.userID);
-    const [userName, setUserName] = useState(null);
-    const [userEmail, setUserEmail] = useState(null);
-    const [userFollowerCount, setUserFollowerCount] = useState(null);
-    const [userFollowingCount, setUserFollowingCount] = useState(null);
-    const [profilePicture, setProfilePicture] = useState(null);
+export default function UserProfileData({ userData }) {
+    const { user, logOutUser } = useContext(UserContext); // person viewing page
+
+    const [userID] = useState(userData.UserID);
+    const [userName] = useState(userData.UserName);
+    const [userEmail] = useState(userData.Email);
+    const [userFollowerCount] = useState(userData.FollowerCount);
+    const [userFollowingCount] = useState(userData.FollowingCount);
+    const [profilePicture] = useState(userData.ProfilePicture);
 
     const imageBaseURL = `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDNAME}/image/upload/`;
-
-    useEffect(() => {
-        fetch(`http://localhost:5000/users/${userID}`)
-        .then((res) => res.json())
-        .then((userData) => {
-            setUserName(userData.UserName);
-            setUserEmail(userData.Email);
-            setUserFollowerCount(userData.FollowerCount);
-            setUserFollowingCount(userData.FollowingCount);
-            setProfilePicture(userData.ProfilePicture);
-        })
-        .catch((err) => console.error("profile fetch error:", err));
-    }, [userID]);
 
     let content = (!userName || !userEmail) ? <div> Loading profile... </div> : 
             <>
@@ -32,7 +21,7 @@ export default function UserProfileData(props) {
                     <p className="profile-content">{userName}</p>
                     <img className="user-profile-image" src={ `${imageBaseURL}${profilePicture}` } alt="" />
                 </div>
-                { props.viewer == "owner" &&
+                { user.UserID == userID &&
                     <div className="profile-row">
                         <p className="profile-content">{userEmail}</p>
                     </div>

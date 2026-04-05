@@ -4,9 +4,9 @@ import UserProfileData from "./UserProfileData.jsx";
 import { UserContext } from "../../../contexts/Context.jsx";
 import "./ProfilePage.css";
 import { Link } from "react-router-dom";
-import { universalDatabaseInteraction } from "../../../utility.js";
+import { universalDatabaseFetch, universalDatabaseInteraction } from "../../../utility.js";
 
-export default function CurrentUserProfilePage() {
+export default function CurrentUserProfilePage({ userData }) {
     const { user, logOutUser } = useContext(UserContext);
     const [message, setMessage] = useState("");
 
@@ -38,17 +38,19 @@ export default function CurrentUserProfilePage() {
         });
 
         await response.json().then((data) => {
-            let imageLink = data.secure_url.replace(imageBaseURL, ""); // we only want the end of the link not the base
             let body = {"UserID" : user.UserID, "ProfilePicture": `${data.public_id}.${data.format}`};
 
-            universalDatabaseInteraction("put", "user-image", body);
-            window.location.reload(); // reload window to show data change
+            universalDatabaseInteraction("put", "user-image", body).then((result) => {
+                if (result.successful)  window.location.reload(); // reload window to show data change
+            });
         });
     }
 
     return (
         <>
-            <UserProfileData userID={user.UserID} />
+            { userData &&
+                <UserProfileData userData={userData} />
+            }
             <div className="user-settings">
                 <FormElement  formTitle="Update Profile" endPoint={`users/${user.UserID}`} method="PATCH" passToEndPoint={ [{key: "UserID", value: user.UserID}] } submitButtonText="Update Profile" sections={ [forumUserNameSection, forumEmailSection] } />
             </div>
@@ -65,7 +67,7 @@ export default function CurrentUserProfilePage() {
                 {message && <p>{message}</p>}
             </div>         
 
-            <Link to="/"> { /* sends the user back to the landing page */ }
+            <Link to="/"> 
                 <button onClick={ handleButtonPress } className="logout-button">Log out</button>
             </Link>
         </>

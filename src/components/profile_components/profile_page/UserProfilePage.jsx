@@ -1,125 +1,94 @@
 import { useEffect, useState, useContext } from "react";
-import MessagesPage from "../../messages_page/ConversationPanel.jsx";
+import ConversationPanel from "../../messages_page/ConversationPanel.jsx";
 import UserProfileData from "./UserProfileData.jsx";
 import { UserContext } from "../../../contexts/Context.jsx";
 import "./ProfilePage.css";
+import { universalDatabaseFetch, universalDatabaseInteraction } from "../../../utility.js";
 
-export default function UserProfilePage(props) {
-  // props: currentUserID (user viewing page) userPageID (users page)
+export default function UserProfilePage({ userData }) {
+    let relationshipStates = ["Following", "Friends", "", "Follows you"];
 
-  const [pageOwnerID] = useState(props.userPageID);
-  const { user } = useContext(UserContext); // page viewer
+    // the indices match relationshipStates if relationshipStates = following, the button text will be "Unfollow"
+    let buttonText = ["Unfollow", "Unfriend", "Follow", "Friend"];
 
-  const [relationship, setRelationship] = useState(false);
-  const [followButtonText, setFollowButtonText] = useState(false);
+    const { user } = useContext(UserContext); // page viewer
+    const [userInformation, setUserInformation] = useState(null);
 
-  const relationshipFromRow = (relationshipData) => {
-      const followerID = relationshipData.FollowingUser;
-      const followingID = relationshipData.FollowedUser;
+    const [relationshipIndex, setRelationshipIndex] = useState(3);
 
-      if (followerID == user.UserID && followingID == pageOwnerID) { // viewer follows owner
-        setFollowButtonText("Unfollow");
-        return "You follow this user";
-      }
+    const invertRelationship = () => { // if the user pressed the follow/unfollow/friend/unfriend, the relationship will change to the inverse
+        // following => ""
+        // friends => follows you
+        // follows you => friend
+        // "" => following
 
-      if (followerID == pageOwnerID && followingID == user.UserID) { // owner follows user
-        setFollowButtonText("Follow");
-        return "This user follows you";
-      }
-  }
-
-  const processUserRelationship = (userRelationshipData) => {
-    const relationshipDataLength = userRelationshipData.length;
-
-    if (relationshipDataLength == 0) { // no relationship
-      setRelationship("");
-    } else if (relationshipDataLength == 1) { // relationship is one way
-      setRelationship(relationshipFromRow(userRelationshipData[0]));
-    } else if (relationshipDataLength == 2) { // relationship is two way
-      let relationshipOne = relationshipFromRow(userRelationshipData[0]);
-      let relationshipTwo = relationshipFromRow(userRelationshipData[1]);
-
-      if (relationshipOne != relationshipTwo) { // should maybe check a bit more throughly 
-        setFollowButtonText("Unfollow");
-        setRelationship("You and this user follow eachother");
-      } 
+        // a specific order is used so the index + 2 will be the reverse (you need to wrap around though for if the index goes over 4)
+        setRelationshipIndex((relationshipIndex + 2) % relationshipStates.length);
     }
-  }
 
-  useEffect(() => {
-    fetch(`http://localhost:5000/relationship/${user.UserID}/${pageOwnerID}`)
-    .then((res) => res.json())
-    .then((data) => {
-      processUserRelationship(data);
-    })
-    .catch((err) => console.error("profile fetch error:", err));
-  }, []);
+    const processUserRelationship = (userRelationshipData) => {
+        let userFollowerRow = userRelationshipData.find((row) => row.FollowingUser == user.UserID) || null; // if the user follows the page
+        let userFollowedRow = userRelationshipData.find((row) => row.FollowedUser == user.UserID) || null; // if the page follows the user
 
-  const handleRelationshipChange = async (endpoint, newButtonText, newRelationshipText) => {
-    let data = {FollowerID: user.UserID, FolloweeID: pageOwnerID};
-
-    try {
-        const response = await fetch(`http://localhost:5000/${endpoint}`, {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data),
-        });
-
-        if (!response.ok) {
-            throw new Error("Network response error");
-        } else {
-          setFollowButtonText(newButtonText);
-          setRelationship(newRelationshipText);
+        let relationIndex = 2;
+        if (userFollowerRow && userFollowedRow) { // if userFollowerRow and userFollowedRow are not null- with our current set up that means that they area friends
+            relationIndex = 1;
+        } else if (userFollowerRow) { // user follows page
+            relationIndex = 0;
+        } else if (userFollowedRow) { // page follows user
+            relationIndex = 3;
         }
-    } catch (error) {
-        console.log(`Data was submitted unsuccessfully: ${error}`);
-    }
-  }
 
-  const handleButtonPress = () => { // sorry this is a mess
-    let userFollowsViewer = (relationship == "You and this user follow eachother" || relationship == "This user follows you");
-    let endpoint = followButtonText.toLowerCase();
-
-    let newButtonText = (endpoint == "follow") ? "Unfollow" : "Follow";
-    let newRelationshipText = "";
-
-    if (userFollowsViewer) {
-      endpoint += "-mutual";
-
-      if (followButtonText == "Follow") { // user is following someone that does not follow them
-        newRelationshipText = "You and this user follow eachother";
-      } else { // user is unfollowing someone that does not follow them
-        newRelationshipText = "This user follows you";
-      }
-    } else {
-      if (followButtonText == "Unfollow") { // user is following someone that does not follow them
-        newRelationshipText = "You follow this user";
-      }
+        setRelationshipIndex(relationIndex);
     }
 
-    handleRelationshipChange(endpoint, newButtonText, newRelationshipText);
-  };
+    useEffect(() => {
+        setUserInformation(userData);
 
-  return (
-    <div className="profile-container">
-      <div className="profile-left-side">
+        universalDatabaseFetch(`relationship/${user.UserID}/${userData.UserID}`).then((data) => {
+            if(data.successful) {
+                processUserRelationship(data.result);
+            }
+        });
+    }, [userData]);
 
-        <UserProfileData userID={pageOwnerID} viewer={"user"} />
+    const handleRelationshipChange = async (endpoint) => {
+        let body = {FollowerID: user.UserID, FolloweeID: userInformation.UserID};
 
-        <div className="relationship-elements">
-          <h2 className="user-relationship">
-            {relationship}
-          </h2>
+        universalDatabaseInteraction("POST", endpoint, body).then((data) => {
+            if (data.successful) {
+                invertRelationship();
+            } else {
+                console.log(data);
+            }
+        });
+    }
 
-          <button onClick={handleButtonPress} className="user-follow-button">{followButtonText}</button>
+    const handleButtonPress = () => { // sorry this is a mess
+        let endpoint = buttonText[relationshipIndex].toLowerCase();
+        handleRelationshipChange(endpoint);
+    };
+
+    return (
+        <div className="profile-container">
+        <div className="profile-left-side">
+
+            <UserProfileData userData={userData}/>
+    
+            <div className="relationship-elements">
+            <h2 className="user-relationship">
+                {relationshipStates[relationshipIndex]}
+            </h2>
+
+            <button onClick={handleButtonPress} className="user-follow-button">{buttonText[relationshipIndex]}</button>
+            </div>
+
         </div>
-
-      </div>
-      <div className="profile-right-side">
-        <MessagesPage currentUserID={user.UserID} userPageID={pageOwnerID} />
-      </div>
-    </div>
-  );
+        <div className="profile-right-side"> 
+            { userData.UserID &&
+                <ConversationPanel userPageID={userData.UserID} />
+            }
+        </div>
+        </div>
+    );
 }

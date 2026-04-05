@@ -14,9 +14,10 @@ const MessagesPage = () => {
     universalDatabaseFetch(`messages/${user.UserID}`).then((data) => {
       setConverstationList(data);
 
-      if (1 < converstationList.length) {
-        let mostRecent = converstationList[0];
+      if (1 < data.length) {
+        let mostRecent = data[0];
         let mostRecentUserID = (mostRecent.ReceiverID == user.UserID) ? mostRecent.SenderID : mostRecent.ReceiverID;
+        console.log(mostRecentUserID);
         setFocusConverstation(mostRecentUserID);
       }
     });
@@ -34,7 +35,14 @@ const MessagesPage = () => {
           ))}
       </div>
       <div className="focused-converstation">
-        <ConversationPanel key={focusedConverstation} otherUserID={focusedConverstation}/>
+        { focusedConverstation &&
+            <ConversationPanel key={focusedConverstation} userPageID={focusedConverstation}/>
+        }
+
+        { !focusedConverstation &&
+            <div className="loading-messages">Currently Loading Messages...</div>
+        }
+        
       </div>
     </div>
   );

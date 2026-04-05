@@ -47,6 +47,10 @@ const App = () => {
                   <Route index element={<ProfilePage />}/>
                 </Route>
 
+                <Route path="/Profile/:userName" element={<Layout />}>
+                  <Route index element={<ProfilePage />}/>
+                </Route>
+
                 <Route path="/Forum/:forumName/category/:categoryName" element={<Layout />}>
                   <Route index element={<CategoryLandingPage />}/>
                 </Route>
