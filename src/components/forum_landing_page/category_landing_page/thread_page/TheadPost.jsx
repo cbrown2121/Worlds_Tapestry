@@ -169,7 +169,7 @@ const ThreadPost = (props) => {
                                 <button className="edit-button" command="show-modal" commandfor={modalID}>Edit</button>
                             </div>
                             <dialog id={modalID} className="edit-field" >
-                                <div className="edit-container"><input
+                                <div className="edit-container"><textarea
                                     className="text-field"
                                     value={text}
                                     onChange={(e) => setText(e.target.value)}
