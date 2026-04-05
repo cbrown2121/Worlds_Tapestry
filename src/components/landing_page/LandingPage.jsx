@@ -4,6 +4,8 @@ import "./LandingPage.css";
 import CommunityTab from "./CommunityTab";
 import TrendingTab from "./TrendingTab";
 import FormElement from "../form_component/FormElement.jsx";
+import FormTextSection from "../form_component/FormTextSection.jsx";
+import FormRadioSection from "../form_component/FormRadioSection.jsx";
 import { UserContext } from "../../contexts/Context.jsx";
 import { universalDatabaseFetch, universalDatabaseInteraction } from "../../utility.js";
 
@@ -26,8 +28,6 @@ function LandingPage() {
             setForumList(forumList);
         });
     }, []);
-
-    let forumNameSection = { type: "text", sectionTitle: "Community Name", sectionID:"ForumName" };
 
     let forumVisbilitySection = {
         type: "radio", sectionTitle: "Community Visibility", sectionID:"ForumVisibility",
@@ -53,13 +53,25 @@ function LandingPage() {
         ]
     };
 
-    let sidebarElement = (loggedIn()) ? <FormElement  formTitle="Create A Community" endPoint="forums" method="POST" passToEndPoint={ [{key: "UserID", value: user.UserID}] } submitButtonText="Create Community" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection] } /> : null;
-
     return (
         <>
             <div id="landing-page" className="main-content">
                 <div id="landing-left">
-                    { sidebarElement }
+                    { loggedIn() ?
+                        // <FormElement  formTitle="Create A Community" endPoint="forums" method="POST" passToEndPoint={ [{key: "UserID", value: user.UserID}] } submitButtonText="Create Community" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection, forumTagsSection] } /> 
+                        <div className="">
+                            <FormElement passToEndPoint={[{key: "UserID", value: user.UserID}]} method="POST" endPoint="forums" formTitle="Create A Community">
+                                <FormTextSection type="text" sectionTitle="Community Name" sectionID="ForumName"/>
+                                <FormRadioSection {...forumVisbilitySection} />
+                                <FormRadioSection {...forumJoinSection} />
+                                <FormRadioSection {...forumMapSection} />
+                                <FormTextSection type="text" sectionTitle="Community Tags" sectionID="Tags"/>
+                                <button className="createForum" type="submit">Create Forum</button>
+                            </FormElement>
+                        </div>
+
+                        : null
+                    }
                 </div>
                 <div id="landing-right">
                     <div id="my-communities-header">

@@ -7,6 +7,7 @@ import ForumTrendingTab from "../ForumTrendingTab"
 import defaultIcon from "../../../assets/commmunity-default-icon.svg"
 import ThreadTab from "./ThreadTab.jsx"
 import FormElement from "../../form_component/FormElement.jsx";
+import FormTextSection from "../../form_component/FormTextSection.jsx";
 import { UserContext } from "../../../contexts/Context.jsx";
 import { universalDatabaseFetch } from "../../../utility.js";
 
@@ -32,9 +33,6 @@ const CategoryLandingPage = ( props ) => {
         
     }
 
-    let threadTitle = { type: "text", sectionTitle: "Title", sectionID:"ThreadName" };
-    let threadContent = { type: "text", sectionTitle: "Content", sectionID:"Content" };
-
     return (
         <>
             <div className="forum-landing-page main-content">
@@ -51,7 +49,11 @@ const CategoryLandingPage = ( props ) => {
                         <h2 className="forum-name">{state.categoryName}</h2>
                     </div>
 
-                    <FormElement  formTitle="Create A Thread" endPoint="create-thread" method="POST" passToEndPoint={ [{key: "UserID", value: user.UserID}, {key: "CategoryID", value: categoryID}] } submitButtonText="Create Thread" sections={ [threadTitle, threadContent] } />;
+                    <FormElement formTitle="Create A Thread" endPoint="create-thread" method="POST" passToEndPoint={ [{key: "UserID", value: user.UserID}, {key: "CategoryID", value: categoryID}] }>
+                        <FormTextSection type="text" sectionTitle="Title" sectionID="ThreadName"/>
+                        <FormTextSection type="text" sectionTitle="Content" sectionID="Content"/>
+                        <button className="create-thread-button" type="submit">Create Thread</button>
+                    </FormElement>
                 </div>
             </div>
         </>

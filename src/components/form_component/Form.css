@@ -9,13 +9,11 @@
 
 .form-component form {
     /* border: 2px solid var(--text); */
-    border-radius: 0.5rem;
+    border-radius: 0.25rem;
     
-    background: var(--light-grey);
+    background: var(--background);
     padding: 1rem;
-
-    background: var(--light-grey);
-    color: var(--text);
+    border: 1px solid var(--text);
 }
 
 .form-component form .form-section {
@@ -33,7 +31,7 @@
 }
 
 .form-component form .form-section .section-heading h2 {
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
 .form-component form .form-section .section-options, .form-component form .form-section .form-radio-buttons {
@@ -53,13 +51,16 @@
     width: 100%;
 
     text-align: center;
+
+    background: var(--form-input-accent);
+    border: 1px solid var(--text);
 }
 
 .form-component form button {
     border: 2px solid var(--text);
     border-radius: 0.25rem;
     
-    background: var(--background);
+    background: var(--secondary);
 
     font-size: 1.5rem;
     font-weight: 500;
@@ -68,8 +69,12 @@
     width: 100%;
 } 
 
+.form-component form button:hover {
+    background: var(--tertiary);
+} 
+
 .form-component form button:active{
-    background: var(--secondary);
+    background: var(--tertiary);
 }
 
 .form-list-element {

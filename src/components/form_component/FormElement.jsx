@@ -1,12 +1,14 @@
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext, Children } from "react"
 import FormTextSection from "./FormTextSection.jsx";
 import FormRadioSection from "./FormRadioSection.jsx";
 import { UserContext } from "../../contexts/Context.jsx";
+import { universalDatabaseFetch, universalDatabaseInteraction } from "../../utility.js";
 import "./Form.css"
+import { useNavigate } from "react-router-dom";
 
 function FormElement( props ) {
-    const [sections, setSections] = useState( props.sections );
-    const { user } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -22,46 +24,28 @@ function FormElement( props ) {
             processedData[keyPair.key] = keyPair.value;
         }
 
-        try {
-            const response = await fetch(`http://localhost:5000/${ props.endPoint }`, {
-                method: props.method,
-                headers: {
-                "Content-Type": "application/json"
-                },
-                body: JSON.stringify(processedData),
-            });
+        console.log(props.endPoint);
+        console.log(processedData);
 
-            if (!response.ok) {
-                throw new Error("Network response error");
+        universalDatabaseInteraction(props.method, props.endPoint, processedData).then((data) => {
+            console.log(data);
+
+            if (props.updateUserInformation) { // reset user information and go to profile
+                setUser({ UserID: parseInt(processedData.UserID), UserName: processedData.UserName });
+                
+                navigate(`/Profile/${processedData.UserName}`);
             }
-
-            const result = await response.json();
-            console.log(result);
-
-        } catch (error) {
-            console.log(`Data was submitted unsuccessfully: ${error}`);
-        }
-
-        window.location.reload(); // reload window to show data change
+            window.location.reload(""); // reload window to show data change
+        });
     }
 
     return (
         <>
-            <div id={props.formID} className="form-component">
+            <div className="form-component">
                 <h1 className="form-title"> { props.formTitle } </h1>
                 <form onSubmit={ handleSubmit } action="">
-
-                    {sections.map((section) => {
-                        if (section.type == "text") {
-                            return <FormTextSection key={ section.sectionID } {...section} />
-                        } else if (section.type == "radio") {
-                            return <FormRadioSection key={ section.sectionID } {...section} />
-                        }
-                    })}
-
-                    <button className="submit-form-button" type="submit"> { props.submitButtonText } </button>
+                    {props.children}
                 </form>
-                
             </div>
         </>
     )

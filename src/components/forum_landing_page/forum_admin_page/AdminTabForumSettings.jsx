@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import FormElement from "../../form_component/FormElement.jsx";
 import FormRow from "../../form_component/FormRow.jsx";
 import "./ForumAdminPage.css";
+import FormRadioSection from "../../form_component/FormRadioSection.jsx";
 
 function AdminTabForumSettings(props) {
     const [forumID, setForumID] = useState(props.forumID);
@@ -35,7 +36,12 @@ function AdminTabForumSettings(props) {
 
     return (
         <>
-            <FormElement  formTitle="Change Forum Settings" endPoint="update-forums" method="PUT" passToEndPoint={ [{key: "ForumID", value: props.forumID}] } submitButtonText="Update" sections={ [forumVisbilitySection, forumJoinSection, forumMapSection] }/>
+            <FormElement formTitle="Change Forum Settings" endPoint="update-forums" method="PUT" passToEndPoint={ [{key: "ForumID", value: props.forumID}] }>
+                <FormRadioSection {...forumVisbilitySection}/>
+                <FormRadioSection {...forumJoinSection}/>
+                <FormRadioSection {...forumMapSection}/>
+                <button type="submit" className="change-forum-settings">Update</button>
+            </FormElement>
         </>
     )
 }

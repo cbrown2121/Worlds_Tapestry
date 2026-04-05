@@ -19,7 +19,8 @@ function CommunityTab( props ) {
                     // https://dev.to/gaurbprajapati/demystifying-uselocation-in-reactjs-a-beginners-guide-to-navigation-4h6f
                     // https://medium.com/@alexanie_/https-ocxigin-hashnode-dev-uselocation-hook-in-react-router-758a0a711308
                     forumName: props.ForumName,
-                    forumMap: props.AllowMaps
+                    forumMap: props.AllowMaps,
+                    forumTags: props.Tags
                 }}
             >
 

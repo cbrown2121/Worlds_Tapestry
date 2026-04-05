@@ -4,6 +4,8 @@ import FormElement from "../../form_component/FormElement.jsx";
 import FormRow from "../../form_component/FormRow.jsx";
 import "./ForumAdminPage.css";
 import { ForumContext } from "../../../contexts/Context.jsx";
+import FormTextSection from "../../form_component/FormTextSection.jsx";
+import FormRadioSection from "../../form_component/FormRadioSection.jsx";
 
 const AdminTabCategorySettings = () => {
     const [forum] = useState(ForumContext);
@@ -21,7 +23,12 @@ const AdminTabCategorySettings = () => {
     
     return (
         <>
-            <FormElement formID="add-forum-categories" formTitle="Add A New Category" endPoint="category" method="POST" passToEndPoint={ [{key: "ForumID", value: forum.ForumID}] } submitButtonText="Create Category" sections={ [categoryNameSection, categoryDescription, categoryPinStatus] } />
+            <FormElement formID="add-forum-categories" formTitle="Add A New Category" endPoint="category" method="POST" passToEndPoint={ [{key: "ForumID", value: forum.ForumID}] }>
+                <FormTextSection {...categoryNameSection}/>
+                <FormTextSection {...categoryDescription}/>
+                <FormRadioSection {...categoryPinStatus} />
+                <button type="submit" className="forum-categories-submit-button">Add a Category</button>
+            </FormElement>
         </>
     )
 }

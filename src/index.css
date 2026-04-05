@@ -23,6 +23,7 @@
   --lightest-grey: #efefef;
   --dark-grey: #B7B7B7;
   --darkest-grey: #333333;
+  --form-input-accent: #d9ddd7;
 }
 
 html, body, #root {

@@ -5,15 +5,13 @@ import { UserContext } from "../../../contexts/Context.jsx";
 import "./ProfilePage.css";
 import { Link } from "react-router-dom";
 import { universalDatabaseFetch, universalDatabaseInteraction } from "../../../utility.js";
+import FormTextSection from "../../form_component/FormTextSection.jsx";
 
 export default function CurrentUserProfilePage({ userData }) {
     const { user, logOutUser } = useContext(UserContext);
     const [message, setMessage] = useState("");
 
     const imageBaseURL = `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDNAME}/image/upload/`;
-
-    let forumUserNameSection = { type: "text", sectionTitle: "Username", sectionID:"UserName" };
-    let forumEmailSection = { type: "text", sectionTitle: "Email", sectionID:"Email" };
 
     const handleButtonPress = () => {
         logOutUser();
@@ -52,7 +50,11 @@ export default function CurrentUserProfilePage({ userData }) {
                 <UserProfileData userData={userData} />
             }
             <div className="user-settings">
-                <FormElement  formTitle="Update Profile" endPoint={`users/${user.UserID}`} method="PATCH" passToEndPoint={ [{key: "UserID", value: user.UserID}] } submitButtonText="Update Profile" sections={ [forumUserNameSection, forumEmailSection] } />
+                <FormElement updateUserInformation={true} formTitle="Update Profile" endPoint={`users/${user.UserID}`} method="PATCH" passToEndPoint={ [{key: "UserID", value: user.UserID}] }>
+                    <FormTextSection type="text" sectionTitle="Username" sectionID="UserName" />
+                    <FormTextSection type="text" sectionTitle="Email" sectionID="Email" />
+                    <button type="submit" className="user-profile-update-button">Update Profile</button>
+                </FormElement>
             </div>
 
             <div className="user-profile">

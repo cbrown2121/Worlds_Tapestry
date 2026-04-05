@@ -13,7 +13,7 @@ function AdminTabMapSettings() {
 
     return (
         <>
-            <FormElement formID="map-center" formTitle="Change Map Center" endPoint="map/update-lat-long" method="PUT" passToEndPoint={ [{key: "ForumID", value: forum.ForumID}] } submitButtonText="Submit" sections={ [mapLatSection, mapLongSection] } />
+            {/* <FormElement formID="map-center" formTitle="Change Map Center" endPoint="map/update-lat-long" method="PUT" passToEndPoint={ [{key: "ForumID", value: forum.ForumID}] } submitButtonText="Submit" sections={ [mapLatSection, mapLongSection] } /> */}
         </>
     )
 }

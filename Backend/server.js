@@ -752,25 +752,42 @@ app.get("/place-reviews/:locationID/summary", (req, res) => {
   });
 });
 
+const cleanTags = (tags) => { // splits into an array and removes duplicates, white spaces, and ', ", `, then forms a string with elements seperated by a single comma
+    let tagArray = tags.split(",");
+    let tagSet = new Set(); // prevents duplicates
+
+    for (const tag of tagArray) {
+        let trimmedTag = tag.trim();
+
+        if (trimmedTag != "" && !tag.includes("\"") && !tag.includes("\'") && !tag.includes("\`") && !tag.includes(",")) {
+            tagSet.add(trimmedTag);
+        }
+    }
+
+    return Array.from(tagSet).join(",");
+}
+
 // POST Endpoints
 // POST forums
 app.post("/forums", (req, res) => {
-  const { ForumName, SearchVisibility, JoinPermissions, AllowMaps, UserID } = req.body; // add in tags later the form currently doesnt support them
+    const { ForumName, SearchVisibility, JoinPermissions, AllowMaps, UserID, Tags } = req.body; // add in tags later the form currently doesnt support them
 
-  // query to insert forum 
-  const sql = `
-    INSERT INTO Forums (ForumName, SearchVisibility, JoinPermissions, AllowMaps, OwnerID)
-    VALUES (?, ?, ?, ?, ?)
-  `;
+    let tags = cleanTags(Tags);
 
-  db.query(sql, [ForumName, SearchVisibility, JoinPermissions, AllowMaps, UserID], (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Failed to create forum" });
-    }
+    // query to insert forum 
+    const sql = `
+        INSERT INTO Forums (ForumName, SearchVisibility, JoinPermissions, AllowMaps, OwnerID, Tags)
+        VALUES (?, ?, ?, ?, ?, ?)
+    `;
 
-    res.json({ message: "Forum created", id: result.insertId });
-  });
+    db.query(sql, [ForumName, SearchVisibility, JoinPermissions, AllowMaps, UserID, tags], (err, result) => {
+        if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Failed to create forum" });
+        }
+
+        res.json({ message: "Forum created", id: result.insertId });
+    });
 });
 
 app.post("/add-user-to-forum", (req, res) => {

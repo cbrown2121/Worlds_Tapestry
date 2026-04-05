@@ -17,14 +17,17 @@ export const ReportForm = (props) => { // form that is centered in the middle of
     
     console.log(state)
 
-    let issueField = { type: "text", sectionTitle: "Describe your issue", sectionID:"Subject" };
+    let issueField = {  };
 
     const navigate = useNavigate(); 
     
     return (
         <>
             <div className="form-component content-report-form">
-                <FormElement  formTitle={`Report ${type} ${reportedName}`} endPoint="content-reports" method="POST" passToEndPoint={ [{key: "SubmitterID", value: user.UserID}, {key:"ReportedID", value: reportedID}, {key:"ReportType", value: type}] } submitButtonText="Submit" sections={ [issueField] } />
+                <FormElement formTitle={`Report ${type} ${reportedName}`} endPoint="content-reports" method="POST" passToEndPoint={ [{key: "SubmitterID", value: user.UserID}, {key:"ReportedID", value: reportedID}, {key:"ReportType", value: type}] }>
+                    <FormTextSection type="text" sectionTitle="Describe your issue" sectionID="Subject"/>
+                    <button type="submit" className="report-form">Submit</button>
+                </FormElement>
             </div>
         </>
     )

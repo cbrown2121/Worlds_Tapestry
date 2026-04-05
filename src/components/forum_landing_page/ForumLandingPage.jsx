@@ -7,10 +7,12 @@ import ForumSection from "./ForumSection";
 import ForumTrendingTab from "./ForumTrendingTab";
 import defaultIcon from "../../assets/commmunity-default-icon.svg";
 import { UserContext } from "../../contexts/Context";
+import { universalDatabaseFetch } from "../../utility";
 
 function ForumLandingPage( props ) {
     const [forumID] = useState(props.forumID)
     const [forumName] = useState(props.forumName)
+    const [tagList, setTagList] = useState([])
     const [categories, setCategories] = useState([]);
 
     const [userRole, setUserRole] = useState(null);
@@ -19,31 +21,30 @@ function ForumLandingPage( props ) {
     const { user, loggedIn } = useContext(UserContext);
     
     const getForumCategories = () => {
-        fetch(`http://localhost:5000/categories/${forumID}`)
-        .then(response => response.json())
-        .then(categoryList => {
-            createCategories(categoryList);
-        }).catch(error => console.error(error));
+        universalDatabaseFetch(`categories/${forumID}`).then((data) => {
+            createCategories(data);
+        });
     }
 
     const getUserRoleInForum = () => {
-        fetch(`http://localhost:5000/forum-membership/${forumID}/${user.UserID}`)
-        .then(response => response.json())
-        .then(userRole => {
-
-            if (userRole.length == 1) { // the response will return nothing if the user is not in the forum. it should never be higher than 1 since a user cannot be in a forum twice.
-                setUserRole(userRole[0].UserRole); // the array only has one element so this is safe
+        universalDatabaseFetch(`forum-membership/${forumID}/${user.UserID}`).then((data) => {
+            if (data.length == 1) { // the response will return nothing if the user is not in the forum. it should never be higher than 1 since a user cannot be in a forum twice.
+                setUserRole(data[0].UserRole); // the array only has one element so this is safe
                 setJoinButtonText("Leave Community");
             }
-
-        }).catch(error => console.error(error));
+        });
     }
 
     useEffect(() => {
+        setCategories([]);
         getForumCategories();
 
         if (loggedIn()) {
             getUserRoleInForum();
+        }
+
+        if (props.forumTags != null && props.forumTags != undefined && props.forumTags != "") {
+            setTagList(props.forumTags.split(","));
         }
     }, []);
 
@@ -93,8 +94,8 @@ function ForumLandingPage( props ) {
             <div className="forum-landing-page main-content">
                 <div className="forum-landing-main">
                     <ForumSection title="Categories" categoryTabsList=
-                        {categories.map((category) => (
-                            <CategoryTab key={category.CategoryID} ForumName={forumName} {...category}/>
+                        {categories.map((category, index) => (
+                            <CategoryTab key={`${category.CategoryID}-index`} ForumName={forumName} {...category}/>
                         ))}
                     />
                 </div>
@@ -120,12 +121,18 @@ function ForumLandingPage( props ) {
                         </Link>
                     }
 
-                    <div className="side-bar-section">
-                        <div className="side-bar-section-title">
-                            <h1>Top Tags</h1>
+                    { 0 < tagList.length &&
+                        <div className="side-bar-section side-bar-section-tags">
+                            <div className="side-bar-section-title">
+                                <h1>Tags</h1>
+                            </div>
+                            <div className="tag-list">
+                                {tagList.map((tag, index) => (
+                                    <h3 key={index}>{tag}</h3>
+                                ))}
+                            </div>
                         </div>
-                        <div className="side-bar-section-container"></div>
-                    </div>
+                    }
 
                     <div className="side-bar-section">
                         <Link key={ `${forumID}-${forumName}-report` } className="router-link" 

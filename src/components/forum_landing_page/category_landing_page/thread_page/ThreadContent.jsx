@@ -5,6 +5,8 @@ import ThreadPost from "./TheadPost.jsx";
 import FormElement from "../../../form_component/FormElement.jsx";
 import { UserContext } from "../../../../contexts/Context.jsx";
 import { Link } from "react-router-dom";
+import FormTextSection from "../../../form_component/FormTextSection.jsx";
+import { universalDatabaseFetch } from "../../../../utility.js";
 
 function ThreadContent(props) {
     const state = useLocation().state;
@@ -16,45 +18,10 @@ function ThreadContent(props) {
     const [ThreadList, setThread] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:5000/posts/${threadID}`)
-        .then(response => response.json())
-        .then(postList => {
-            setPosts(postList);
-        }).catch(error => console.error(error));
+        universalDatabaseFetch(`posts/${threadID}`).then((data) => {
+            setPosts(data);
+        });
     }, []);
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        const formData = new FormData(event.currentTarget);
-        const userId = props.userID; // demo user
-
-        let userData = { creator : user.UserID, thread_id : threadID, content : formData.get("postbody") }
-        
-        try {
-            const response = await fetch(`http://localhost:5000/posts`, {
-                method: "POST",
-                headers: {
-                "Content-Type": "application/json"
-                },
-                body: JSON.stringify(userData),
-            });
-
-            if (!response.ok) {
-                throw new Error("Network response error");
-            }
-
-            const result = await response.json();
-            console.log(`Data was submitted successfully: ${userData}`);
-
-        } catch (error) {
-            console.log(`Data was submitted unsuccessfully: ${error}`);
-        }
-
-        window.location.reload(); // reload window to show that profile has been updated.
-    }
-
-    let forumTextSection = { type: "text", sectionTitle: "Post Content", sectionID:"content" };
 
   return (
     <>
@@ -89,10 +56,13 @@ function ThreadContent(props) {
                 }
             })}
 
-            <FormElement  formTitle="Add to the discussion" method="POST" endPoint="posts" passToEndPoint={ [{key: "creator", value: user.UserID}, {key: "thread_id", value: threadID}] } submitButtonText="Create Post" sections={ [forumTextSection] } />
+            <FormElement formTitle="Add to the discussion" method="POST" endPoint="posts" passToEndPoint={ [{key: "creator", value: user.UserID}, {key: "thread_id", value: threadID}] }>
+                <FormTextSection type="text" sectionTitle="Post Content" sectionID="content" />
+                <button type="submit" className="create-post">Create Post</button>
+            </FormElement>
         </div>
     </>
   )
 }
 
-export default ThreadContent
+export default ThreadContent;

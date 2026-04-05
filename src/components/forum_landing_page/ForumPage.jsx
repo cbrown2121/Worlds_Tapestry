@@ -10,7 +10,7 @@ function ForumPage() {
 
     return (
         <>
-            <ForumLandingPage key={location.pathname} forumID={ location.state.forumID } forumName={ location.state.forumName } forumMap ={ location.state.forumMap } /> { /* giving a unique key to the component will force it to rerender. without it the forum links wont work correctly */ }
+            <ForumLandingPage key={location.pathname} forumID={ location.state.forumID } forumTags={ location.state.forumTags } forumName={ location.state.forumName } forumMap ={ location.state.forumMap } /> { /* giving a unique key to the component will force it to rerender. without it the forum links wont work correctly */ }
         </>
     )
 }

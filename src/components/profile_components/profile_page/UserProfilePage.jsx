@@ -152,8 +152,6 @@ export default function UserProfilePage({ userData }) {
             { (pageOwnerBlocked || pageViewerBlocked) &&
                 <div className="messaging-notice"><p>You cannot message this user</p></div>
             }
-
-
         </div>
         </div>
     );
