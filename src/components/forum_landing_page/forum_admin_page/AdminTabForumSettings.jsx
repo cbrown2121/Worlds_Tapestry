@@ -49,7 +49,7 @@ function AdminTabForumSettings(props) {
             </FormElement>
 
             <div className="form-textarea">
-                <FormElement endPoint="update-tags" method="PUT" passToEndPoint={ [{key: "ForumID", value: forumID}] }>
+                <FormElement formTitle="Update Tags" endPoint="update-tags" method="PUT" passToEndPoint={ [{key: "ForumID", value: forumID}] }>
                     <textarea name="ForumTags" id="ForumTags" defaultValue={forumTags}></textarea>
                     <button type="submit" className="change-forum-settings">Update</button>
                 </FormElement>
