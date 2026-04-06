@@ -7,6 +7,7 @@ import profile from "../../../../assets/profile.svg"
 import { UserContext } from "../../../../contexts/Context.jsx"
 import { calculateRecency, getDate } from "../../../../utility.js";
 import FormElement from "../../../form_component/FormElement.jsx";
+import FormTextSection from "../../../form_component/FormTextSection.jsx"
 import { Link } from "react-router-dom"
 
 const ThreadPost = (props) => {
@@ -208,7 +209,11 @@ const ThreadPost = (props) => {
                                 </Link>
                             </div>
                             <dialog id={modalID} className="reply-field">
-                                 <FormElement  formTitle="Reply" method="POST" endPoint="reply" passToEndPoint={ [{key: "creator", value: user.UserID}, {key: "thread_id", value: props.ThreadID},{key: "subject", value: "Reply to: " + props.UserName}] } submitButtonText="Reply" sections={ [forumTextSection] } />
+                                 <FormElement  formTitle="Reply" method="POST" endPoint="reply" passToEndPoint={ [{key: "creator", value: user.UserID}, {key: "thread_id", value: props.ThreadID},{key: "subject", value: "Reply to: " + props.UserName}] }>
+                                    <FormTextSection type="text" sectionTitle="content" sectionID="content" />
+                                    <button type="submit" className="user-profile-update-button">Reply</button>
+                                    </FormElement> 
+
                             </dialog>
                         </>
                     }
