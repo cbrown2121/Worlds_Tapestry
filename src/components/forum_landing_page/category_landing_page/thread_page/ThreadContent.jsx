@@ -56,10 +56,12 @@ function ThreadContent(props) {
                 }
             })}
 
+
             <FormElement formTitle="Add to the discussion" method="POST" endPoint="posts" passToEndPoint={ [{key: "creator", value: user.UserID}, {key: "thread_id", value: threadID}] }>
-                <FormTextSection type="text" sectionTitle="Post Content" sectionID="content" />
+                <textarea name="content" id="content"></textarea>
                 <button type="submit" className="create-post">Create Post</button>
             </FormElement>
+
         </div>
     </>
   )

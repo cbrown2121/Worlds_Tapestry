@@ -116,3 +116,15 @@
 
     margin-bottom: 1rem;
 }
+
+form textarea {
+    height: 10rem;
+    width: 100%;
+    resize: none;
+
+    padding: 1rem;
+
+    font-family: "Montserrat";
+
+    margin-bottom: 1rem;
+}
