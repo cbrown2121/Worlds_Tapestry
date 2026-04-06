@@ -1090,25 +1090,6 @@ app.post("/content-reports", (req, res) => {
   });
 });
 
-// POST reports
-app.post("/reports", (req, res) => {
-  const { forum_id, page_link, issue_type, subject, form_submit} = req.body;
-
-  const sql = ` 
-    INSERT INTO Reports (ForumID, PageLink, IssueType, Subject, FormSubmit)
-    VALUES (?, ?, ?, ?, ?)
-  `;
-
-  db.query(sql, [forum_id, page_link, issue_type, subject, form_submit], (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Failed to create report" });
-    }
-
-    res.json({ message: "report created", id: result.insertId });
-  });
-});
-
 // POST user
 app.post("/create-user", (req, res) => {
   const { UserName, Email, Password } = req.body;
@@ -1814,50 +1795,6 @@ app.patch("/threads/:id", (req, res) => {
       return res.json({ message: "No changes made" });
 
     res.json({ message: "Thread updated successfully" });
-  });
-});
-
-// PATCH Reports
-app.patch("/reports/:id", (req, res) => {
-  const id = req.params.id.trim();
-
-  // White listed columns
-  const allowedFields = [
-    "IssueType",
-    "Subject"
-  ];
-
-  const updates = [];
-  const values = [];
-
-  for (const key in req.body) {
-    if (allowedFields.includes(key)) {
-      updates.push(`${key} = ?`);
-      values.push(req.body[key]);
-    }
-  }
-
-  if (updates.length === 0)
-    return res.status(400).json({ message: "No valid fields provided" });
-
-  values.push(id);
-
-  const sql = `
-    UPDATE Reports
-    SET ${updates.join(", ")}
-    WHERE ReportID = ?
-  `;
-
-  db.query(sql, values, (err, result) => {
-    if (err) return res.status(500).json(err);
-
-    if (result.affectedRows === 0)
-      return res.status(404).json({ message: "Report not found" });
-
-    if (result.changedRows === 0)
-      return res.json({ message: "No changes made" });
-
-    res.json({ message: "Report updated successfully" });
   });
 });
 

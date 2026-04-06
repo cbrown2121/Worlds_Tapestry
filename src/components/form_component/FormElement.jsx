@@ -24,10 +24,11 @@ function FormElement( props ) {
             processedData[keyPair.key] = keyPair.value;
         }
 
+        console.log(processedData)
+
         universalDatabaseInteraction(props.method, props.endPoint, processedData).then((data) => {
             if (props.updateUserInformation) { // reset user information and go to profile
                 setUser({ UserID: parseInt(processedData.UserID), UserName: processedData.UserName });
-                
                 navigate(`/Profile/${processedData.UserName}`);
             }
 
