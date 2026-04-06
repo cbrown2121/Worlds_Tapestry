@@ -1,5 +1,8 @@
-.profile-page {
-   
+#usernameHeader {
+   font-family: "Cambay";
+   font-weight: 700;
+   font-size: 1.25rem;
+   padding-left: 1%;
 }
 
 .profile-container {
@@ -8,6 +11,7 @@
     display: flex;
 
     gap: 10rem;
+    
 }
 
 /* left side with user data and follow status */

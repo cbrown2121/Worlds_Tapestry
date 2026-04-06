@@ -18,7 +18,7 @@ export default function UserProfileData({ userData }) {
     let content = (!userName || !userEmail) ? <div> Loading profile... </div> : 
             <>
                 <div className="profile-row">
-                    <p className="profile-content">{userName}</p>
+                    <p className="profile-content" id="usernameHeader">{userName}</p>
                     <img className="user-profile-image" src={ `${imageBaseURL}${profilePicture}` } alt="" />
                 </div>
                 { user.UserID == userID &&
