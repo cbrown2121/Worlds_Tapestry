@@ -7,7 +7,7 @@ import { ForumContext } from "../../../contexts/Context.jsx";
 import FormTextSection from "../../form_component/FormTextSection.jsx";
 import FormRadioSection from "../../form_component/FormRadioSection.jsx";
 
-const AdminTabCategorySettings = () => {
+const AdminTabCategorySettings = (props) => {
     const [forum] = useState(ForumContext);
 
     let categoryNameSection = { type: "text", sectionTitle: "Category Name", sectionID:"CategoryName" };
@@ -23,7 +23,7 @@ const AdminTabCategorySettings = () => {
     
     return (
         <>
-            <FormElement formID="add-forum-categories" formTitle="Add A New Category" endPoint="category" method="POST" passToEndPoint={ [{key: "ForumID", value: forum.ForumID}] }>
+            <FormElement formID="add-forum-categories" formTitle="Add A New Category" endPoint="category" method="POST" passToEndPoint={ [{key: "ForumID", value: props.forumID}] }>
                 <FormTextSection {...categoryNameSection}/>
                 <FormTextSection {...categoryDescription}/>
                 <FormRadioSection {...categoryPinStatus} />
