@@ -31,7 +31,6 @@
     height: 10rem;
     width: 10rem;
 
-    background: var(--secondary);
     padding: 1rem;
 }
 
@@ -66,4 +65,70 @@
 .user-profile-image {
     height: 200px;
     width: 200px;
+}
+
+.user-profile-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: none;
+    gap: 2rem;
+}
+
+.user-profile-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: none;
+    gap: 2rem;
+}
+
+.user-profile-page .right {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.sub-section .input[type="file"] {
+  display: none;
+}
+
+.file-upload {
+  border: 1px solid var(--text);
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+
+  margin-bottom: 1rem;
+
+  width: 100%;
+}
+
+.sub-section button[type="submit"] {
+  background: var(--secondary);
+}
+
+.user-following-data {
+    display: flex;
+    gap: 1rem;
+
+    width: 100%;
+}
+
+.following-data-sub {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.button-list {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 2rem;
+    width: 100%;
+}
+
+.button-list button {
+    width: 6rem
 }

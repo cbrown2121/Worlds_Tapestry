@@ -147,3 +147,39 @@
 .search-results .tab .tab-name-text {
     font-size: 36px;
 } */
+
+.category-tab .tab-information {
+    width: 60%;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    padding: 1rem 0;
+}
+
+.category-tab .tab-stats {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    width: 40%;
+    padding: 1rem 0;
+}
+
+.thread-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.thread-tab .tab-information {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.thread-tab .tab-stats {
+    width: 80%;
+}

@@ -34,12 +34,14 @@
 
 .forum-landing-page .forum-landing-side .forum-information {
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 2rem;
-
-    background: var(--light-grey);
+    
+    border: 1px solid var(--text);
+    /* background: var(--secondary); */
     padding: 1rem;
-    border-radius: 1rem;
+    border-radius: 0.25rem;
 }
 
 .forum-landing-page .forum-landing-side .forum-image {
@@ -51,11 +53,16 @@
 }
 
 .forum-landing-page .forum-landing-side #forum-join-button {
-    background: var(--light-grey);
-    border: none;
+    background: var(--secondary);
+    border: 1px solid var(--text);
+    /* border: none; */
     height: 3rem;
 
     font-size: 1rem;
+}
+
+.forum-landing-page .forum-landing-side #forum-join-button:hover {
+    background: var(--tertiary);
 }
 
 .forum-landing-page .forum-landing-side .side-bar-section {
@@ -95,12 +102,18 @@
 }
 
 button {
-    background: var(--light-grey);
+    background: var(--secondary);
     border: none;
     height: 3rem;
     width: 100%;
     font-size: 1rem;
 }
+
+button:hover {
+    border: 1px solid var(--text);
+    background: var(--tertiary);
+}
+
 /* .forum-landing-page .forum-landing-side #add-category-button {
     background: var(--light-grey);
     border: none;

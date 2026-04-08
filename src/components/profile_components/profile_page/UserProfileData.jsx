@@ -26,12 +26,13 @@ export default function UserProfileData({ userData }) {
                         <p className="profile-content">{userEmail}</p>
                     </div>
                 }
-                <div className="profile-row">
-                    <div className="profile-row">
+
+                <div className="profile-row user-following-data">
+                    <div className="profile-row following-data-sub">
                         <p className="profile-label">Following: </p>
                         <p className="profile-content">{userFollowingCount}</p>
                     </div>
-                    <div className="profile-row">
+                    <div className="profile-row following-data-sub">
                         <p className="profile-label">Followers: </p>
                         <p className="profile-content">{userFollowerCount}</p>
                     </div>

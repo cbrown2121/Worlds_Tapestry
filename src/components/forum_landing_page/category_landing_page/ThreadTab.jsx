@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 function ThreadTab( props ) {
+    console.log(props)
     const location = useLocation();
     const [recency, setRecency] = useState(calculateRecency(props.MostRecentActivity));
     const [forumName] = useState(props.ForumName);
@@ -14,7 +15,7 @@ function ThreadTab( props ) {
     return (
         <>
             <Link className="router-link" 
-                    to={ `/Forum/${forumName}/Category/${categoryName}/thread/${threadName}` }  // change later so this includes the forum name from the previous link
+                    to={ `/Forum/${forumName}/Category/${categoryName}/thread/${props.ThreadName}` }  // change later so this includes the forum name from the previous link
                     state={{ 
                         threadID: props.ThreadID,
                         threadName: props.ThreadName
@@ -22,7 +23,6 @@ function ThreadTab( props ) {
             >
 
             <div className="tab thread-tab">
-                    <div className="icon-or-image"></div>
 
                     <div className="tab-information">
                         <div className="tab-name-text">

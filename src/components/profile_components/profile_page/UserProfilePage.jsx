@@ -124,9 +124,9 @@ export default function UserProfilePage({ userData }) {
             <UserProfileData userData={userData}/>
     
             <div className="relationship-elements">
-                <h2 className="user-relationship">
+                {/* <h2 className="user-relationship">
                     {relationshipStates[relationshipIndex]}
-                </h2>
+                </h2> */}
 
                 <div className="button-list">
                     { (!pageOwnerBlocked && !pageViewerBlocked) && 

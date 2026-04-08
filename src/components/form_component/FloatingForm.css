@@ -16,6 +16,31 @@
 
     z-index: 10; /* this should be the second highest z axis */
     width: 50%;
+
+    height: 80vh;
+}
+
+.floating-form .form-section {
+    gap: 0.5rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.floating-form .floating-form-submit {
+    height: 2rem !important;
+    font-size: 1rem
+}
+
+.floating-form .floating-form-submit {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2rem !important;
+}
+
+.form-details > .floating-form-submit:nth-child(6) > p:nth-child(1) {
+    font-size: 1rem
 }
 
 .floating-form-area {
@@ -30,7 +55,6 @@
     width: 50vw;
 
     display: flex;
-
 }
 
 .floating-form-area {
@@ -64,11 +88,19 @@
     align-items: center;
     background: var(--background);
     height: 25vh;
-    padding: 1rem;
+    padding: 0.5rem;
     border-radius: 0.25rem;
     justify-content: center;
     gap: 1rem;
 } 
+
+#ForumName {
+    height: 2rem;
+}
+
+#Tags {
+    height: 2rem;
+}
 
 .form-message button {
     width: 60%;

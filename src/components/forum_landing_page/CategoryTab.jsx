@@ -42,13 +42,11 @@ function CategoryTab( props ) {
                     }}
             >
 
-                <div className="tab">
-                    <div className="icon-or-image"></div>
-
+                <div className="category-tab tab">
                     <div className="tab-information">
                         {categoryNameTab}
                         <div className="tab-description">
-                            <p className="tab-description-text">{props.Description}</p>
+                            {/* <p className="tab-description-text">{props.CategoryDescription}</p> */}
                         </div>
                     </div>
 

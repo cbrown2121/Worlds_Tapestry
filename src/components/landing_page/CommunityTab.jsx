@@ -25,7 +25,6 @@ function CommunityTab( props ) {
             >
 
                 <div className="tab landing-tab">
-                    <div className="icon-or-image"></div>
 
                     <div className="tab-information">
                         <div className="tab-name">{props.ForumName}</div>

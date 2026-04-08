@@ -46,32 +46,39 @@ export default function CurrentUserProfilePage({ userData }) {
 
     return (
         <>
-            { userData &&
-                <UserProfileData userData={userData} />
-            }
-            <div className="user-settings">
-                <FormElement updateUserInformation={true} formTitle="Update Profile" endPoint={`users/${user.UserID}`} method="PATCH" passToEndPoint={ [{key: "UserID", value: user.UserID}] }>
-                    <FormTextSection type="text" sectionTitle="Username" sectionID="UserName" />
-                    <FormTextSection type="text" sectionTitle="Email" sectionID="Email" />
-                    <button type="submit" className="user-profile-update-button">Update Profile</button>
-                </FormElement>
-            </div>
-
-            <div className="user-profile">
-                <h2>Upload a profile image</h2>
-                <div>
-                    <form onSubmit={uploadPhoto} action="">
-                        <input type="file" name="userProfile" id="userProfile" accept="image/png, image/jpeg, image/jpg" />
-                        <button type="submit" >Upload</button>
-                    </form>
+            <div className="user-profile-page">
+                <div className="left">
+                    { userData &&
+                        <UserProfileData userData={userData} />
+                    }
                 </div>
+                <div className="right">
+                    <div className="user-settings">
+                        <FormElement updateUserInformation={true} formTitle="Update Profile" endPoint={`users/${user.UserID}`} method="PATCH" passToEndPoint={ [{key: "UserID", value: user.UserID}] }>
+                            <FormTextSection type="text" sectionTitle="Username" sectionID="UserName" />
+                            <FormTextSection type="text" sectionTitle="Email" sectionID="Email" />
+                            <button type="submit" className="user-profile-update-button">Update Profile</button>
+                        </FormElement>
+                    </div>
 
-                {message && <p>{message}</p>}
-            </div>         
+                    <div className="sub-section">
+                        <div className="user-profile">
+                            <h2>Upload a profile image</h2>
+                            <div>
+                                <form onSubmit={uploadPhoto} action="">
+                                    <input className="file-upload" type="file" name="userProfile" id="userProfile" accept="image/png, image/jpeg, image/jpg" />
+                                    <button type="submit" >Upload</button>
+                                </form>
+                            </div>
+                        </div>         
 
-            <Link to="/"> 
-                <button onClick={ handleButtonPress } className="logout-button">Log out</button>
-            </Link>
+                        <Link to="/"> 
+                            <button onClick={ handleButtonPress } className="logout-button">Log out</button>
+                        </Link>
+                    </div>
+
+                </div>
+            </div>
         </>
     );
 }

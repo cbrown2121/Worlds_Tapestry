@@ -58,14 +58,30 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    width: 50%;
+    width: 100%;
 }
 
 #landing-page #landing-right #my-communities-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 2rem;
     height: 3rem;
+}
+
+#landing-page #landing-right #my-communities-header .title {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+#landing-page #landing-right #my-communities-header button {
+    width: 20%;
+    background: var(--secondary);
+}
+
+#landing-page #landing-right #my-communities-header button:hover {
+    background: var(--tertiary);
 }
 
 #landing-page #landing-right #my-communities-header #my-communities-header-icon {

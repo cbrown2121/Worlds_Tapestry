@@ -74,22 +74,21 @@ function LandingPage() {
                         <FormSelectionSection {...forumJoinSection} />
                         <FormSelectionSection {...forumMapSection} />
                         <FormTextSection type="text" sectionTitle="Community Tags" sectionID="Tags"/>
-                        <button type="submit">Create Community</button>
+                        <button className="floating-form-submit" type="submit"><p>Create Community</p></button>
                     </FloatingForm>
                 }
-                <div className="create-a-form">
-
-                </div>
-                <div id="landing-left">
-                    { loggedIn() ?
-                        <button className="create-a-forum-button" onClick={() => setInFloatingForum(true)}>Create A Community</button>
-                        : null
-                    }
-                </div>
+                
                 <div id="landing-right">
                     <div id="my-communities-header">
-                        <img id="my-communities-header-icon" src={bookIcon} alt="" />
-                        <h1 id="my-communities-header-text" >{landingPageText}</h1>
+                        <div className="title">
+                            <img id="my-communities-header-icon" src={bookIcon} alt="" />
+                            <h1 id="my-communities-header-text" >{landingPageText}</h1>
+                        </div>
+
+                        { loggedIn() ?
+                            <button className="create-a-forum-button" onClick={() => setInFloatingForum(true)}>Create A Community</button>
+                            : null
+                        }
                     </div>
                     
                     <div id="my-communities">

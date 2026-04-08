@@ -20,8 +20,9 @@ function ForumLandingPage( props ) {
 
     const { user, loggedIn } = useContext(UserContext);
     
-    const getForumCategories = () => {
+    const getForumCategories = (forumID) => {
         universalDatabaseFetch(`categories/${forumID}`).then((data) => {
+            console.log(data)
             createCategories(data);
         });
     }
@@ -35,10 +36,6 @@ function ForumLandingPage( props ) {
         });
     }
 
-    const setForumData = () => {
-
-    }
-
     useEffect(() => {
         let path = window.location.pathname;
         let textToSkip = "/Forum/";
@@ -47,7 +44,6 @@ function ForumLandingPage( props ) {
         universalDatabaseFetch(`forum/${path.substring(forumNameStart)}`).then((data) => {
             if (data.successful) {
                 let forumData = data.results[0];
-                console.log(forumData);
                 setForumID(forumData.ForumID);
                 setForumName(forumData.ForumName);
 
@@ -55,11 +51,9 @@ function ForumLandingPage( props ) {
                     setTagList(forumData.Tags.split(","));
                     console.log(forumData.Tags.split(","));
                 }
+                getForumCategories(forumData.ForumID);
             }
         });
-
-        setCategories([]);
-        getForumCategories();
 
         if (loggedIn()) {
             getUserRoleInForum();
@@ -68,6 +62,7 @@ function ForumLandingPage( props ) {
     }, []);
 
     const createCategories = (categoriesList) => {
+        setCategories([]);
         for (let i = 0; i < categoriesList.length; i++) {
             let category = categoriesList[i];
             if (category.Pinned == 1) { // category is pinned
@@ -120,13 +115,13 @@ function ForumLandingPage( props ) {
                 </div>
                 <div className="forum-landing-side">
                     <div className="forum-information">
-                        <img src={defaultIcon} alt="" className="forum-image" />
                         <h2 className="forum-name">{ forumName }</h2>
+
+                        { loggedIn() &&
+                            <button id="forum-join-button" onClick={ joinButtonAction }> {joinButtonText} </button>
+                        }
                     </div>
 
-                    { loggedIn() &&
-                        <button id="forum-join-button" onClick={ joinButtonAction }> {joinButtonText} </button>
-                    }
 
                     { (props.forumMap == 1) &&
                         <Link key={ `${forumID}-${forumName}-map` } className="router-link" 

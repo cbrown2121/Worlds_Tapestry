@@ -13,13 +13,27 @@
     margin-left: 6rem;
 
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     gap: 1rem;
 }
 
 .thread-page .thread-header .thread-name-count {
     display: flex;
+    align-items: center;
     gap: 2rem;
+    width: 100%;
+}
+
+.thread-page .thread-header .thread-name-count button {
+    width: 100%;
+    padding: 0 1rem;
+
+    border: 1px solid var(--text);
+    border-radius: 0.25rem;
+}
+
+.thread-page .thread-header .thread-name-count button:hover {
+    background: var(--tertiary);
 }
 
 .thread-page .thread-header h1 {

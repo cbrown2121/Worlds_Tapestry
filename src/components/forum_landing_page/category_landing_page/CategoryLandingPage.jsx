@@ -45,7 +45,6 @@ const CategoryLandingPage = ( props ) => {
                 </div>
                 <div className="forum-landing-side">
                     <div className="forum-information">
-                        <img src={defaultIcon} alt="" className="forum-image" />
                         <h2 className="forum-name">{state.categoryName}</h2>
                     </div>
 

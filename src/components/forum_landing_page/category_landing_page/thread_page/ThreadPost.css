@@ -52,12 +52,17 @@
 }
 
 .thread-post .post-left .post-like-dislike-date .ratings .rating button {
-    height: 3rem;
-    width: 3rem;
+    height: 50px;
+    width: 50px;
+    background: var(--background);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 } 
 
 .thread-post .post-left .post-like-dislike-date .ratings .rating .active {
-    background: var(--background)
+    background: var(--secondary);
 } 
 
 .thread-post .post-left .post-like-dislike-date .ratings .rating button img {
@@ -71,7 +76,11 @@
     align-items: center;
     gap: 1rem;
 
-    width: 25%;
+    width: 25vw;
+}
+
+.thread-post .post-right a {
+    width: 100%;
 }
 
 .thread-post .post-right .user-profile-mini {
@@ -80,7 +89,7 @@
     padding: 2rem;
 
     width: 100%;
-    max-width: 19rem;
+    /* max-width: 19rem; */
 }
 
 .thread-post .post-right .user-profile-mini .user-major-details {
