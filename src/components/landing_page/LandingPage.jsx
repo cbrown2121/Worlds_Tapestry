@@ -5,15 +5,26 @@ import CommunityTab from "./CommunityTab";
 import TrendingTab from "./TrendingTab";
 import FormElement from "../form_component/FormElement.jsx";
 import FormTextSection from "../form_component/FormTextSection.jsx";
-import FormRadioSection from "../form_component/FormRadioSection.jsx";
+import FormSelectionSection from "../form_component/FormSelectionSection.jsx";
 import { UserContext } from "../../contexts/Context.jsx";
 import { universalDatabaseFetch, universalDatabaseInteraction } from "../../utility.js";
+import FloatingForm from "../form_component/FloatingForm.jsx";
 
 // for now the "my communities" section is all the forums in our database
 
 function LandingPage() {
     const [forumList, setForumList] = useState([]);
+    const [inFloatingForum, setInFloatingForum] = useState(false);
     const { user, loggedIn } = useContext(UserContext);
+
+    // <FormElement passToEndPoint={[{key: "UserID", value: user.UserID}]} method="POST" endPoint="forums" formTitle="Create A Community">
+    //     <FormTextSection type="text" sectionTitle="Community Name" sectionID="ForumName"/>
+    //     <FormSelectionSection {...forumVisbilitySection} />
+    //     <FormSelectionSection {...forumJoinSection} />
+    //     <FormSelectionSection {...forumMapSection} />
+    //     <FormTextSection type="text" sectionTitle="Community Tags" sectionID="Tags"/>
+    //     <button className="createForum" type="submit">Create Forum</button>
+    // </FormElement>
 
     let landingPageText = (loggedIn()) ? "My Communities" : "Communities";
 
@@ -56,20 +67,22 @@ function LandingPage() {
     return (
         <>
             <div id="landing-page" className="main-content">
+                { inFloatingForum &&
+                    <FloatingForm onExit={() => setInFloatingForum(false)} endpoint="forums" method="post" passToEndPoint={[{key: "UserID", value: user.UserID}]}>
+                        <FormTextSection type="text" sectionTitle="Community Name" sectionID="ForumName"/>
+                        <FormSelectionSection {...forumVisbilitySection} />
+                        <FormSelectionSection {...forumJoinSection} />
+                        <FormSelectionSection {...forumMapSection} />
+                        <FormTextSection type="text" sectionTitle="Community Tags" sectionID="Tags"/>
+                        <button type="submit">Create Community</button>
+                    </FloatingForm>
+                }
+                <div className="create-a-form">
+
+                </div>
                 <div id="landing-left">
                     { loggedIn() ?
-                        // <FormElement  formTitle="Create A Community" endPoint="forums" method="POST" passToEndPoint={ [{key: "UserID", value: user.UserID}] } submitButtonText="Create Community" sections={ [forumNameSection, forumVisbilitySection, forumJoinSection, forumMapSection, forumTagsSection] } /> 
-                        <div className="">
-                            <FormElement passToEndPoint={[{key: "UserID", value: user.UserID}]} method="POST" endPoint="forums" formTitle="Create A Community">
-                                <FormTextSection type="text" sectionTitle="Community Name" sectionID="ForumName"/>
-                                <FormRadioSection {...forumVisbilitySection} />
-                                <FormRadioSection {...forumJoinSection} />
-                                <FormRadioSection {...forumMapSection} />
-                                <FormTextSection type="text" sectionTitle="Community Tags" sectionID="Tags"/>
-                                <button className="createForum" type="submit">Create Forum</button>
-                            </FormElement>
-                        </div>
-
+                        <button className="create-a-forum-button" onClick={() => setInFloatingForum(true)}>Create A Community</button>
                         : null
                     }
                 </div>

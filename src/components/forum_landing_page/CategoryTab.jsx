@@ -33,7 +33,7 @@ function CategoryTab( props ) {
     return (
         <>
             <Link className="router-link" 
-                    to={ `/Forum/${ forumName.replace(/[ ]/g, "_") }/category/${ categoryName.replace(/[ ]/g, "_") }` }  // change later so this includes the forum name from the previous link
+                    to={ `/Forum/${ forumName }/category/${ categoryName }` }  // change later so this includes the forum name from the previous link
                     state={{ 
                         forumID: forumID,
                         forumName: forumName,

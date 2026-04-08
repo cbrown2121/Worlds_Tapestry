@@ -15,7 +15,6 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { UserProvider, ForumProvider } from "./contexts/Context.jsx";
 import LoginPage from "./components/login_page/LoginPage.jsx";
 import ForumLandingPage from "./components/forum_landing_page/ForumLandingPage.jsx";
-import ForumPage from "./components/forum_landing_page/ForumPage.jsx";
 import { ReportForm } from "./components/form_component/ReportForm.jsx";
 import ReportPage from "./components/report_page/ReportPage.jsx";
 import MessagesPage from "./components/messages_page/MessagesPage.jsx";
@@ -40,7 +39,7 @@ const App = () => {
                 </Route>
 
                 <Route path="/Forum/:forumName" element={<Layout key={window.location.pathname} /> }>
-                  <Route index element={<ForumPage/>}/>
+                  <Route index element={<ForumLandingPage/>}/>
                 </Route>
 
                 <Route path="/Profile" element={<Layout />}>

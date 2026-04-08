@@ -1,0 +1,84 @@
+.overlay-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 5;
+}
+
+.floating-form {
+    position: absolute;
+    top: 45vh; /* slightly above 50% for better centering */
+    left: 50vw;
+    transform: translate(-50%, -50%);
+
+    z-index: 10; /* this should be the second highest z axis */
+    width: 50%;
+}
+
+.floating-form-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-exit-button {
+    background: none;
+    border: none;
+    width: 50vw;
+
+    display: flex;
+
+}
+
+.floating-form-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-details  {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 101;
+    background: var(--background);
+    border-radius: 0.25rem;
+
+    width: 40vw;
+}
+
+.form-details form {
+    width: 100%;
+}
+
+.form-details .form-section {
+    width: 100%;
+}
+
+.form-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--background);
+    height: 25vh;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    justify-content: center;
+    gap: 1rem;
+} 
+
+.form-message button {
+    width: 60%;
+    background: var(--secondary);
+}
+
+.form-message button:hover {
+    background: var(--tertiary);
+}
+
+.form-message button:active {
+    background: var(--tertiary);
+}

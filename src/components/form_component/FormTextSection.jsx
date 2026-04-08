@@ -12,7 +12,7 @@ function FormTextSection( props ) {
                         <h2 className="forum-section-header">{ props.sectionTitle }</h2>
                     </div>
                     <div className="section-options">
-                        <input type="text" id={ props.sectionID } name={ props.sectionID }/>
+                        <input onInput={(e) => e.target.setCustomValidity("")}required type="text" id={ props.sectionID } name={ props.sectionID }/>
                     </div>
             </div>
         </>

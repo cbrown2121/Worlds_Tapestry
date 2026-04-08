@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import "./Form.css"
 
-function FormRadioSection( props ) {
+function FormSelectionSection( props ) {
 
     return (
         <>
@@ -14,7 +14,7 @@ function FormRadioSection( props ) {
                     {props.options.map((option) => (
                         <div className="form-radion-button-label" key={ `${option.id}-${option.value}` }>
                             <label htmlFor={ option.id }>{ option.label }</label>
-                            <input type="radio" id={ option.id } name={ option.id } value={ option.value } defaultChecked={ option.defaultChecked }/>
+                            <input required type="radio" id={ option.id } name={ option.id } value={ option.value } defaultChecked={ option.defaultChecked }/>
                         </div>
                     ))}
                 </div>  
@@ -23,4 +23,4 @@ function FormRadioSection( props ) {
     )
 }
 
-export default FormRadioSection
+export default FormSelectionSection

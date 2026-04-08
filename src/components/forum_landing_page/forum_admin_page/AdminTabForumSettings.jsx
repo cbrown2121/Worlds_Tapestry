@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import FormElement from "../../form_component/FormElement.jsx";
 import FormRow from "../../form_component/FormRow.jsx";
 import "./ForumAdminPage.css";
-import FormRadioSection from "../../form_component/FormRadioSection.jsx";
+import FormSelectionSection from "../../form_component/FormSelectionSection.jsx";
 
 function AdminTabForumSettings(props) {
     let path = window.location.pathname;
@@ -42,9 +42,9 @@ function AdminTabForumSettings(props) {
     return (
         <>
             <FormElement formTitle="Change Forum Settings" endPoint="update-forums" method="PUT" passToEndPoint={ [{key: "ForumID", value: forumID}] }>
-                <FormRadioSection {...forumVisbilitySection}/>
-                <FormRadioSection {...forumJoinSection}/>
-                <FormRadioSection {...forumMapSection}/>
+                <FormSelectionSection {...forumVisbilitySection}/>
+                <FormSelectionSection {...forumJoinSection}/>
+                <FormSelectionSection {...forumMapSection}/>
                 <button type="submit" className="change-forum-settings">Update</button>
             </FormElement>
 

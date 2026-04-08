@@ -10,9 +10,9 @@ import { UserContext } from "../../contexts/Context";
 import { universalDatabaseFetch } from "../../utility";
 
 function ForumLandingPage( props ) {
-    const [forumID] = useState(props.forumID)
-    const [forumName] = useState(props.forumName)
-    const [tagList, setTagList] = useState([])
+    const [forumID, setForumID] = useState(null);
+    const [forumName, setForumName] = useState(null);
+    const [tagList, setTagList] = useState([]);
     const [categories, setCategories] = useState([]);
 
     const [userRole, setUserRole] = useState(null);
@@ -35,7 +35,29 @@ function ForumLandingPage( props ) {
         });
     }
 
+    const setForumData = () => {
+
+    }
+
     useEffect(() => {
+        let path = window.location.pathname;
+        let textToSkip = "/Forum/";
+        let forumNameStart = path.indexOf("/Forum/") + textToSkip.length;
+
+        universalDatabaseFetch(`forum/${path.substring(forumNameStart)}`).then((data) => {
+            if (data.successful) {
+                let forumData = data.results[0];
+                console.log(forumData);
+                setForumID(forumData.ForumID);
+                setForumName(forumData.ForumName);
+
+                if (forumData.Tags != null || forumData.Tags != undefined) {
+                    setTagList(forumData.Tags.split(","));
+                    console.log(forumData.Tags.split(","));
+                }
+            }
+        });
+
         setCategories([]);
         getForumCategories();
 
@@ -43,9 +65,6 @@ function ForumLandingPage( props ) {
             getUserRoleInForum();
         }
 
-        if (props.forumTags != null && props.forumTags != undefined && props.forumTags != "") {
-            setTagList(props.forumTags.split(","));
-        }
     }, []);
 
     const createCategories = (categoriesList) => {
@@ -111,7 +130,7 @@ function ForumLandingPage( props ) {
 
                     { (props.forumMap == 1) &&
                         <Link key={ `${forumID}-${forumName}-map` } className="router-link" 
-                        to={ `/Forum/${ forumName.replace(/[ ]/g, "_") }/Map` } 
+                        to={ `/Forum/${ forumName }/Map` } 
                         state={{ 
                             forumID: forumID,
                             forumName: forumName,
@@ -154,7 +173,7 @@ function ForumLandingPage( props ) {
                                 <h1>Admin Dash</h1>
                             </div>
                             <Link key={ `${forumID}-${forumName}-admin` } className="router-link" 
-                            to={ `/Forum/${ forumName.replace(/[ ]/g, "_") }/Admin-Dashboard` } 
+                            to={ `/Forum/${ forumName }/Admin-Dashboard` } 
                             state={{ 
                                 forumID: forumID,
                                 forumName: forumName,

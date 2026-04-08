@@ -27,11 +27,7 @@ dist-ssr
 
 # API key
 *.env
-<<<<<<< HEAD
-
-#Backend
-./Backend/*.env
-=======
+.env.developement
 ./Backend/*.env
 ./Backend/*.json
 
@@ -40,4 +36,4 @@ package.json
 
 ./Backend/package-lock.json
 ./Backend/package.json
->>>>>>> cd718c287428be304cb393430f6e80c97a1e2a0e
+.env.development

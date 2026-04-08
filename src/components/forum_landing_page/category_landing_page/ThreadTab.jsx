@@ -7,18 +7,14 @@ import { useLocation } from 'react-router-dom';
 
 function ThreadTab( props ) {
     const location = useLocation();
-    const [recency, setRecency] = useState(null);
+    const [recency, setRecency] = useState(calculateRecency(props.MostRecentActivity));
     const [forumName] = useState(props.ForumName);
     const [categoryName] = useState(props.CategoryName);
-
-    useEffect(() => {
-        setRecency(calculateRecency(props.MostRecentPost))
-    },[]);
 
     return (
         <>
             <Link className="router-link" 
-                    to={ `/Forum/${ forumName.replace(/[ ]/g, "_") }/Category/${ categoryName.replace(/[ ]/g, "_") }/thread/${props.ThreadName.replace(/[ ]/g, "_")}` }  // change later so this includes the forum name from the previous link
+                    to={ `/Forum/${forumName}/Category/${categoryName}/thread/${threadName}` }  // change later so this includes the forum name from the previous link
                     state={{ 
                         threadID: props.ThreadID,
                         threadName: props.ThreadName

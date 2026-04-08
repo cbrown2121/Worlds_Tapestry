@@ -38,7 +38,6 @@ html, body, #root {
   margin: 0; 
   padding: 0;
   box-sizing: border-box;
-  /* scrollbar-width: none; */
 }
 
 input:focus,
@@ -56,6 +55,10 @@ button:focus {
 /* prevent horizontal scroll WITHOUT breaking Google Maps */
 body {
   overflow-x: hidden;
+}
+
+body:has(.overlay-effect) {
+  overflow: hidden;
 }
 
 .router-link {

@@ -149,7 +149,7 @@ const ThreadPost = (props) => {
                                 <p className="dislike-count">{dislikeCount}</p>
                             </div>
                         </div>
-                        <p className="post-creation-day">{getDate(props.Created_Time)}</p>
+                        <p className="post-creation-day">{calculateRecency(props.CreatedTime)}</p>
                     </div>
                 </div>
                 <div className="post-right">

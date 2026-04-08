@@ -13,7 +13,7 @@ function CommunityTab( props ) {
     return (
         <>
             <Link className="router-link" 
-                to={ `/Forum/${ props.ForumName.replace(/[ ]/g, "_") }` } 
+                to={ `/Forum/${ props.ForumName }` } 
                 state={{ 
                     forumID: props.ForumID, // this is how we pass along what forum we are viewing to the forumpage component 
                     // https://dev.to/gaurbprajapati/demystifying-uselocation-in-reactjs-a-beginners-guide-to-navigation-4h6f

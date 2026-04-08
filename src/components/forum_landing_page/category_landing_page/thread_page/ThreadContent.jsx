@@ -5,7 +5,6 @@ import ThreadPost from "./TheadPost.jsx";
 import FormElement from "../../../form_component/FormElement.jsx";
 import { UserContext } from "../../../../contexts/Context.jsx";
 import { Link } from "react-router-dom";
-import FormTextSection from "../../../form_component/FormTextSection.jsx";
 import { universalDatabaseFetch } from "../../../../utility.js";
 
 function ThreadContent(props) {
@@ -15,7 +14,7 @@ function ThreadContent(props) {
     const [threadID, setThreadID] = useState(state.threadID);
     const [threadName, setThreadName] = useState(state.threadName);
     const [posts, setPosts] = useState([]);
-    const [ThreadList, setThread] = useState([]);
+    const [fillingOutForm, setFormState] = useState(false);
 
     useEffect(() => {
         universalDatabaseFetch(`posts/${threadID}`).then((data) => {

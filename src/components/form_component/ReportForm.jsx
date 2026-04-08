@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, componentDidMount } from "react"
 import FormTextSection from "./FormTextSection.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
-import FormRadioSection from "./FormRadioSection.jsx";
+import FormSelectionSection from "./FormSelectionSection.jsx";
 import { UserContext } from "../../contexts/Context.jsx";
 import { universalDatabaseFetch, universalDatabaseInteraction } from "../../utility.js";
 import FormElement from "./FormElement.jsx";

@@ -80,16 +80,13 @@ app.get("/:forumID/users", (req, res) => {
 });
 
 // GET forum by name
-app.get("/:forumID/forumName", (req, res) => {
+app.get("/forum/:forumName", (req, res) => {
   const { forumName } = req.params;
-
-  const SQL = 
-              ` SELECT Forum
-                WHERE ForumName = ?;`;
+  const SQL = `SELECT * FROM Forums WHERE ForumName = ?;`;
 
   db.query(SQL, [forumName], (err, results) => {
-    if (err) return res.status(500).json(err);
-    res.json(results);
+    if (err) return res.json({successful: false, error: err});
+    res.json({successful: true, results: results});
   });
 });
 
@@ -753,6 +750,10 @@ app.get("/place-reviews/:locationID/summary", (req, res) => {
 });
 
 const cleanTags = (tags) => { // splits into an array and removes duplicates, white spaces, and ', ", `, then forms a string with elements seperated by a single comma
+    if (tags == null || undefined) {
+        return null;
+    }
+    
     let tagArray = tags.split(",");
     let tagSet = new Set(); // prevents duplicates
 
@@ -782,11 +783,12 @@ app.post("/forums", (req, res) => {
 
     db.query(sql, [ForumName, SearchVisibility, JoinPermissions, AllowMaps, UserID, tags], (err, result) => {
         if (err) {
-        console.error(err);
+            console.error(err);
+            return res.json({ successful: false, error: err });
         return res.status(500).json({ error: "Failed to create forum" });
         }
 
-        res.json({ message: "Forum created", id: result.insertId });
+        res.json({ successful: true, id: result.insertId });
     });
 });
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, Children } from "react"
 import FormTextSection from "./FormTextSection.jsx";
-import FormRadioSection from "./FormRadioSection.jsx";
+import FormSelectionSection from "./FormSelectionSection.jsx";
 import { UserContext } from "../../contexts/Context.jsx";
 import { universalDatabaseFetch, universalDatabaseInteraction } from "../../utility.js";
 import "./Form.css"

@@ -1,26 +1,17 @@
 // DATE TIME FUNCTIONS ==================================================================
 
-const convertToLocalTime = (UTCTime) => {
+const convertToLocalTime = (UTCDateTime) => {
+    let date = new Date(UTCDateTime);
     let offset = new Date().getTimezoneOffset() / 60;
-
-    UTCTime.setHours(UTCTime.getHours() - offset);
+    date.setHours(date.getHours() - offset);
     
-    return UTCTime;
+    return date;
 }
 
 export const getDate = (dateTime) => {
     const date = convertToLocalTime(new Date(dateTime));
 
-    let hour = date.getHours();
-    let amPM = "AM";
-
-    if (12 <= hour) {
-        hour = hour % 12;
-
-        amPM = "PM";
-    }
-
-    return `${date.getMonth() + 1}/${date.getDay() + 1}/${date.getFullYear()}`;
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 }
 
 const getRecencyString = (difference, type) => {
@@ -31,20 +22,20 @@ const getRecencyString = (difference, type) => {
 export const calculateRecency = (mostRecent) => { 
     if (mostRecent == null) return null;
 
-    const currentTime = new Date();
-    const mostRecentTime = convertToLocalTime(new Date(mostRecent)); // in UTC but we convert to local time below
+    let localDateTime = convertToLocalTime(mostRecent);
+    let currentDateTime = new Date();
 
-    const milliseconds = Math.abs(currentTime - mostRecentTime);
+    const milliseconds = currentDateTime - localDateTime;
 
     const secondsPassed = Math.floor(milliseconds / 1000);
     const minutesPassed = Math.floor(Math.abs(secondsPassed / 60));
     const hoursPassed = Math.floor(Math.abs(minutesPassed / 60));
-    const date = getDate(mostRecent);
+    const daysPassed = Math.floor(hoursPassed / 24);
 
-    if (secondsPassed < 60) return getRecencyString(secondsPassed, "Second");
-    if (minutesPassed < 60) return getRecencyString(minutesPassed, "Minute");
-    if (hoursPassed < 24) return getRecencyString(hoursPassed, "Hour");
-    return date;
+    if (0 < daysPassed) return getDate(localDateTime);
+    if (0 < hoursPassed) return getRecencyString(hoursPassed, "Hour");
+    if (0 < minutesPassed) return getRecencyString(minutesPassed, "Minute");
+    return getRecencyString(secondsPassed, "Second");
 }
 
 // GET
@@ -88,4 +79,23 @@ export const universalDatabaseInteraction = async (method, endpoint, body) => {
     } catch (error) {
         console.log(`Data was submitted unsuccessfully: ${error}`);
     }
+}
+
+export const convertFormToData = (event, passToEndPoint) => {
+    let processedData = {};
+
+    new FormData(event.currentTarget).forEach((value, key) => {
+        processedData[key] = value;
+    });
+
+    for (let i = 0; i < passToEndPoint.length; i++) {
+        let keyPair = passToEndPoint[i];
+        processedData[keyPair.key] = keyPair.value;
+    }
+
+    return processedData;
+}
+
+export const universalFormSubmit = (body, endpoint, method, processedData) => {
+    return universalDatabaseInteraction(method, endpoint, processedData);
 }
