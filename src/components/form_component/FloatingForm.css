@@ -20,6 +20,11 @@
     height: 80vh;
 }
 
+.floating-form .form-exit-button {
+    background: none !important;
+    border: none !important;
+}
+
 .floating-form .form-section {
     gap: 0.5rem !important;
     margin-bottom: 1rem !important;

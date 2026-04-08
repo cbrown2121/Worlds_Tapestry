@@ -9,12 +9,13 @@ import defaultIcon from "../../assets/commmunity-default-icon.svg";
 import { UserContext } from "../../contexts/Context";
 import { universalDatabaseFetch } from "../../utility";
 
-function ForumLandingPage( props ) {
+function ForumLandingPage() {
     const [forumID, setForumID] = useState(null);
     const [forumName, setForumName] = useState(null);
     const [tagList, setTagList] = useState([]);
     const [categories, setCategories] = useState([]);
-
+    const [forumMap, setForumMap] = useState(0);
+ 
     const [userRole, setUserRole] = useState(null);
     const [joinButtonText, setJoinButtonText] = useState("Join Community");
 
@@ -27,13 +28,8 @@ function ForumLandingPage( props ) {
         });
     }
 
-    const getUserRoleInForum = () => {
-        universalDatabaseFetch(`forum-membership/${forumID}/${user.UserID}`).then((data) => {
-            if (data.length == 1) { // the response will return nothing if the user is not in the forum. it should never be higher than 1 since a user cannot be in a forum twice.
-                setUserRole(data[0].UserRole); // the array only has one element so this is safe
-                setJoinButtonText("Leave Community");
-            }
-        });
+    const getUserRoleInForum = (forumID) => {
+
     }
 
     useEffect(() => {
@@ -46,18 +42,24 @@ function ForumLandingPage( props ) {
                 let forumData = data.results[0];
                 setForumID(forumData.ForumID);
                 setForumName(forumData.ForumName);
+                setForumMap(forumData.AllowMaps);
 
                 if (forumData.Tags != null || forumData.Tags != undefined) {
                     setTagList(forumData.Tags.split(","));
                     console.log(forumData.Tags.split(","));
                 }
                 getForumCategories(forumData.ForumID);
+
+                console.log(`forum-membership/${forumData.ForumID}/${user.UserID}`)
+                
+                universalDatabaseFetch(`forum-membership/${forumData.ForumID}/${user.UserID}`).then((data) => {
+                    if (data.length == 1) { // the response will return nothing if the user is not in the forum. it should never be higher than 1 since a user cannot be in a forum twice.
+                        setUserRole(data[0].UserRole); // the array only has one element so this is safe
+                        setJoinButtonText("Leave Community");
+                    }
+                });
             }
         });
-
-        if (loggedIn()) {
-            getUserRoleInForum();
-        }
 
     }, []);
 
@@ -123,7 +125,7 @@ function ForumLandingPage( props ) {
                     </div>
 
 
-                    { (props.forumMap == 1) &&
+                    { (forumMap == 1) &&
                         <Link key={ `${forumID}-${forumName}-map` } className="router-link" 
                         to={ `/Forum/${ forumName }/Map` } 
                         state={{ 
@@ -172,9 +174,9 @@ function ForumLandingPage( props ) {
                             state={{ 
                                 forumID: forumID,
                                 forumName: forumName,
-                                forumMaps: props.forumMap,
+                                forumMaps: forumMap,
                                 userRole: userRole,
-                                forumTags: props.forumTags
+                                forumTags: tagList
                             }}
                             >
                                 <button className="forum-settings" > Community Settings </button>
