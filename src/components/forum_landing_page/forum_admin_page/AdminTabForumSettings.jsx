@@ -10,10 +10,15 @@ function AdminTabForumSettings(props) {
     let remove = "/Admin-Dashboard";
     let returnPath = path.substring(0, path.indexOf(remove));
 
-    const [forumID, setForumID] = useState(props.forumID);
-    const [forumTags, setForumTags] = useState(props.forumTags);
+    const [forumID, setForumID] = useState();
+    const [forumTags, setForumTags] = useState();
 
     // later change fields so defaults reflect current settings
+
+    useEffect(() => {
+        setForumID(props.forumID);
+        setForumTags(props.forumTags.join(", "));
+    }, []);
 
     let forumVisbilitySection = {
         type: "radio", sectionTitle: "Update Visibility", sectionID:"ForumVisibility",
