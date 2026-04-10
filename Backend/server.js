@@ -667,6 +667,7 @@ app.get("/maps/:mapID/include-status", (req, res) => {
     SELECT IncludeStatus
     FROM Maps
     WHERE MapID = ?
+    LIMIT = 1
   `;
 
   db.query(sql, [mapID], (err, results) => {
